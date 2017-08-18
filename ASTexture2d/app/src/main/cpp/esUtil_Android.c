@@ -189,6 +189,7 @@ void android_main ( struct android_app *pApp )
       {
          esContext.drawFunc ( &esContext );
          eglSwapBuffers ( esContext.eglDisplay, esContext.eglWSurface );
+//          eglSwapBuffers ( esContext.eglDisplay, esContext.eglPSurface );
       }
    }
 }

@@ -49,6 +49,7 @@
 #ifdef ANDROID
 #include <android/log.h>
 #include "android_native_app_glue.h"
+#include "my_log.h"
 #include <android/asset_manager.h>
 typedef AAsset esFile;
 #else
@@ -219,29 +220,39 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
 #endif // ANDROID
 
    // Create a surface
-   esContext->eglWSurface = eglCreateWindowSurface ( esContext->eglDisplay, config,
-                                                    esContext->eglNativeWindow, NULL );
+   esContext->eglWSurface = eglCreateWindowSurface ( esContext->eglDisplay, config, esContext->eglNativeWindow, NULL );
 
    if ( esContext->eglWSurface == EGL_NO_SURFACE )
    {
       return GL_FALSE;
    }
 
+    esContext->eglPSurface = eglCreatePbufferSurface(esContext->eglDisplay, config, NULL);
+    if( esContext->eglPSurface == EGL_NO_SURFACE)
+    {
+        int err = eglGetError();
+        LOGE("eglCreatePbufferSurface error errno=%d", err);
+        return GL_FALSE;
+    }
+
    // Create a GL context
-   esContext->eglContext = eglCreateContext ( esContext->eglDisplay, config, 
-                                              EGL_NO_CONTEXT, contextAttribs );
+   esContext->eglContext = eglCreateContext ( esContext->eglDisplay, config, EGL_NO_CONTEXT, contextAttribs );
 
    if ( esContext->eglContext == EGL_NO_CONTEXT )
    {
       return GL_FALSE;
    }
 
-   // Make the context current
-   if ( !eglMakeCurrent ( esContext->eglDisplay, esContext->eglWSurface,
-                          esContext->eglWSurface, esContext->eglContext ) )
+//    Make the context current
+   if ( !eglMakeCurrent ( esContext->eglDisplay, esContext->eglWSurface, esContext->eglWSurface, esContext->eglContext ) )
    {
       return GL_FALSE;
    }
+
+//    if ( !eglMakeCurrent ( esContext->eglDisplay, esContext->eglPSurface, esContext->eglPSurface, esContext->eglContext ) )
+//    {
+//        return GL_FALSE;
+//    }
 
 #endif // #ifndef __APPLE__
 

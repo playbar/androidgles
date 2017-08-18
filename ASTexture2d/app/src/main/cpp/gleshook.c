@@ -63,14 +63,14 @@ void (*old_glShaderSource) (GLuint shader, GLsizei count, const GLchar* const* s
 void MJ_glShaderSource (GLuint shader, GLsizei count, const GLchar* const* string, const GLint* length)
 {
     LOGI("MJ_glShaderSource");
-    for(int i = 0; i < count; ++i){
-        int len = strlen(*string);
-        FILE *pfile = fopen("/sdcard/shader.txt", "wb");
-        fwrite(*string, len, 1, pfile);
-        fflush(pfile);
-        fclose(pfile);
-//        LOGI("shader: %s", *string);
-    }
+//    for(int i = 0; i < count; ++i){
+//        int len = strlen(*string);
+//        FILE *pfile = fopen("/sdcard/shader.txt", "wb");
+//        fwrite(*string, len, 1, pfile);
+//        fflush(pfile);
+//        fclose(pfile);
+////        LOGI("shader: %s", *string);
+//    }
     return old_glShaderSource(shader, count, string, length);
 }
 
@@ -115,10 +115,10 @@ void (*old_glBufferData)(GLenum target, GLsizeiptr size, const GLvoid* data, GLe
 void MJ_glBufferData (GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage)
 {
     LOGI("MJ_glBufferData");
-    FILE *pfile = fopen("/sdcard/bufferdata.txt", "wb");
-    fwrite(data, size, 1, pfile);
-    fflush(pfile);
-    fclose(pfile);
+//    FILE *pfile = fopen("/sdcard/bufferdata.txt", "wb");
+//    fwrite(data, size, 1, pfile);
+//    fflush(pfile);
+//    fclose(pfile);
     return old_glBufferData(target, size, data, usage);
 }
 

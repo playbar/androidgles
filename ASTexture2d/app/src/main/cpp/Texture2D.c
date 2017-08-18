@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "esUtil.h"
 #include "my_log.h"
+#include "libpng/pngutils.h"
 
 typedef struct
 {
@@ -27,15 +28,16 @@ GLuint CreateSimpleTexture2D( )
    // Texture object handle
    GLuint textureId =0;
 
-   // 2x2 Image, 3 bytes per pixel (R, G, B)
-   GLubyte pixels[4 * 3] =
+   // 2x2 Image, 4 bytes per pixel (R, G, B, A)
+   GLubyte pixels[4 * 4] =
    {
-      255,   0,   0, // Red
-        0, 255,   0, // Green
-        0,   0, 255, // Blue
-      255, 255,   0  // Yellow
+      255,   0,   0, 255, // Red
+        0, 255,   0, 255, // Green
+        0,   0, 255, 255, // Blue
+      255, 255,   0, 255  // Yellow
    };
-
+    int ilen = sizeof(pixels);
+    write_png("/sdcard/test.png", pixels, 2, 2);
    // Use tightly packed data
    glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
@@ -47,7 +49,7 @@ GLuint CreateSimpleTexture2D( )
    glBindTexture ( GL_TEXTURE_2D, textureId );
 
    // Load the texture
-   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels );
+   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
 
    // Set the filtering mode
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -93,7 +95,7 @@ int Init ( ESContext *esContext )
    userData->samplerLoc = glGetUniformLocation ( userData->programObject, "s_texture" );
 
    // Load the texture
-//   userData->textureId = CreateSimpleTexture2D ();
+   userData->textureId = CreateSimpleTexture2D ();
 
    glClearColor ( 1.0f, 1.0f, 1.0f, 0.0f );
    return TRUE;
@@ -126,11 +128,9 @@ void Draw ( ESContext *esContext )
    glUseProgram ( userData->programObject );
 
    // Load the vertex position
-   glVertexAttribPointer ( 0, 3, GL_FLOAT,
-                           GL_FALSE, 5 * sizeof ( GLfloat ), vVertices );
+   glVertexAttribPointer ( 0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof ( GLfloat ), vVertices );
    // Load the texture coordinate
-   glVertexAttribPointer ( 1, 2, GL_FLOAT,
-                           GL_FALSE, 5 * sizeof ( GLfloat ), &vVertices[3] );
+   glVertexAttribPointer ( 1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof ( GLfloat ), &vVertices[3] );
 
    glEnableVertexAttribArray ( 0 );
    glEnableVertexAttribArray ( 1 );
@@ -236,18 +236,18 @@ int esMain ( ESContext *esContext )
 
    createSharedContext( esContext );
 
-   pthread_t id_1;
-   int ret;
-   ret = pthread_create( &id_1, NULL,(void*)thread_1, esContext );
-   if( ret != 0 ){
-      printf("Create thread error\n");
-   }
-//   pthread_join( id_1, NULL );
-
-   pthread_t seft = pthread_self();
-//   char chId[32] = {0};
-//   sprintf( chId, "main thread id=%u", seft );
-   LOGI( "main thread id=%u", seft );
+//   pthread_t id_1;
+//   int ret;
+//   ret = pthread_create( &id_1, NULL,(void*)thread_1, esContext );
+//   if( ret != 0 ){
+//      printf("Create thread error\n");
+//   }
+////   pthread_join( id_1, NULL );
+//
+//   pthread_t seft = pthread_self();
+////   char chId[32] = {0};
+////   sprintf( chId, "main thread id=%u", seft );
+//   LOGI( "main thread id=%u", seft );
 
    return GL_TRUE;
 }
