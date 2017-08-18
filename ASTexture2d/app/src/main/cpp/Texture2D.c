@@ -229,7 +229,7 @@ int esMain ( ESContext *esContext )
       return GL_FALSE;
    }
 
-//   eglMakeCurrent( esContext->eglDisplay, esContext->eglSurface, esContext->eglSurface, gShareContext );
+//   eglMakeCurrent( esContext->eglDisplay, esContext->eglWSurface, esContext->eglWSurface, gShareContext );
 
    esRegisterDrawFunc ( esContext, Draw );
    esRegisterShutdownFunc ( esContext, ShutDown );

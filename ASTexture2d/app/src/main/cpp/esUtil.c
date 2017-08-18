@@ -219,10 +219,10 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
 #endif // ANDROID
 
    // Create a surface
-   esContext->eglSurface = eglCreateWindowSurface ( esContext->eglDisplay, config, 
+   esContext->eglWSurface = eglCreateWindowSurface ( esContext->eglDisplay, config,
                                                     esContext->eglNativeWindow, NULL );
 
-   if ( esContext->eglSurface == EGL_NO_SURFACE )
+   if ( esContext->eglWSurface == EGL_NO_SURFACE )
    {
       return GL_FALSE;
    }
@@ -237,8 +237,8 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
    }
 
    // Make the context current
-   if ( !eglMakeCurrent ( esContext->eglDisplay, esContext->eglSurface, 
-                          esContext->eglSurface, esContext->eglContext ) )
+   if ( !eglMakeCurrent ( esContext->eglDisplay, esContext->eglWSurface,
+                          esContext->eglWSurface, esContext->eglContext ) )
    {
       return GL_FALSE;
    }
