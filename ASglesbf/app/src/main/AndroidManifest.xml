@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
+    package="com.android.gles3jni">
+  <uses-permission android:name="android.permission.BLUETOOTH" />
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <uses-permission android:name="android.permission.GET_TASKS" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+  <!--  uses-permission android:name="android.permission.ACCESS_SURFACE_FLINGER" /> -->
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <application android:label="mojing_activity" >
+    <activity android:name=".GLES3JNIActivity"
+         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
+         android:launchMode="singleTask"
+          android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" 
+          android:screenOrientation="landscape">
+          
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity android:name="com.bn.mojing.Adjust.AdjustActivity"
+         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+          android:launchMode="singleTask" 
+          android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale" 
+          android:screenOrientation="landscape">
+    </activity>
+    <meta-data android:name="DEVELOPER_MERCHANT_ID" android:value="C3845343263589043" />
+    <meta-data android:name="DEVELOPER_APP_ID" android:value="\03908040197953231" />
+    <meta-data android:name="DEVELOPER_APP_KEY" android:value="8b20789122bae89442edadf780250ad5" />
+    <meta-data android:name="DEVELOPER_CHANNEL_ID" android:value="www.mojing.cn" />
+  </application>
+  <uses-feature android:glEsVersion="0x00030000" />
+  <uses-sdk android:minSdkVersion="16" />
+</manifest>
