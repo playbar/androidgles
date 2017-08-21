@@ -227,7 +227,13 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
       return GL_FALSE;
    }
 
-    esContext->eglPSurface = eglCreatePbufferSurface(esContext->eglDisplay, config, NULL);
+    int attribListPbuffer[] = {
+            EGL_WIDTH, esContext->width,
+            EGL_HEIGHT, esContext->height,
+//            EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
+            EGL_NONE
+    };
+    esContext->eglPSurface = eglCreatePbufferSurface(esContext->eglDisplay, config, attribListPbuffer);
     if( esContext->eglPSurface == EGL_NO_SURFACE)
     {
         int err = eglGetError();

@@ -1,15 +1,15 @@
-package org.wysaid.ndkopenglbackdraw;
+package com.openglesbook;
+
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.opengl.EGL14;
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.opengles.GL10;
-
-import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.opengl.EGL14;
-import android.util.Log;
 
 public class GLHelpFunctions {
 

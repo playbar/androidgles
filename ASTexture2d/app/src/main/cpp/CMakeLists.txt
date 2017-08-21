@@ -29,12 +29,14 @@ add_library(glesbook SHARED
         Texture2D.c
         inlineHook.c
         relocate.c
-        gleshook.c)
+        gleshook.c
+        gldrawback.c)
 
 # Include libraries needed for hello-jni lib
 target_link_libraries(glesbook
                       android
                       z
                       log
+                      jnigraphics
                       EGL
                       GLESv3)

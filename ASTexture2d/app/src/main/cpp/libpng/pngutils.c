@@ -185,12 +185,6 @@ bool write_png(char *file_name, unsigned char *pdata, int width, int height)
     if (fp == NULL)
         return false;
 
-    /* Create and initialize the png_struct with the desired error handler
-     * functions.  If you want to use the default stderr and longjump method,
-     * you can supply NULL for the last three parameters.  We also check that
-     * the library version is compatible with the one used at compile time,
-     * in case we are using dynamically linked libraries.  REQUIRED.
-     */
     png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
     if (png_ptr == NULL)
@@ -219,39 +213,11 @@ bool write_png(char *file_name, unsigned char *pdata, int width, int height)
         return false;
     }
 
-    /* One of the following I/O initialization functions is REQUIRED */
-
-//#ifdef streams /* I/O initialization method 1 */
-    /* Set up the output control if you are using standard C streams */
 //   png_init_io(png_ptr, fp);
-
-//#else no_streams /* I/O initialization method 2 */
-//    /* If you are using replacement write functions, instead of calling
-//     * png_init_io() here you would call
-//     */
     png_set_write_fn(png_ptr, (void *) fp, user_write_fn, user_flush_function);
 
 //    /* where user_io_ptr is a structure you want available to the callbacks */
 //#endif no_streams /* Only use one initialization method */
-
-#ifdef hilevel
-    /* This is the easy way.  Use it if you already have all the
-    * image info living in the structure.  You could "|" many
-    * PNG_TRANSFORM flags into the png_transforms integer here.
-    */
-   png_write_png(png_ptr, info_ptr, png_transforms, png_voidp_NULL);
-
-#else
-    /* This is the hard way */
-
-    /* Set the image information here.  Width and height are up to 2^31,
-     * bit_depth is one of 1, 2, 4, 8, or 16, but valid values also depend on
-     * the color_type selected. color_type is one of PNG_COLOR_TYPE_GRAY,
-     * PNG_COLOR_TYPE_GRAY_ALPHA, PNG_COLOR_TYPE_PALETTE, PNG_COLOR_TYPE_RGB,
-     * or PNG_COLOR_TYPE_RGB_ALPHA.  interlace is either PNG_INTERLACE_NONE or
-     * PNG_INTERLACE_ADAM7, and the compression_type and filter_type MUST
-     * currently be PNG_COMPRESSION_TYPE_BASE and PNG_FILTER_TYPE_BASE. REQUIRED
-     */
 
     png_set_IHDR(png_ptr, info_ptr, width, height, 8, PNG_COLOR_TYPE_RGB_ALPHA,
                  PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
@@ -302,36 +268,7 @@ bool write_png(char *file_name, unsigned char *pdata, int width, int height)
 #endif
     png_set_text(png_ptr, info_ptr, text_ptr, 3);
 
-    /* Other optional chunks like cHRM, bKGD, tRNS, tIME, oFFs, pHYs */
-
-    /* Note that if sRGB is present the gAMA and cHRM chunks must be ignored
-     * on read and, if your application chooses to write them, they must
-     * be written in accordance with the sRGB profile
-     */
-
-    /* Write the file header information.  REQUIRED */
     png_write_info(png_ptr, info_ptr);
-
-    /* If you want, you can write the info in two steps, in case you need to
-     * write your private chunk ahead of PLTE:
-     *
-     *   png_write_info_before_PLTE(write_ptr, write_info_ptr);
-     *   write_my_chunk();
-     *   png_write_info(png_ptr, info_ptr);
-     *
-     * However, given the level of known- and unknown-chunk support in 1.2.0
-     * and up, this should no longer be necessary.
-     */
-
-    /* Once we write out the header, the compression type on the text
-     * chunks gets changed to PNG_TEXT_COMPRESSION_NONE_WR or
-     * PNG_TEXT_COMPRESSION_zTXt_WR, so it doesn't get written out again
-     * at the end.
-     */
-
-    /* Set up the transformations you want.  Note that these are
-     * all optional.  Only call them if you want them.
-     */
 
     /* Invert monochrome pixels */
     png_set_invert_mono(png_ptr);
@@ -392,14 +329,7 @@ bool write_png(char *file_name, unsigned char *pdata, int width, int height)
 
     /* It is REQUIRED to call this to finish writing the rest of the file */
     png_write_end(png_ptr, info_ptr);
-#endif hilevel
 
-    /* If you png_malloced a palette, free it here (don't free info_ptr->palette,
-     * as recommended in versions 1.0.5m and earlier of this example; if
-     * libpng mallocs info_ptr->palette, libpng will free it).  If you
-     * allocated it with malloc() instead of png_malloc(), use free() instead
-     * of png_free().
-     */
     png_free(png_ptr, palette);
     palette = NULL;
 
@@ -411,11 +341,7 @@ bool write_png(char *file_name, unsigned char *pdata, int width, int height)
      */
 //    png_free(png_ptr, trans);
 //    trans = NULL;
-    /* Whenever you use png_free() it is a good idea to set the pointer to
-     * NULL in case your application inadvertently tries to png_free() it
-     * again.  When png_free() sees a NULL it returns without action, thus
-     * avoiding the double-free security problem.
-     */
+
 
     /* Clean up after the write, and free any memory allocated */
     png_destroy_write_struct(&png_ptr, &info_ptr);
@@ -425,4 +351,99 @@ bool write_png(char *file_name, unsigned char *pdata, int width, int height)
 
     /* That's it */
     return true;
+}
+
+
+void write_png_1(char *file_name, unsigned char *pdata, int width, int height)
+{
+    FILE *fp;
+    png_structp png_ptr;
+    png_infop info_ptr;
+    png_colorp palette;
+
+    /* 打开需要写入的文件 */
+    fp = fopen(file_name, "wb");
+    if (fp == NULL)
+        return;
+
+    /* 创建并初始化 png_struct 及其所需的错误处理函数，如果你想使用默
+     * 认的 stderr 和 longjump() 方法，你可以将最后三个参数设为 NULL，
+     * 在使用动态链接库的情况下，我们也会检测函数库版本是否与在编译时
+     * 使用的版本是否兼容。（必要）
+     */
+    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+    if (png_ptr == NULL)
+    {
+        fclose(fp);
+        return;
+    }
+
+    /* 分配内存并初始化图像信息数据。（必要）*/
+    info_ptr = png_create_info_struct(png_ptr);
+    if (info_ptr == NULL)
+    {
+        fclose(fp);
+        png_destroy_write_struct(&png_ptr,  NULL);
+        return;
+    }
+
+    /* 设置错误处理。如果你在调用 png_create_write_struct() 时没
+     * 有设置错误处理函数，那么这段代码是必须写的。*/
+    if (setjmp(png_jmpbuf(png_ptr)))
+    {
+        /* 如果程序跑到这里了，那么写入文件时出现了问题 */
+        fclose(fp);
+        png_destroy_write_struct(&png_ptr, &info_ptr);
+        return;
+    }
+
+    /* 设置输出控制，如果你使用的是 C 的标准 I/O 流 */
+//    png_init_io(png_ptr, fp);
+    png_set_write_fn(png_ptr, (void *) fp, user_write_fn, user_flush_function);
+
+    /* 这是一种复杂的做法 */
+
+    /* （必需）在这里设置图像的信息，宽度、高度的上限是 2^31。
+     * bit_depth 取值必需是 1、2、4、8 或者 16, 但是可用的值也依赖于 color_type。
+     * color_type 可选值有： PNG_COLOR_TYPE_GRAY、PNG_COLOR_TYPE_GRAY_ALPHA、
+     * PNG_COLOR_TYPE_PALETTE、PNG_COLOR_TYPE_RGB、PNG_COLOR_TYPE_RGB_ALPHA。
+     * interlace 可以是 PNG_INTERLACE_NONE 或 PNG_INTERLACE_ADAM7,
+     * 而 compression_type 和 filter_type 目前必需是 PNG_COMPRESSION_TYPE_BASE
+     * 和 and PNG_FILTER_TYPE_BASE。
+     */
+    int bit_depth = 8;
+    png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth, PNG_COLOR_TYPE_RGB_ALPHA,
+                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+
+    /* 写入文件头部信息（必需） */
+    png_write_info(png_ptr, info_ptr);
+
+    png_uint_32 k;
+    int bytes_per_pixel = 4;
+
+    /* 在这个示例代码中，"image" 是一个一维的字节数组（每个元素占一个字节空间） */
+    png_byte image[height*width*bytes_per_pixel];
+
+    png_bytepp row_pointers = malloc(height * sizeof(png_bytep));
+
+    if (height > PNG_UINT_32_MAX/(sizeof (png_bytep)))
+        png_error (png_ptr, "Image is too tall to process in memory");
+
+    /* 将这些像素行指针指向你的 "image" 字节数组中对应的位置，即：指向每行像素的起始处 */
+    for (k = 0; k < height; k++)
+        row_pointers[k] = image + k*width*bytes_per_pixel;
+
+    /* 一次调用就将整个图像写进文件 */
+    png_write_image(png_ptr, row_pointers);
+    /* 必需调用这个函数完成写入文件其余部分 */
+    png_write_end(png_ptr, info_ptr);
+    /* 写完后清理并释放已分配的内存 */
+    png_destroy_write_struct(&png_ptr, &info_ptr);
+    /* 关闭文件 */
+    fclose(fp);
+    free(row_pointers);
+
+    /* That's it */
+    return;
 }
