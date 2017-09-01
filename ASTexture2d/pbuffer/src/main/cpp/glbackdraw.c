@@ -13,6 +13,18 @@
 #define LOG_ERROR(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 #define SHADER_STRING(...) #__VA_ARGS__
 
+enum FBORenderTarget
+{
+    NORMAL_FBO,
+    NORMAL_TEXTURE,
+    NORMAL_COLOR_RBO,
+    NORMAL_DEPTH_RBO,
+    MULTISAMPLING_FBO,
+    MULTISAMPLING_TEXTURE,
+    MULTISAMPLING_COLOR_RBO,
+    MULTISAMPLING_DEPTH_RBO,
+};
+
 void printGLString(const char* name, GLenum em)
 {
     const char *s = (const char*)glGetString(em);
@@ -60,6 +72,36 @@ const GLfloat g_vertices[] =
 	1.0f, -1.0f
 };
 
+void drawText(char* row, int w, int h)
+{
+    glViewport(0, 0, w, h);
+
+    ////////////////////////////////////
+    GLuint vsh, fsh, program;
+    vsh = glCreateShader(GL_VERTEX_SHADER);
+    fsh = glCreateShader(GL_FRAGMENT_SHADER);
+    program = glCreateProgram();
+    glShaderSource(vsh, 1, (const GLchar**)&g_defaultVertexShaderString, NULL);
+    glShaderSource(fsh, 1, (const GLchar**)&g_defaultFragmentShaderString, NULL);
+    glCompileShader(vsh);
+    glCompileShader(fsh);
+    glAttachShader(program, vsh);
+    glAttachShader(program, fsh);
+    glLinkProgram(program);
+    glDeleteShader(vsh);
+    glDeleteShader(fsh);
+    glUseProgram(program);
+    GLuint vPosition = glGetAttribLocation(program, "vPosition");
+    checkGLError("glGetAttribLocation");
+    LOG_INFO("glGetAttribLocation(\"vPosition\") = %d\n", vPosition);
+    glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, g_vertices);
+    glEnableVertexAttribArray(vPosition);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, row);
+}
+
 void runBackDraw(char* row, int w, int h)
 {
     GLuint texture, renderBuffer, frameBuffer;
@@ -91,38 +133,69 @@ void runBackDraw(char* row, int w, int h)
     }
     else
     {
-        glViewport(0, 0, w, h);
-
-        ////////////////////////////////////
-        GLuint vsh, fsh, program;
-        vsh = glCreateShader(GL_VERTEX_SHADER);
-        fsh = glCreateShader(GL_FRAGMENT_SHADER);
-        program = glCreateProgram();
-        glShaderSource(vsh, 1, (const GLchar**)&g_defaultVertexShaderString, NULL);
-        glShaderSource(fsh, 1, (const GLchar**)&g_defaultFragmentShaderString, NULL);
-        glCompileShader(vsh);
-        glCompileShader(fsh);
-        glAttachShader(program, vsh);
-        glAttachShader(program, fsh);
-        glLinkProgram(program);
-        glDeleteShader(vsh);
-        glDeleteShader(fsh);
-        glUseProgram(program);
-        GLuint vPosition = glGetAttribLocation(program, "vPosition");
-        checkGLError("glGetAttribLocation");
-        LOG_INFO("glGetAttribLocation(\"vPosition\") = %d\n", vPosition);
-        glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, g_vertices);
-        glEnableVertexAttribArray(vPosition);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-        glPixelStorei(GL_PACK_ALIGNMENT, 1);
-        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, row);
+        drawText(row, w, h);
     }
 
     glDeleteTextures(1, &texture);
     glDeleteFramebuffers(1, &frameBuffer);
     glDeleteRenderbuffers(1, &renderBuffer);
 }
+
+
+void backDrawWithoutMultisampling(char* row, int rw, int rh)
+{
+    GLuint RenderRelatedIds[8];
+    glGenTextures(1, &RenderRelatedIds[NORMAL_TEXTURE]);
+    glBindTexture(GL_TEXTURE_2D, RenderRelatedIds[NORMAL_TEXTURE]);
+    {
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rw, rh, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+    glGenRenderbuffers(1, &RenderRelatedIds[NORMAL_COLOR_RBO]);
+    glBindRenderbuffer(GL_RENDERBUFFER, RenderRelatedIds[NORMAL_COLOR_RBO]);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, rw, rh);
+    glGenRenderbuffers(1, &RenderRelatedIds[NORMAL_DEPTH_RBO]);
+    glBindRenderbuffer(GL_RENDERBUFFER, RenderRelatedIds[NORMAL_DEPTH_RBO]);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, rw, rh);
+    glGenFramebuffers(1, &RenderRelatedIds[NORMAL_FBO]);
+    glBindFramebuffer(GL_FRAMEBUFFER, RenderRelatedIds[NORMAL_FBO]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, RenderRelatedIds[NORMAL_TEXTURE], 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, RenderRelatedIds[NORMAL_COLOR_RBO]);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, RenderRelatedIds[NORMAL_DEPTH_RBO]);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        LOG_ERROR("Image Handler initImageFBO failed!\n");
+    }
+    else
+    {
+        drawText(row, rw, rh);
+    }
+
+    glDeleteFramebuffers(1, &RenderRelatedIds[NORMAL_FBO]);
+    glDeleteFramebuffers(1, &RenderRelatedIds[NORMAL_COLOR_RBO]);
+    glDeleteFramebuffers(1, &RenderRelatedIds[NORMAL_DEPTH_RBO]);
+    glDeleteFramebuffers(1, &RenderRelatedIds[NORMAL_TEXTURE]);
+
+}
+
+//void backDrawWithMultisampling(char* row, int rw, int rh)
+//{
+//    glGenTextures(1, &RenderRelatedIds[MULTISAMPLING_TEXTURE]);
+//    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, RenderRelatedIds[MULTISAMPLING_TEXTURE]);
+//    {
+//        glTexParameterf(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//        glTexParameterf(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+//        glTexParameterf(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//        glTexParameterf(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_GENERATE_MIPMAP, GL_TRUE);
+//    }
+//    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, rw, rh, GL_TRUE);
+//}
 
 
 JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_getGLBackDrawImage(JNIEnv *env, jclass cls, jobject bitmap)
@@ -156,6 +229,7 @@ JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_getGLBa
     }
 
     runBackDraw(row, w, h);
+//    backDrawWithoutMultisampling(row, w, h);
     LOG_INFO("unlocking pixels");
     AndroidBitmap_unlockPixels(env, bitmap);
 }

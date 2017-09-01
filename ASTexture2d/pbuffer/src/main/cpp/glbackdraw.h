@@ -7,11 +7,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     org_wysaid_ndkopenglbackdraw_GLHelpFunctions
- * Method:    getGLBackDrawImage
- * Signature: (Landroid/graphics/Bitmap;)V
- */
+
 JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_getGLBackDrawImage
   (JNIEnv *, jclass, jobject);
 
