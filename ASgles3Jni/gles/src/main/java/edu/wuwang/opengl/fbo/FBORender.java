@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 import edu.wuwang.opengl.filter.AFilter;
 import edu.wuwang.opengl.filter.GrayFilter;
@@ -70,6 +71,13 @@ public class FBORender implements GLSurfaceView.Renderer {
                 GLES20.GL_TEXTURE_2D, fTexture[1], 0);
             GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_DEPTH_ATTACHMENT,
                 GLES20.GL_RENDERBUFFER, fRender[0]);
+//            GLES20.glFramebufferRenderbuffer(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+//                    GLES20.GL_RENDERBUFFER, fRender[0]);
+            int error = GLES20.glGetError();
+            if( error != GLES20.GL_NO_ERROR)
+            {
+                Log.e("error", "error");
+            }
             GLES20.glViewport(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
             mFilter.setTextureId(fTexture[0]);
             mFilter.draw();

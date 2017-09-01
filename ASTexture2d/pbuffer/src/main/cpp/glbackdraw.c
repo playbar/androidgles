@@ -3,6 +3,7 @@
 #include <android/bitmap.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include "glbackdraw.h"
 
 #ifndef LOG_TAG
 #define LOG_TAG "NDKOpenGLBackDraw"

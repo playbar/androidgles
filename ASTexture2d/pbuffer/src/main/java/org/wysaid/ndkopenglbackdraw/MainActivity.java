@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 public class MainActivity extends Activity {
 	static
 	{
-		System.loadLibrary("NDKOpenGLBackDraw");
+		System.loadLibrary("pbuffer");
 	}
 	
 	@SuppressLint("NewApi")

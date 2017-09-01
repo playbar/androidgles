@@ -9,10 +9,11 @@ android {
         minSdkVersion 24
         targetSdkVersion 25
 
-        ndk {
-            moduleName "NDKOpenGLBackDraw"
-            abiFilters "armeabi"
-            ldLibs "log", "android", "EGL", "GLESv2", "jnigraphics"
+        externalNativeBuild {
+            cmake {
+                abiFilters 'armeabi-v7a'
+                arguments '-DANDROID_TOOLCHAIN=clang'
+            }
         }
     }
 
@@ -22,4 +23,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+
 }
