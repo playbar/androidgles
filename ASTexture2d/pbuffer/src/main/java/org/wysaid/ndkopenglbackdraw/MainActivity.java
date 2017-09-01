@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 
 public class MainActivity extends Activity {
 	static
@@ -33,6 +34,7 @@ public class MainActivity extends Activity {
 
 		Bitmap displayBitmap = ((BitmapDrawable)displayView.getDrawable()).getBitmap();
 		Canvas canvas = new Canvas(bitmap);
+//        canvas.drawBitmap(displayBitmap, 0, 0, null);
 		for(int i = 0; i < bitmap.getHeight(); i += displayBitmap.getHeight()) {
 			for(int j = 0; j < bitmap.getWidth(); j += displayBitmap.getWidth()) {
 				canvas.drawBitmap(displayBitmap, j, i, null);

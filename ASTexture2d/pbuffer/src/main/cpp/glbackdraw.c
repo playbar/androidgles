@@ -83,8 +83,7 @@ void runBackDraw(char* row, int w, int h)
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, w, h);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-        GL_RENDERBUFFER, renderBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderBuffer);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {

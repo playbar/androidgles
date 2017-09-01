@@ -23,15 +23,20 @@ public class GLHelpFunctions {
 	static int[] num_config = new int[1];
 
 	@SuppressLint("InlinedApi")
-	static int[] configSpec = { EGL10.EGL_SURFACE_TYPE, EGL10.EGL_PBUFFER_BIT,
+	static int[] configSpec = {
+			EGL10.EGL_SURFACE_TYPE, EGL10.EGL_PBUFFER_BIT,
 			EGL10.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
-			EGL10.EGL_RED_SIZE, 8, EGL10.EGL_GREEN_SIZE, 8,
-			EGL10.EGL_BLUE_SIZE, 8, EGL10.EGL_ALPHA_SIZE, 8, EGL10.EGL_NONE };
+			EGL10.EGL_RED_SIZE, 8,
+			EGL10.EGL_GREEN_SIZE, 8,
+			EGL10.EGL_BLUE_SIZE, 8,
+			EGL10.EGL_ALPHA_SIZE, 8,
+			EGL10.EGL_NONE };
 	// eglCreatePbufferSurface used this config
 	static int attribListPbuffer[] = {
-			// The NDK code would never draw to Pbuffer, so it's not neccessary to
-			// match anything.
-			EGL10.EGL_WIDTH, 32, EGL10.EGL_HEIGHT, 32, EGL10.EGL_NONE };
+			EGL10.EGL_WIDTH, 32,
+			EGL10.EGL_HEIGHT, 32,
+			EGL10.EGL_NONE
+	};
 	static EGL10 mEgl;
 	static GL10 gl;
 	static javax.microedition.khronos.egl.EGLSurface mEglPBSurface;
