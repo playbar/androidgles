@@ -48,6 +48,7 @@
 #ifdef ANDROID
 #include <android/log.h>
 #include "android_native_app_glue.h"
+#include "my_log.h"
 #include <android/asset_manager.h>
 typedef AAsset esFile;
 #else
@@ -241,6 +242,11 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
    {
       return GL_FALSE;
    }
+
+    LOGI("GL Vendor: \"%s\"\n", glGetString(GL_VENDOR));
+    LOGI("GL Renderer: \"%s\"\n", glGetString(GL_RENDERER));
+    LOGI("GL Version: \"%s\"\n", glGetString(GL_VERSION));
+    LOGI("GL Extensions: \"%s\"\n", glGetString(GL_EXTENSIONS));
 
 #endif // #ifndef __APPLE__
 

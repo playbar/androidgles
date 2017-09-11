@@ -151,6 +151,9 @@ GLuint ESUTIL_API esLoadProgram ( const char *vertShaderSrc, const char *fragSha
    glAttachShader ( programObject, vertexShader );
    glAttachShader ( programObject, fragmentShader );
 
+    glBindAttribLocation(programObject, 0, "aPosition");
+    glBindAttribLocation(programObject, 1, "aColor");
+
    // Link the program
    glLinkProgram ( programObject );
 

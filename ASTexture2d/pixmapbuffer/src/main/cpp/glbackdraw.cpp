@@ -16,7 +16,7 @@
 
 static EGLImageKHR gImg;
 static bool gUseImg = false;
-//#define EGLIMAGE 1
+#define EGLIMAGE 1
 
 enum FBORenderTarget
 {
@@ -57,18 +57,18 @@ void main()
 );
 
 #ifdef EGLIMAGE
-const char* const g_defaultFragmentShaderString = SHADER_STRING
-(
-precision mediump float;
-varying vec2 textureCoordinate;
-uniform samplerExternalOES myTexture;
-void main()
-{
-    vec4 textureColor = texture2D(myTexture, textureCoordinate);
-    textureColor.rb += textureCoordinate.xy;
-    gl_FragColor = textureColor;
-}
-);
+const char* const g_defaultFragmentShaderString =
+"#extension GL_OES_EGL_image_external : require     \n"
+"precision mediump float;                           \n"
+"varying vec2 textureCoordinate;                    \n"
+"uniform samplerExternalOES myTexture;              \n"
+"void main()                                        \n"
+"{                                                  \n"
+"    vec4 textureColor = texture2D(myTexture, textureCoordinate); \n"
+"    textureColor.rb += textureCoordinate.xy;       \n"
+"    gl_FragColor = textureColor;                   \n"
+"}                                                  \n";
+
 #else
 const char* const g_defaultFragmentShaderString = SHADER_STRING
 (
@@ -141,18 +141,13 @@ void runBackDraw(char* row, int w, int h)
     glGenTextures(1, &texture);
     LOG_INFO("Input Image Texture id %d\n", texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     if( gUseImg )
     {
-//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, row);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, row);
         EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
         gImg = eglCreateImageKHR(eglGetCurrentDisplay(), eglGetCurrentContext(),
                                  EGL_GL_TEXTURE_2D_KHR,
-                                 (EGLClientBuffer)row,
+                                 (EGLClientBuffer)texture,
                                  eglImgAttrs);
         if( gImg == EGL_NO_IMAGE_KHR)
         {
@@ -164,6 +159,11 @@ void runBackDraw(char* row, int w, int h)
     else {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, row);
     }
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 
     glGenFramebuffers(1, &frameBuffer);
