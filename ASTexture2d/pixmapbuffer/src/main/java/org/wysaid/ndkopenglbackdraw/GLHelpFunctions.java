@@ -24,7 +24,7 @@ public class GLHelpFunctions {
 
 	@SuppressLint("InlinedApi")
 	static int[] configSpec = {
-			EGL10.EGL_SURFACE_TYPE, EGL10.EGL_PBUFFER_BIT,
+			EGL10.EGL_SURFACE_TYPE, EGL10.EGL_PIXMAP_BIT,
 			EGL10.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
 			EGL10.EGL_RED_SIZE, 8,
 			EGL10.EGL_GREEN_SIZE, 8,
@@ -54,12 +54,9 @@ public class GLHelpFunctions {
 		if (mEglContext == EGL10.EGL_NO_CONTEXT) {
 			Log.d("ERROR:", "eglCreateContext Failed!");
 		}
-		mEglPBSurface = mEgl.eglCreatePbufferSurface(mEglDisplay, mEglConfig, attribListPbuffer);
-		if (mEglPBSurface == EGL10.EGL_NO_SURFACE) {
-				Log.d("ERROR:", "eglCreatePbufferSurface Failed!");
-		}
 
-//		mEglPBSurface = mEgl.eglCreatePixmapSurface(mEglDisplay, mEglConfig, attribListPbuffer, null);
+
+		mEglPBSurface = mEgl.eglCreatePixmapSurface(mEglDisplay, mEglConfig, attribListPbuffer, null);
 //		if (mEglPBSurface == EGL10.EGL_NO_SURFACE) {
 //			Log.d("ERROR:", "eglCreatePbufferSurface Failed!");
 //		}
