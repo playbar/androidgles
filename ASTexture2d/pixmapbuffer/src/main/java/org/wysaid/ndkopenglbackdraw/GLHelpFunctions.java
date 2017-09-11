@@ -13,6 +13,7 @@ import android.util.Log;
 
 public class GLHelpFunctions {
 
+	public static native void drawImgtargetTex(Bitmap bm);
 	public static native void getGLBackDrawImage(Bitmap bm);
 
 	// use GLES2.0.

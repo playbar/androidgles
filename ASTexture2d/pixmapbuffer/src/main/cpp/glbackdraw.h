@@ -8,8 +8,8 @@
 extern "C" {
 #endif
 
-JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_getGLBackDrawImage
-  (JNIEnv *, jclass, jobject);
+JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_getGLBackDrawImage(JNIEnv *, jclass, jobject);
+JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_drawImgtargetTex(JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
 }

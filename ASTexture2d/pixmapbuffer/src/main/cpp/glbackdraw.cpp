@@ -1,8 +1,9 @@
 #include <jni.h>
 #include <android/log.h>
 #include <android/bitmap.h>
-#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
 #include <GLES2/gl2ext.h>
+#include <egl/eglext.h>
 #include "glbackdraw.h"
 
 #ifndef LOG_TAG
@@ -12,6 +13,9 @@
 #define LOG_INFO(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define LOG_ERROR(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 #define SHADER_STRING(...) #__VA_ARGS__
+
+static EGLImageKHR gImg;
+static bool gUseImg = false;
 
 enum FBORenderTarget
 {
@@ -99,7 +103,14 @@ void drawText(char* row, int w, int h)
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
-    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, row);
+    if( gUseImg )
+    {
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, gImg);
+    }
+    else {
+        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, row);
+    }
+    return;
 }
 
 void runBackDraw(char* row, int w, int h)
@@ -114,11 +125,17 @@ void runBackDraw(char* row, int w, int h)
     LOG_INFO("Input Image Texture id %d\n", texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, row);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    if( gUseImg )
+    {
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, gImg);
+    }
+    else {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, row);
+    }
 
     glGenFramebuffers(1, &frameBuffer);
     glGenRenderbuffers(1, &renderBuffer);
@@ -139,6 +156,8 @@ void runBackDraw(char* row, int w, int h)
     glDeleteTextures(1, &texture);
     glDeleteFramebuffers(1, &frameBuffer);
     glDeleteRenderbuffers(1, &renderBuffer);
+    eglDestroyImageKHR(eglGetCurrentDisplay(), gImg);
+    return;
 }
 
 
@@ -197,9 +216,53 @@ void backDrawWithoutMultisampling(char* row, int rw, int rh)
 //    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA, rw, rh, GL_TRUE);
 //}
 
+JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_drawImgtargetTex(JNIEnv *env, jclass cls, jobject bitmap)
+{
+    gUseImg = true;
+    AndroidBitmapInfo info;
+    int w, h, ret;
+    char* row;
+
+    if ((ret = AndroidBitmap_getInfo(env, bitmap, &info)) < 0)
+    {
+        LOG_ERROR("AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return;
+    }
+
+    LOG_INFO("color image :: width is %d; height is %d; stride is %d; format is %d;flags is %d", info.width, info.height, info.stride, info.format, info.flags);
+
+    if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888)
+    {
+        LOG_ERROR("Bitmap format is not RGBA_8888 !");
+        return;
+    }
+
+    w = info.width;
+    h = info.height;
+    ret = AndroidBitmap_lockPixels(env, bitmap, (void**) &row);
+
+    if (ret < 0)
+    {
+        LOG_ERROR("AndroidBitmap_lockPixels() failed ! error=%d", ret);
+        return ;
+    }
+
+    EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
+    gImg = eglCreateImageKHR(eglGetDisplay(EGL_DEFAULT_DISPLAY), EGL_NO_CONTEXT,
+                                        EGL_NATIVE_BUFFER_ANDROID,
+                                        (EGLClientBuffer)row,
+                                        eglImgAttrs);
+
+
+    runBackDraw(row, w, h);
+//    backDrawWithoutMultisampling(row, w, h);
+    LOG_INFO("unlocking pixels");
+    AndroidBitmap_unlockPixels(env, bitmap);
+}
 
 JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_getGLBackDrawImage(JNIEnv *env, jclass cls, jobject bitmap)
 {
+    gUseImg = false;
     AndroidBitmapInfo info;
     int w, h, ret;
     char* row;
