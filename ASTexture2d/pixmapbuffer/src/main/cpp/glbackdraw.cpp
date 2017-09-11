@@ -16,6 +16,7 @@
 
 static EGLImageKHR gImg;
 static bool gUseImg = false;
+//#define EGLIMAGE 1
 
 enum FBORenderTarget
 {
@@ -55,6 +56,20 @@ void main()
 }
 );
 
+#ifdef EGLIMAGE
+const char* const g_defaultFragmentShaderString = SHADER_STRING
+(
+precision mediump float;
+varying vec2 textureCoordinate;
+uniform samplerExternalOES myTexture;
+void main()
+{
+    vec4 textureColor = texture2D(myTexture, textureCoordinate);
+    textureColor.rb += textureCoordinate.xy;
+    gl_FragColor = textureColor;
+}
+);
+#else
 const char* const g_defaultFragmentShaderString = SHADER_STRING
 (
 precision mediump float;
@@ -67,6 +82,7 @@ void main()
     gl_FragColor = textureColor;
 }
 );
+#endif
 
 const GLfloat g_vertices[] =
 {
@@ -105,7 +121,8 @@ void drawText(char* row, int w, int h)
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     if( gUseImg )
     {
-        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, gImg);
+        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, row);
+//        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, gImg);
     }
     else {
         glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, row);
@@ -131,11 +148,23 @@ void runBackDraw(char* row, int w, int h)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     if( gUseImg )
     {
+//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, row);
+        EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
+        gImg = eglCreateImageKHR(eglGetCurrentDisplay(), eglGetCurrentContext(),
+                                 EGL_GL_TEXTURE_2D_KHR,
+                                 (EGLClientBuffer)row,
+                                 eglImgAttrs);
+        if( gImg == EGL_NO_IMAGE_KHR)
+        {
+            LOG_ERROR("eglCreateImageKHR failed");
+        }
+
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, gImg);
     }
     else {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, row);
     }
+
 
     glGenFramebuffers(1, &frameBuffer);
     glGenRenderbuffers(1, &renderBuffer);
@@ -246,13 +275,6 @@ JNIEXPORT void JNICALL Java_org_wysaid_ndkopenglbackdraw_GLHelpFunctions_drawImg
         LOG_ERROR("AndroidBitmap_lockPixels() failed ! error=%d", ret);
         return ;
     }
-
-    EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
-    gImg = eglCreateImageKHR(eglGetDisplay(EGL_DEFAULT_DISPLAY), EGL_NO_CONTEXT,
-                                        EGL_NATIVE_BUFFER_ANDROID,
-                                        (EGLClientBuffer)row,
-                                        eglImgAttrs);
-
 
     runBackDraw(row, w, h);
 //    backDrawWithoutMultisampling(row, w, h);

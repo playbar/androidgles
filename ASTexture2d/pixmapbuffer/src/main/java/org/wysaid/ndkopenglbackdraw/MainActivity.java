@@ -53,7 +53,8 @@ public class MainActivity extends Activity {
 		public void onClick(View view) {
 			// TODO Auto-generated method stub
 			GLHelpFunctions.enableEGL();
-			GLHelpFunctions.getGLBackDrawImage(bitmap);
+//			GLHelpFunctions.getGLBackDrawImage(bitmap);
+            GLHelpFunctions.drawImgtargetTex(bitmap);
 			displayView.setImageBitmap(bitmap);
 		}
 	};
