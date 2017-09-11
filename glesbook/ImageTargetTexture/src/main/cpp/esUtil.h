@@ -50,8 +50,8 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #endif
-#ifdef __cplusplus
 
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -136,6 +136,9 @@ struct ESContext
 };
 
 
+int esMain ( ESContext *esContext );
+
+GLboolean WinCreate ( ESContext *esContext, const char *title );
 ///
 //  Public Functions
 //

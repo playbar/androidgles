@@ -92,7 +92,7 @@ GLuint ESUTIL_API esLoadShader ( GLenum type, const char *shaderSrc )
 
       if ( infoLen > 1 )
       {
-         char *infoLog = malloc ( sizeof ( char ) * infoLen );
+         char *infoLog = (char*)malloc ( sizeof ( char ) * infoLen );
 
          glGetShaderInfoLog ( shader, infoLen, NULL, infoLog );
          esLogMessage ( "Error compiling shader:\n%s\n", infoLog );
@@ -165,7 +165,7 @@ GLuint ESUTIL_API esLoadProgram ( const char *vertShaderSrc, const char *fragSha
 
       if ( infoLen > 1 )
       {
-         char *infoLog = malloc ( sizeof ( char ) * infoLen );
+         char *infoLog = (char *)malloc ( sizeof ( char ) * infoLen );
 
          glGetProgramInfoLog ( programObject, infoLen, NULL, infoLog );
          esLogMessage ( "Error linking program:\n%s\n", infoLog );

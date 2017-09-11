@@ -120,7 +120,7 @@ static void HandleCommand ( struct android_app *pApp, int32_t cmd )
 //  Global extern.  The application must declare this function
 //  that runs the application.
 //
-extern int esMain ( ESContext *esContext );
+
 
 //////////////////////////////////////////////////////////////////
 //

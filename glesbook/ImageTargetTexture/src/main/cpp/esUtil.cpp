@@ -44,7 +44,6 @@
 #include <stdarg.h>
 #include <string.h>
 #include "esUtil.h"
-#include "esUtil_win.h"
 
 #ifdef ANDROID
 #include <android/log.h>
