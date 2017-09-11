@@ -22,21 +22,22 @@ public class GLHelpFunctions {
 	static EGLConfig[] configs = new EGLConfig[1];
 	static int[] num_config = new int[1];
 
-	@SuppressLint("InlinedApi")
-	static int[] configSpec = {
-			EGL10.EGL_SURFACE_TYPE, EGL10.EGL_PIXMAP_BIT,
+	@SuppressLint("InlinedApi") static int[] configSpec = {
+			EGL10.EGL_SURFACE_TYPE, EGL10.EGL_PBUFFER_BIT,
 			EGL10.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT,
 			EGL10.EGL_RED_SIZE, 8,
 			EGL10.EGL_GREEN_SIZE, 8,
 			EGL10.EGL_BLUE_SIZE, 8,
 			EGL10.EGL_ALPHA_SIZE, 8,
-			EGL10.EGL_NONE };
+			EGL10.EGL_NONE
+	};
 	// eglCreatePbufferSurface used this config
 	static int attribListPbuffer[] = {
 			EGL10.EGL_WIDTH, 32,
 			EGL10.EGL_HEIGHT, 32,
 			EGL10.EGL_NONE
 	};
+
 	static EGL10 mEgl;
 	static GL10 gl;
 	static javax.microedition.khronos.egl.EGLSurface mEglPBSurface;
@@ -54,12 +55,11 @@ public class GLHelpFunctions {
 		if (mEglContext == EGL10.EGL_NO_CONTEXT) {
 			Log.d("ERROR:", "eglCreateContext Failed!");
 		}
+		mEglPBSurface = mEgl.eglCreatePbufferSurface(mEglDisplay, mEglConfig, attribListPbuffer);
+		if (mEglPBSurface == EGL10.EGL_NO_SURFACE) {			
+				Log.d("ERROR:", "eglCreatePbufferSurface Failed!");
+		}
 
-
-		mEglPBSurface = mEgl.eglCreatePixmapSurface(mEglDisplay, mEglConfig, attribListPbuffer, null);
-//		if (mEglPBSurface == EGL10.EGL_NO_SURFACE) {
-//			Log.d("ERROR:", "eglCreatePbufferSurface Failed!");
-//		}
 		if (!mEgl.eglMakeCurrent(mEglDisplay, mEglPBSurface, mEglPBSurface, mEglContext)) {
 			Log.d("ERROR:", "eglMakeCurrent failed:" + mEgl.eglGetError());
 		}
