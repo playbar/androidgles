@@ -20,6 +20,21 @@ add_library(glesbook SHARED
         libpng/pngwtran.c
         libpng/pngwutil.c
         libpng/pngutils.c
+        zlib/adler32.c
+        zlib/compress.c
+        zlib/crc32.c
+        zlib/deflate.c
+        zlib/gzclose.c
+        zlib/gzlib.c
+        zlib/gzread.c
+        zlib/gzwrite.c
+        zlib/infback.c
+        zlib/inffast.c
+        zlib/inflate.c
+        zlib/inftrees.c
+        zlib/trees.c
+        zlib/uncompr.c
+        zlib/zutil.c
         android_native_app_glue.c
         esShader.c
         esShapes.c
@@ -30,7 +45,15 @@ add_library(glesbook SHARED
         inlineHook.c
         relocate.c
         gleshook.c
-        gldrawback.c)
+        gldrawback.c
+        AssetStorage.cpp
+        EGLConfigChooser.cpp
+        nativeInterface.cpp
+        render.cpp)
+
+target_include_directories(glesbook PRIVATE
+                          ${CMAKE_CURRENT_SOURCE_DIR}
+                          ${CMAKE_CURRENT_SOURCE_DIR}/libpng )
 
 # Include libraries needed for hello-jni lib
 target_link_libraries(glesbook

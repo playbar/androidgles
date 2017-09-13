@@ -177,7 +177,7 @@ void BlitTextures ( ESContext *esContext )
 
 }
 
-void Draw_2( ESContext *esContext )
+void Draw( ESContext *esContext )
 {
    UserData *userData = (UserData *)esContext->userData;
     PixelFormat format = PIXEL_FORMAT_RGBA_8888;
@@ -288,7 +288,7 @@ void Draw_2( ESContext *esContext )
    glUseProgram(0);
 }
 
-void Draw( ESContext *esContext )
+void Draw_1( ESContext *esContext )
 {
    UserData *userData = (UserData *)esContext->userData;
    glUseProgram ( userData->programObject );
