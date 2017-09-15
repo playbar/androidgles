@@ -21,8 +21,8 @@ public class MainActivity extends Activity {
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
 		dispalyLayout = (LinearLayout) findViewById(R.id.displayLayout);
 		displayView = (ImageView) findViewById(R.id.imageView1);

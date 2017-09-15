@@ -111,6 +111,8 @@ struct ESContext
    /// Window height
    GLint       height;
 
+    EGLImageKHR pEGLImage;
+
 #ifndef __APPLE__
    /// Display handle
    EGLNativeDisplayType eglNativeDisplay;

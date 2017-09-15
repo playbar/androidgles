@@ -7,7 +7,8 @@ add_library(glesbook SHARED
             esTransform.c
             esUtil.c
             esUtil_Android.c
-            TextureWrap.c)
+            Simple_Texture2D.c
+)
 
 # Include libraries needed for hello-jni lib
 target_link_libraries(glesbook

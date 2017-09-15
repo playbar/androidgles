@@ -123,6 +123,7 @@ public:
 
     status_t lock(uint32_t usage, void** vaddr);
     status_t unlock();
+    status_t initCheck();
     ANativeWindowBuffer *getNativeBuffer() const;
     uint32_t getStride() const;
 

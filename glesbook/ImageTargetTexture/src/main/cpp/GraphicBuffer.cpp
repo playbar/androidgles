@@ -49,6 +49,16 @@ RT* callConstructor4 (void (*fptr)(), void* memory, T1 param1, T2 param2, T3 par
 #endif
 }
 
+template <typename RT, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
+RT* callConstructor7 (void (*fptr)(), void* memory, T1 param1, T2 param2, T3 param3, T4 param4, T5 param5, T6 param6, T7 param7)
+{
+    // C1 constructors return pointer
+    typedef RT* (*ABIFptr)(void*, T1, T2, T3, T4, T5, T6, T7);
+    (void)((ABIFptr)fptr)(memory, param1, param2, param3, param4, param5, param6, param7);
+    return reinterpret_cast<RT*>(memory);
+
+}
+
 template <typename T>
 void callDestructor (void (*fptr)(), T* obj)
 {
@@ -81,13 +91,20 @@ static android::android_native_base_t* getAndroidNativeBase (android::GraphicBuf
 GraphicBuffer::GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format, uint32_t usage):
     library("libui.so")
 {
-    setFuncPtr(functions.constructor, library, "_ZN7android13GraphicBufferC1Ejjij");
-    setFuncPtr(functions.destructor, library, "_ZN7android13GraphicBufferD1Ev");
+
+//    setFuncPtr(functions.constructor, library, "_ZN7android13GraphicBufferC1Ejjij");
+//    setFuncPtr(functions.destructor, library, "_ZN7android13GraphicBufferD1Ev");
+//    setFuncPtr(functions.getNativeBuffer, library, "_ZNK7android13GraphicBuffer15getNativeBufferEv");
+//    setFuncPtr(functions.lock, library, "_ZN7android13GraphicBuffer4lockEjPPv");
+//    setFuncPtr(functions.unlock, library, "_ZN7android13GraphicBuffer6unlockEv");
+//    setFuncPtr(functions.initCheck, library, "_ZNK7android13GraphicBuffer9initCheckEv");
+
+    setFuncPtr(functions.constructor, library, "_ZN7android13GraphicBufferC2EjjijjP13native_handleb");
+    setFuncPtr(functions.destructor, library, "_ZN7android13GraphicBufferD2Ev");
     setFuncPtr(functions.getNativeBuffer, library, "_ZNK7android13GraphicBuffer15getNativeBufferEv");
-    setFuncPtr(functions.lock, library, "_ZN7android13GraphicBuffer4lockEjPPv");
+    setFuncPtr(functions.lock, library, "_ZN7android13GraphicBuffer4lockEjRKNS_4RectEPPv");
     setFuncPtr(functions.unlock, library, "_ZN7android13GraphicBuffer6unlockEv");
     setFuncPtr(functions.initCheck, library, "_ZNK7android13GraphicBuffer9initCheckEv");
-
     // allocate memory for GraphicBuffer object
     void *const memory = malloc(GRAPHICBUFFER_SIZE);
     if (memory == nullptr) {
@@ -96,13 +113,14 @@ GraphicBuffer::GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format
     }
 
     try {
-        android::GraphicBuffer* const gb = callConstructor4<android::GraphicBuffer, uint32_t, uint32_t, PixelFormat, uint32_t>(
+        android::GraphicBuffer* const gb = callConstructor7<android::GraphicBuffer, uint32_t, uint32_t, PixelFormat, uint32_t>(
                 functions.constructor,
                 memory,
                 width,
                 height,
                 format,
-                usage
+                usage,
+                1, 0, 1
                 );
         android::android_native_base_t* const base = getAndroidNativeBase(gb);
         status_t ctorStatus = functions.initCheck(gb);
@@ -147,6 +165,11 @@ status_t GraphicBuffer::lock(uint32_t usage, void** vaddr)
 status_t GraphicBuffer::unlock()
 {
     return functions.unlock(impl);
+}
+
+status_t GraphicBuffer::initCheck()
+{
+    return functions.initCheck(impl);
 }
 
 ANativeWindowBuffer *GraphicBuffer::getNativeBuffer() const

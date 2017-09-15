@@ -13,8 +13,22 @@ add_library(glesbook SHARED
             esUtil.cpp
             esUtil_Android.cpp
             GraphicBuffer.cpp
+            Simple_Texture2D.cpp
             DynamicLibrary.cpp
-            ImageTargetTexture.cpp)
+            )
+
+
+target_include_directories(glesbook PRIVATE
+                          ${CMAKE_CURRENT_SOURCE_DIR}
+                          ${CMAKE_CURRENT_SOURCE_DIR}/core/include
+                          ${CMAKE_CURRENT_SOURCE_DIR}/core/libpixelflinger/include
+                          ${CMAKE_CURRENT_SOURCE_DIR}/libhardware/include
+                          ${CMAKE_CURRENT_SOURCE_DIR}/ics/include
+                          )
+
+add_library(lib_ui SHARED IMPORTED )
+set_target_properties(lib_ui PROPERTIES IMPORTED_LOCATION
+    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libui.so)
 
 # Include libraries needed for hello-jni lib
 target_link_libraries(glesbook

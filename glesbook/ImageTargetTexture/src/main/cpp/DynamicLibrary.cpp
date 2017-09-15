@@ -5,14 +5,17 @@
 
 DynamicLibrary::DynamicLibrary(const char *fileName)
 {
-    libHandle = dlopen(fileName, RTLD_LAZY);
+    libHandle = dlopen(NULL, RTLD_NOW);
+//    libHandle = dlopen(fileName, RTLD_NOW);
+//    const char *strerr = dlerror();
     if (!libHandle)
         throw OpenLibFailedException();
 }
 
 DynamicLibrary::~DynamicLibrary()
 {
-    if (libHandle) dlclose(libHandle);
+    if (libHandle)
+        dlclose(libHandle);
 }
 
 void *DynamicLibrary::getFunctionPtr(const char *name) const
