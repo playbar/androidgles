@@ -29,24 +29,44 @@ GLuint CreateSimpleTexture2D( ESContext *esContext)
    GLuint textureId;
 
    // 2x2 Image, 3 bytes per pixel (R, G, B)
-   GLubyte pixels[4 * 3] =
+   GLubyte pixels[4 * 4] =
    {
-      255,   0,   0, // Red
-        0, 255,   0, // Green
-        0,   0, 255, // Blue
-      255, 255,   0  // Yellow
+      255,   0,   0, 255, // Red
+        0, 255,   0, 255, // Green
+        0,   0, 255, 255, // Blue
+      255, 255,   0, 255  // Yellow
    };
 
     ANativeWindowBuffer *pbuffer;
 
     int usage = GraphicBuffer::USAGE_HW_TEXTURE | GraphicBuffer::USAGE_SW_READ_OFTEN | GraphicBuffer::USAGE_SW_WRITE_RARELY;
     GraphicBuffer *graphicBuffer = new GraphicBuffer( 2, 2, PIXEL_FORMAT_RGBA_8888, usage);
+    graphicBuffer->initCheck();
     EGLClientBuffer clientBuffer = graphicBuffer->getNativeBuffer();
-    const EGLint attrs[] = {EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE};
+
+    const EGLint buffer_att[] = {
+            EGL_WIDTH, 2,
+            EGL_HEIGHT, 2,
+            EGL_RED_SIZE, 8,
+            EGL_GREEN_SIZE, 8,
+            EGL_BLUE_SIZE, 8,
+            EGL_ALPHA_SIZE, 8,
+            EGL_NATIVE_BUFFER_USAGE_ANDROID, EGL_NATIVE_BUFFER_USAGE_TEXTURE_ANDROID,
+            EGL_NONE
+    };
+    EGLClientBuffer buffer = eglCreateNativeClientBufferANDROID(buffer_att);
+    EGLint attrs[] = {
+            EGL_IMAGE_PRESERVED_KHR,        EGL_TRUE,
+            EGL_IMAGE_CROP_LEFT_ANDROID,    0,
+            EGL_IMAGE_CROP_TOP_ANDROID,     0,
+            EGL_IMAGE_CROP_RIGHT_ANDROID,   2,
+            EGL_IMAGE_CROP_BOTTOM_ANDROID,  2,
+            EGL_NONE,
+    };
     esContext->pEGLImage = eglCreateImageKHR(eglGetCurrentDisplay(), EGL_NO_CONTEXT,
                                              EGL_NATIVE_BUFFER_ANDROID,
 //                                             EGL_GL_TEXTURE_2D_KHR,
-                                             (EGLClientBuffer)clientBuffer, attrs);
+                                             (EGLClientBuffer)buffer, NULL);
 
 //    status_t err = graphicBuffer->initCheck();
 //    if (err != OK)
@@ -55,14 +75,14 @@ GLuint CreateSimpleTexture2D( ESContext *esContext)
 //        return 0;
 //    }
 //
-
+//    memcpy(buffer, pixels, 4*4);
     // Use tightly packed data
     glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
     // Generate a texture object
     glGenTextures ( 1, &textureId );
     // Bind the texture object
     glBindTexture ( GL_TEXTURE_2D, textureId );
-    glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
+//    glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
     glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, esContext->pEGLImage);
@@ -70,9 +90,6 @@ GLuint CreateSimpleTexture2D( ESContext *esContext)
     // Load the texture
 //   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels );
     // Set the filtering mode
-
-
-
 
 
 //    EGLint lockAttribList[] = {
