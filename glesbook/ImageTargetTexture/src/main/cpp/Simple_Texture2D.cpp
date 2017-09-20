@@ -63,7 +63,8 @@ GLuint CreateSimpleTexture2D( ESContext *esContext)
             EGL_IMAGE_CROP_BOTTOM_ANDROID,  2,
             EGL_NONE,
     };
-    esContext->pEGLImage = eglCreateImageKHR(eglGetCurrentDisplay(), EGL_NO_CONTEXT,
+
+    esContext->pEGLImage = eglCreateImageKHR(eglGetCurrentDisplay(), esContext->eglContext,
                                              EGL_NATIVE_BUFFER_ANDROID,
 //                                             EGL_GL_TEXTURE_2D_KHR,
                                              (EGLClientBuffer)buffer, NULL);
@@ -82,9 +83,10 @@ GLuint CreateSimpleTexture2D( ESContext *esContext)
     glGenTextures ( 1, &textureId );
     // Bind the texture object
     glBindTexture ( GL_TEXTURE_2D, textureId );
-//    glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
+    glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
     glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, esContext->pEGLImage);
 
     // Load the texture
@@ -126,7 +128,7 @@ int Init ( ESContext *esContext )
       "{                                          \n"
       "   gl_Position = a_position;               \n"
       "   v_texCoord = a_texCoord;                \n"
-      "   gl_PointSize = 200.0;                   \n"
+      "   gl_PointSize = 100.0;                   \n"
       "}                                          \n";
 
    char fShaderStr[] =

@@ -40,12 +40,18 @@ GLuint CreateSimpleTexture2D( )
     GLubyte pixels[4 * 4] =
     {
             255,   0,   0, 255, // Red
-            255,   0, 255, 255, // Green
-            0,   255,   0, 255, // Blue
-            0, 255,   0, 255  // Yellow
+            0,   255,   0, 255, // Green
+            0,   0,   255, 255, // Blue
+            0, 255,   255, 255  // Yellow
     };
     int ilen = sizeof(pixels);
-    write_png("/sdcard/test.png", pixels, 2, 2);
+   int width, height;
+//   GLubyte *pdata = DecodePngFile("/sdcard/test.png", &width, &height);
+    pic_data data;
+    detect_png("/sdcard/test.png", &data);
+//    write_png("/sdcard/test.png", pixels, 2, 2);
+
+    write_png_file("/sdcard/test_file.png", &data);
    // Use tightly packed data
    glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
@@ -57,7 +63,7 @@ GLuint CreateSimpleTexture2D( )
    glBindTexture ( GL_TEXTURE_2D, textureId );
 
    // Load the texture
-   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
+   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, data.width, data.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.rgba );
 
    // Set the filtering mode
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -158,9 +164,9 @@ void Draw ( ESContext *esContext )
 //   sprintf( chId, "draw thread id=%u", seft );
    LOGI( "draw thread id=%u", seft  );
 
-    unsigned char *pdata = malloc(esContext->width * esContext->height * 4);
-    glReadPixels(0, 0, esContext->width, esContext->height, GL_RGBA, GL_UNSIGNED_BYTE, pdata);
-    write_png("/sdcard/test.png", pdata, esContext->width, esContext->height);
+//    unsigned char *pdata = malloc(esContext->width * esContext->height * 4);
+//    glReadPixels(0, 0, esContext->width, esContext->height, GL_RGBA, GL_UNSIGNED_BYTE, pdata);
+//    write_png("/sdcard/test.png", pdata, esContext->width, esContext->height);
     return;
 }
 
