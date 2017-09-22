@@ -1,78 +1,62 @@
-/*
- * Created by VisualGDB. Based on hello-jni example.
- * Copyright (C) 2009 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.baofeng.mojing.MojingTextureBaker;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.opengl.GLUtils;
-import android.view.View;
-import android.widget.Button;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.content.Context;
+import android.view.MotionEvent;
+import android.view.View;
 
-import com.baofeng.mojing.MojingTextureBaker.MojingTextureRender;
+import com.baofeng.mojing.MojingTextureBaker.MojingGLSurfaceView;
 
-import java.io.InputStream;
+import javax.microedition.khronos.opengles.GL;
 
-public class MojingTextureBaker extends Activity
-{
-    private GLSurfaceView mGlSurfaceView;
-    private Context mContext;
-    /** Called when the activity is first created. */
+public class MojingTextureBaker extends AppCompatActivity {
+    private MojingGLSurfaceView mMojingSurfaceView = null;
+
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
-        mGlSurfaceView = new GLSurfaceView(this);
-        setContentView(mGlSurfaceView);
-        mGlSurfaceView.setRenderer(new MojingTextureRender(this));
-        mGlSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        setContentView(R.layout.activity_main);
+        mMojingSurfaceView = (MojingGLSurfaceView) findViewById(R.id.gl_surfaceview);
+        mMojingSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+            float previousX, previousY;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event != null) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        previousX = event.getX();
+                        previousY = event.getY();
+                    } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                        final float deltaX = event.getX() - previousX;
+                        final float deltaY = event.getY() - previousY;
+
+                        previousX = event.getX();
+                        previousY = event.getY();
+
+                        mMojingSurfaceView.queueEvent(new Runnable() {
+                            @Override
+                            public void run() {
+                                mMojingSurfaceView.handleTouchDrag(
+                                        deltaX, deltaY);
+                            }
+                        });
+                    }
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
     }
+    public static native int BeginBaker(int iMaxSize);
+    public static native int AddTexture(int hHandle, int iTextureID, int iX, int iY, int iWidth, int iHeight);
+    public static native int RemoveTexture(int hHandle, int iTextureID, int iX, int iY, int iWidth, int iHeight);
+    public static native int GetBakerTextureSize(	int hHandle);
+    public static native String BakerTexture(int hHandle, int iTextureID, boolean bReplaceByBakedTexture);
+    public static native void EndBaker(int hHandle);
 
-        /* A native method that is implemented by the
-         * 'MojingTextureBaker' native library, which is packaged
-         * with this application.
-         */
-        public static native int BeginBaker(int iMaxSize);
-
-        public static native int AddTexture(int hHandle, int iTextureID, int iX, int iY, int iWidth, int iHeight);
-
-        public static native int RemoveTexture(int hHandle, int iTextureID, int iX, int iY, int iWidth, int iHeight);
-
-        public static native int GetBakerTextureSize(int hHandle);
-
-        public static native String BakerTexture(int hHandle, int iTextureID, boolean bReplaceByBakedTexture);
-
-        public static native void EndBaker(int hHandle);
-
-        public static native void OpenGLTest();
-
-		public static native int GLTest(int id);
-
-    /* this is used to load the 'MojingTextureBaker' library on application
-     * startup. The library has already been unpacked into
-     * /data/data/com.baofeng.mojing.MojingTextureBaker/lib/MojingTextureBaker.so at
-     * installation time by the package manager.
-     */
-        static {
-            System.loadLibrary("MojingTextureBaker");
-        }
+    static {
+        System.loadLibrary("MojingTextureBaker");
+    }
 }

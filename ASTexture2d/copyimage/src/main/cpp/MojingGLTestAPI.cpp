@@ -71,10 +71,10 @@ JNIEXPORT jint JNICALL Java_com_baofeng_mojing_MojingTextureBaker_MojingGLSurfac
 //	}
 //}
 //
-//// 4 ±£´æÍ¼Æ¬ ×î±¿µÄ°ì·¨£¬´ÓÏÔ´æÀïÃæ°ÑÊý¾Ý¿½±´³öÀ´
+//// 4 ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ ï¿½î±¿ï¿½Ä°ì·¨ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //void MojingTextureBakerAPI_SaveToImage(int iTextureID, int iWidth, int iHeight, const char *szImageFileName)
 //{
-//	// ½¨Á¢ FBO
+//	// ï¿½ï¿½ï¿½ï¿½ FBO
 //	unsigned int fbo;
 //	glGenFramebuffers(1, &fbo);
 //	glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
@@ -82,9 +82,9 @@ JNIEXPORT jint JNICALL Java_com_baofeng_mojing_MojingTextureBaker_MojingGLSurfac
 //	glEnable(GL_BLEND);
 //	glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, iTextureID, 0);
 //
-//	// Ñ¡ÖÐÊ¹ÓÃµÄÍ¼Æ¬
+//	// Ñ¡ï¿½ï¿½Ê¹ï¿½Ãµï¿½Í¼Æ¬
 //	glBindTexture(GL_TEXTURE_2D, iTextureID);
-//	// ¶ÁÈ¡Êý¾Ý
+//	// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 //	unsigned char *pPixelData = new unsigned char[iWidth * iHeight * 4];
 //	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 //	glReadPixels(0, 0, iWidth, iHeight,

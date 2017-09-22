@@ -31,7 +31,7 @@ namespace Baofeng
 		void MojingTextureBaker::Init()
 		{
 			int size = GetMaxSize();
-			m_iBinWidth = sqrt(size);
+			m_iBinWidth = size;
 			m_iBinHeight = m_iBinWidth;
 			root.left = root.right = 0;
 			root.x = root.y = 0;
@@ -57,7 +57,7 @@ namespace Baofeng
 			root.height = m_iBinHeight;
 			m_iBinWidth *= 2;
 			root.width = m_iBinWidth;
-			return m_iBinHeight * m_iBinWidth;
+			return m_iBinHeight;
 		}
 
 		Node* MojingTextureBaker::Insert(int width, int height, int index)
@@ -145,7 +145,10 @@ namespace Baofeng
 			if (root)
 			{
 				i++;
-
+				//SubTextureID:ID,    // ԭʼͼ��ID
+				//Position : [X, Y],         //��iTextureID�е����Ͻ�����
+				//Size : [W, H]              // ��ȡ��߶�
+				
 				if (root->left && root->right)
 				{
 					int len = sprintf(*lpResult + size,
@@ -157,8 +160,10 @@ namespace Baofeng
 					GLuint uiFramebuffer;
 					glGenFramebuffers(1, &uiFramebuffer);
 					glBindFramebuffer(GL_READ_FRAMEBUFFER, uiFramebuffer);
-					glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, GetBakerResultTextureId(), 0);
-					glBindTexture(GL_TEXTURE_2D, root->index);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    glEnable(GL_BLEND);
+					glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, root->index, 0);
+					glBindTexture(GL_TEXTURE_2D, GetBakerResultTextureId());
 					glCopyTexSubImage2D(GL_TEXTURE_2D, 0, root->x, root->y, 0, 0, root->width, root->height);
 					
 					glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
@@ -168,8 +173,8 @@ namespace Baofeng
 					//LOGI("MojingBaker:GetBakerResult result%d = %s, node size=%d", i, *lpResult, size);
 					//*lpResult = *lpResult + strlen(*lpResult) - 1;
 				}
-//				PreOrderTraversal(root->left, lpResult, size);
-//				PreOrderTraversal(root->right, lpResult, size);
+				PreOrderTraversal(root->left, lpResult, size);
+				PreOrderTraversal(root->right, lpResult, size);
 			}
 		}
 
@@ -195,7 +200,7 @@ namespace Baofeng
 			{
 				if (m_lTextureNodeList.size() > 0)
 				{
-					return m_lTextureNodeList.begin()->rect * m_lTextureNodeList.begin()->rect;
+					return m_lTextureNodeList.begin()->rect;
 				}
 			}
 			return m_iMaxSize;
@@ -282,6 +287,10 @@ namespace Baofeng
 				if (0 == Insert(iter->rect, iter->rect, iter->id))
 				{
 					iCurrentSize = DynamicAddSize();
+					if (iCurrentSize > m_iMaxSize)
+					{
+						return 0;
+					}
 					iter = m_lTextureNodeList.begin();
 				}
 				else

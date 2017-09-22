@@ -8,66 +8,66 @@
 extern "C"
 {
 	/*******************************************************************************************
-	*º¯Êý¹¦ÄÜ£º¿ªÊ¼Í¼Æ¬ºÏÅú¹¤×÷*
-	*ÊäÈëÖµ£º ºÏÅúºóÍ¼Æ¬µÄ×î´ó³ß´ç£¬±ØÐëÊÇ2µÄÕûÊý´ÎÃÝ¡£Ä¬ÈÏÖµ0 ±íÊ¾²»ÏÞÖÆ¡£
-	*·µ»ØÖµ£º ºÏÅú¹¤×÷×éµÄ¾ä±ú¡£ÊÇµ÷ÓÃºóÐøº¯ÊýÊ±±ØÐë´«ÈëµÄµÚÒ»¸ö²ÎÊý¡£±ØÐëÍ¨¹ýEndBakerº¯Êý½øÐÐÊÍ·Å¡£
+	*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½Ê¼Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ß´ç£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¡ï¿½Ä¬ï¿½ï¿½Öµ0 ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¾ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ë´«ï¿½ï¿½Äµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½EndBakerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·Å¡ï¿½
 	********************************************************************************************/
 	JNIEXPORT jint JNICALL Java_com_baofeng_mojing_MojingTextureBaker_MojingTextureBaker_BeginBaker(JNIEnv* env, jobject thiz,
 		jint iMaxSize);
 
 	/****************************************************************************************
-	* º¯Êý¹¦ÄÜ£ºÏòhHandleÖ¸¶¨µÄºÏÅú¹¤×÷×éÖÐÌí¼ÓÒ»¸öÍ¼Æ¬¡£
-	*ÊäÈëÖµ£º
-	*hHandle    ºÍÅú¹¤×÷×é¾ä±ú£¬ÓÉBeginBakerº¯Êý·µ»Ø¡£
-	*iTextureID  Í¼Æ¬µÄID
-	*iX £¬iY £¬iWidth £¬iHeight ·Ö±ðÓÃÀ´Ö¸¶¨±»ºÏÅúµÄ×ÖÍ¼ÏñÔÚiTextureIDÖÐµÄ·¶Î§£¬ÒÔÏñËØÎªµ¥Î»¡£
-	*·µ»ØÖµ£º ´óÓÚ0Ê±£¬±íÊ¾¼ÓÈë´ËÍ¼ÏñºóºÏÅúÍ¼Æ¬µÄ³ß´ç¡£·ñÔò±íÊ¾¼ÓÈëÊ§°Ü¡£
-	*¿ÉÄÜÊÇÓÉÓÚ³¬³öÁËBeginBakerº¯ÊýÊäÈëµÄiMaxSizeµÄÏÞÖÆ£¬»òÕßÖØ¸´Ìí¼Ó¡£
+	* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½hHandleÖ¸ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Í¼Æ¬ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
+	*hHandle    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BeginBakerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¡ï¿½
+	*iTextureID  Í¼Æ¬ï¿½ï¿½ID
+	*iX ï¿½ï¿½iY ï¿½ï¿½iWidth ï¿½ï¿½iHeight ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½iTextureIDï¿½ÐµÄ·ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Î»ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½0Ê±ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½Ä³ß´ç¡£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü¡ï¿½
+	*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½ï¿½ï¿½BeginBakerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iMaxSizeï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½Ó¡ï¿½
 	****************************************************************************************/
 	JNIEXPORT jint JNICALL Java_com_baofeng_mojing_MojingTextureBaker_MojingTextureBaker_AddTexture(JNIEnv* env, jobject thiz,
 		jint hHandle, jint iTextureID, jint iX, jint iY, jint iWidth, jint iHeight);
 
 	/************************************************************************
-	*º¯Êý¹¦ÄÜ£ºÏòhHandleÖ¸¶¨µÄºÏÅú¹¤×÷×éÖÐÉ¾³ýÒ»¸öÍ¼Æ¬¡£
-	*ÊäÈëÖµ£º
-	*hHandle    ºÍÅú¹¤×÷×é¾ä±ú£¬ÓÉBeginBakerº¯Êý·µ»Ø¡£
-	*iTextureID  Í¼Æ¬µÄID¡£0±íÊ¾É¾³ýËùÓÐÍ¼¡£
-	*iX £¬iY £¬iWidth £¬iHeight ·Ö±ðÓÃÀ´Ö¸¶¨±»ºÏÅúµÄ×ÖÍ¼ÏñÔÚiTextureIDÖÐµÄ·¶Î§£¬ÒÔÏñËØÎªµ¥Î»¡£
-	*Èç¹ûiX iY iWidth iHeight¾ùÎª0£¬±íÊ¾É¾³ýËùÓÐiTextureIDÖ¸¶¨µÄÍ¼Ïñ¡£
-	*·µ»ØÖµ£º ´óÓÚ0Ê±£¬±íÊ¾É¾³ý´ËÍ¼ÏñºóºÏÅúÍ¼Æ¬µÄ³ß´ç¡£·ñÔò±íÊ¾É¾³ýÊ§°Ü¡£¿ÉÄÜÊÇÓÉÓÚÃ»ÓÐÕÒµ½¶ÔÓ¦µÄÍ¼Æ¬¡£
+	*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½hHandleÖ¸ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Ò»ï¿½ï¿½Í¼Æ¬ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
+	*hHandle    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BeginBakerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¡ï¿½
+	*iTextureID  Í¼Æ¬ï¿½ï¿½IDï¿½ï¿½0ï¿½ï¿½Ê¾É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½
+	*iX ï¿½ï¿½iY ï¿½ï¿½iWidth ï¿½ï¿½iHeight ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½iTextureIDï¿½ÐµÄ·ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Î»ï¿½ï¿½
+	*ï¿½ï¿½ï¿½iX iY iWidth iHeightï¿½ï¿½Îª0ï¿½ï¿½ï¿½ï¿½Ê¾É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iTextureIDÖ¸ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½0Ê±ï¿½ï¿½ï¿½ï¿½Ê¾É¾ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½Ä³ß´ç¡£ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾É¾ï¿½ï¿½Ê§ï¿½Ü¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Í¼Æ¬ï¿½ï¿½
 	************************************************************************/
 	JNIEXPORT jint JNICALL Java_com_baofeng_mojing_MojingTextureBaker_MojingTextureBaker_RemoveTexture(JNIEnv* env, jobject thiz,
 		jint hHandle, jint iTextureID, jint iX, jint iY, jint iWidth, jint iHeight);
 
 	/************************************************************************
-	*º¯Êý¹¦ÄÜ£º»ñÈ¡hHandleÖ¸¶¨µÄºÏÅú¹¤×÷×éºÏÅúºóÍ¼Æ¬´óÐ¡¡£
-	*ÊäÈëÖµ£º
-	*hHandle    ºÍÅú¹¤×÷×é¾ä±ú£¬ÓÉBeginBakerº¯Êý·µ»Ø¡£
-	*·µ»ØÖµ£º
-	*´óÓÚ0£º          ºÏÅúºóÍ¼Æ¬´óÐ¡
-	*µÈÓÚ0£º          ºÏÅú¹¤×÷×éÎª¿Õ£¬Ã»ÓÐÌí¼Ó¹ýÈÎºÎÍ¼
-	*Ð¡ÓÚ0£º          Ã»ÓÐÕÒµ½¶ÔÓ¦µÄºÏÅú¹¤×÷×é
+	*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½È¡hHandleÖ¸ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½Ð¡ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
+	*hHandle    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BeginBakerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¡ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½0ï¿½ï¿½          ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½Ð¡
+	*ï¿½ï¿½ï¿½ï¿½0ï¿½ï¿½          ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Õ£ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ó¹ï¿½ï¿½Îºï¿½Í¼
+	*Ð¡ï¿½ï¿½0ï¿½ï¿½          Ã»ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½Ó¦ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	************************************************************************/
 	JNIEXPORT jint JNICALL Java_com_baofeng_mojing_MojingTextureBaker_MojingTextureBaker_GetBakerTextureSize(JNIEnv* env, jobject thiz,
 		jint hHandle);
 
 	/************************************************************************
-	*º¯Êý¹¦ÄÜ£º¶ÔhHandleÖ¸¶¨µÄºÏÅú¹¤×÷×éÖ´ÐÐºÏÅú¡£
-	*ÊäÈëÖµ£º
-	*hHandle       ºÍÅú¹¤×÷×é¾ä±ú£¬ÓÉBeginBakerº¯Êý·µ»Ø¡£
-	*iTextureID    ºÏÅúÊä³öÍ¼Æ¬µÄID, ±ß³¤²»µÃÐ¡ÓÚGetBakerTextureSize£¬ÇÒÍ¼Æ¬¸ñÊ½±ØÐëÓëËùÓÐ×ÓÍ¼ÏñÒ»ÖÂ
-	*bReplaceByBakedTexture Èç¹ûÎªTure£¬±íÊ¾ÓÃºÏÅúºóµÄiTextureIDºÍ×ÓÍ¼ÏñÔÚiTextureIDÖÐµÄ×ø±ê£¬Ìæ»»×ÓÍ¼ÏñµÄ²ÎÊý
-	*·µ»ØÖµ£º
+	*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½hHandleÖ¸ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ðºï¿½ï¿½ï¿½ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
+	*hHandle       ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BeginBakerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¡ï¿½
+	*iTextureID    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ID, ï¿½ß³ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½GetBakerTextureSizeï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ò»ï¿½ï¿½
+	*bReplaceByBakedTexture ï¿½ï¿½ï¿½ÎªTureï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iTextureIDï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½iTextureIDï¿½Ðµï¿½ï¿½ï¿½ï¿½ê£¬ï¿½æ»»ï¿½ï¿½Í¼ï¿½ï¿½Ä²ï¿½ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
 	jsonstring:
 	{
-	SubTextureCount: N,                    // ×ÓÍ¼ÏñµÄ×ÜÊý
-	BakedTextureSize : Size,                // ºÏÅúºóÍ¼ÏñµÄ±ä³¤
-	BakedTextureID : iTextureID,         // ºÏÅúºóÍ¼ÏñµÄID
+	SubTextureCount: N,                    // ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	BakedTextureSize : Size,                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ä±ä³¤
+	BakedTextureID : iTextureID,         // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ID
 	BakedTexture : [
 	{
-	SubTextureID:ID,    // Ô­Ê¼Í¼ÏñID
-	Position : [X, Y],         //ÔÚiTextureIDÖÐµÄ×óÉÏ½Ç×ø±ê
-	Size : [W, H]              // ¿í¶È¡¢¸ß¶È
+	SubTextureID:ID,    // Ô­Ê¼Í¼ï¿½ï¿½ID
+	Position : [X, Y],         //ï¿½ï¿½iTextureIDï¿½Ðµï¿½ï¿½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½
+	Size : [W, H]              // ï¿½ï¿½È¡ï¿½ï¿½ß¶ï¿½
 	},
 	...]
 	}
@@ -76,10 +76,10 @@ extern "C"
 		jint hHandle, jint iTextureID, jboolean bReplaceByBakedTexture);
 
 	/************************************************************************
-	*º¯Êý¹¦ÄÜ£º½áÊøhHandleÖ¸¶¨µÄÍ¼Æ¬ºÏÅú¹¤×÷
-	*ÊäÈëÖµ£º
-	*hHandle       ºÍÅú¹¤×÷×é¾ä±ú£¬ÓÉBeginBakerº¯Êý·µ»Ø¡£0±íÊ¾É¾³ýËùÓÐµÄBaker¶ÔÏó¡£
-	*·µ»ØÖµ£º ÎÞ¡£
+	*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½hHandleÖ¸ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
+	*hHandle       ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BeginBakerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¡ï¿½0ï¿½ï¿½Ê¾É¾ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Bakerï¿½ï¿½ï¿½ï¿½
+	*ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ ï¿½Þ¡ï¿½
 	************************************************************************/
 	JNIEXPORT void JNICALL Java_com_baofeng_mojing_MojingTextureBaker_MojingTextureBaker_EndBaker(JNIEnv* env, jobject thiz,
 		jint hHandle);
