@@ -551,7 +551,7 @@ Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj) {
 //        LOGE("Unsupported OpenGL ES version");
 //    }
 
-    g_renderer = createES2Renderer();
+    g_renderer = createES3Renderer();
 
 //    GPU_Sobel();
     Init();
