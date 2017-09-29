@@ -47,7 +47,8 @@ EGLBoolean (*old_eglSwapBuffers)(EGLDisplay dpy, EGLSurface surface) = NULL;
 EGLBoolean MJ_eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
 {
     LOGI("MJ_eglSwapBuffers");
-    return old_eglSwapBuffers(dpy, surface);
+    EGLBoolean re = old_eglSwapBuffers(dpy, surface);
+    return re;
 }
 
 EGLBoolean (*old_eglCopyBuffers)(EGLDisplay dpy, EGLSurface surface, EGLNativePixmapType target) = NULL;

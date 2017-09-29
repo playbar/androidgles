@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdlib>
 #include <iostream>
+#include <unistd.h>
 
 using std::string;
 
@@ -59,6 +60,17 @@ RT* callConstructor7 (void (*fptr)(), void* memory, T1 param1, T2 param2, T3 par
 
 }
 
+template <typename RT, typename T1, typename T2, typename T3, typename T4, typename T5>
+RT* callConstructor5 (void (*fptr)(), void* memory, T1 param1, T2 param2, T3 param3, T4 param4, T5 param5)
+{
+    // C1 constructors return pointer
+    typedef RT* (*ABIFptr)(void*, T1, T2, T3, T4, T5);
+    (void)((ABIFptr)fptr)(memory, param1, param2, param3, param4, param5);
+    return reinterpret_cast<RT*>(memory);
+
+}
+
+
 template <typename T>
 void callDestructor (void (*fptr)(), T* obj)
 {
@@ -88,7 +100,7 @@ static android::android_native_base_t* getAndroidNativeBase (android::GraphicBuf
     return pointerToOffset<android::android_native_base_t>(gb, 2 * sizeof(void *));
 }
 
-GraphicBuffer::GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format, uint32_t usage):
+GraphicBuffer::GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format, uint32_t usage, std::string requestorName):
     library("libui.so")
 {
 
@@ -100,6 +112,7 @@ GraphicBuffer::GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format
 //    setFuncPtr(functions.initCheck, library, "_ZNK7android13GraphicBuffer9initCheckEv");
 
     setFuncPtr(functions.constructor, library, "_ZN7android13GraphicBufferC2EjjijjP13native_handleb");
+    setFuncPtr(functions.constructor1, library, "_ZN7android13GraphicBufferC2EjjijNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE");
     setFuncPtr(functions.destructor, library, "_ZN7android13GraphicBufferD2Ev");
     setFuncPtr(functions.getNativeBuffer, library, "_ZNK7android13GraphicBuffer15getNativeBufferEv");
     setFuncPtr(functions.lock, library, "_ZN7android13GraphicBuffer4lockEjRKNS_4RectEPPv");
@@ -113,35 +126,78 @@ GraphicBuffer::GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format
     }
 
     try {
-        android::GraphicBuffer* const gb = callConstructor7<android::GraphicBuffer, uint32_t, uint32_t, PixelFormat, uint32_t>(
-                functions.constructor,
-                memory,
-                width,
-                height,
-                format,
-                usage,
-                1, 0, 1
-                );
-        android::android_native_base_t* const base = getAndroidNativeBase(gb);
-        status_t ctorStatus = functions.initCheck(gb);
+        if(!requestorName.empty())
+        {
+//            std::string str = "[eglCreateNativeClientBufferANDROID pid " +getpid() + "]";
 
-        if (ctorStatus) {
-            // ctor failed
-            callDestructor<android::GraphicBuffer>(functions.destructor, gb);
-            std::cerr << "GraphicBuffer ctor failed, initCheck returned "  << ctorStatus << std::endl;
+            char szTmp[256] = {0};
+            sprintf(szTmp, "[eglCreateNativeClientBufferANDROID pid %d]", getpid());
+
+            android::GraphicBuffer *const gb = callConstructor5<android::GraphicBuffer, uint32_t, uint32_t, PixelFormat, uint32_t>(
+                    functions.constructor,
+                    memory,
+                    width,
+                    height,
+                    format,
+                    usage,
+                    szTmp
+            );
+
+            android::android_native_base_t *const base = getAndroidNativeBase(gb);
+            status_t ctorStatus = functions.initCheck(gb);
+
+            if (ctorStatus) {
+                // ctor failed
+                callDestructor<android::GraphicBuffer>(functions.destructor, gb);
+                std::cerr << "GraphicBuffer ctor failed, initCheck returned " << ctorStatus
+                          << std::endl;
+            }
+
+            // check object layout
+            if (base->magic != 0x5f626672u) // "_bfr"
+                std::cerr << "GraphicBuffer layout unexpected" << std::endl;
+
+            // check object version
+            const uint32_t expectedVersion = sizeof(void *) == 4 ? 96 : 168;
+            if (base->version != expectedVersion)
+                std::cerr << "GraphicBuffer version unexpected" << std::endl;
+
+            base->incRef(base);
+            impl = gb;
         }
+        else {
+            android::GraphicBuffer *const gb = callConstructor7<android::GraphicBuffer, uint32_t, uint32_t, PixelFormat, uint32_t>(
+                    functions.constructor,
+                    memory,
+                    width,
+                    height,
+                    format,
+                    usage,
+                    1, 0, 1
+            );
 
-        // check object layout
-        if (base->magic != 0x5f626672u) // "_bfr"
-            std::cerr << "GraphicBuffer layout unexpected" << std::endl;
+            android::android_native_base_t *const base = getAndroidNativeBase(gb);
+            status_t ctorStatus = functions.initCheck(gb);
 
-        // check object version
-        const uint32_t expectedVersion = sizeof(void *) == 4 ? 96 : 168;
-        if (base->version != expectedVersion)
-            std::cerr << "GraphicBuffer version unexpected" << std::endl;
+            if (ctorStatus) {
+                // ctor failed
+                callDestructor<android::GraphicBuffer>(functions.destructor, gb);
+                std::cerr << "GraphicBuffer ctor failed, initCheck returned " << ctorStatus
+                          << std::endl;
+            }
 
-        base->incRef(base);
-        impl = gb;
+            // check object layout
+            if (base->magic != 0x5f626672u) // "_bfr"
+                std::cerr << "GraphicBuffer layout unexpected" << std::endl;
+
+            // check object version
+            const uint32_t expectedVersion = sizeof(void *) == 4 ? 96 : 168;
+            if (base->version != expectedVersion)
+                std::cerr << "GraphicBuffer version unexpected" << std::endl;
+
+            base->incRef(base);
+            impl = gb;
+        }
     } catch (...) {
         free(memory);
         throw;

@@ -84,6 +84,7 @@ struct GraphicBufferFunctions
     typedef ANativeWindowBuffer*	(*getNativeBufferFunc)	(const android::GraphicBuffer* buffer);
 
     genericFunc						constructor;
+    genericFunc						constructor1;
     genericFunc						destructor;
     lockFunc						lock;
     unlockFunc						unlock;
@@ -119,6 +120,7 @@ public:
     };
 
     GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format, uint32_t usage);
+    GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format, uint32_t usage, std::string requestorName);
     ~GraphicBuffer();
 
     status_t lock(uint32_t usage, void** vaddr);

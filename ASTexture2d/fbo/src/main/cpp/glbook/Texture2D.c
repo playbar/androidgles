@@ -40,9 +40,9 @@ GLuint CreateSimpleTexture2D( )
     GLubyte pixels[4 * 4] =
     {
             255,   0,   0, 255, // Red
-            255,   0, 255, 255, // Green
-            0,   255,   0, 255, // Blue
-            0, 255,   0, 255  // Yellow
+            0,   2550, 0,  255, // Green
+            0,   0,   255, 255, // Blue
+            255, 0,   255, 255  // Yellow
     };
     int ilen = sizeof(pixels);
     write_png("/sdcard/test.png", pixels, 2, 2);

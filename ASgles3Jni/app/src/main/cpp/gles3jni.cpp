@@ -203,7 +203,7 @@ GLuint CreateStorageTexture2D( )
 
     // Bind the texture object
     glBindTexture ( GL_TEXTURE_2D, textureId );
-    glTexStorage2D( GL_TEXTURE_2D, 0, GL_RGB, 2, 2 );
+//    glTexStorage2D( GL_TEXTURE_2D, 0, GL_RGB, 2, 2 );
 
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGB, GL_UNSIGNED_BYTE, pixels );
     // Load the texture
@@ -551,7 +551,7 @@ Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj) {
 //        LOGE("Unsupported OpenGL ES version");
 //    }
 
-    g_renderer = createES3Renderer();
+    g_renderer = createES2Renderer();
 
 //    GPU_Sobel();
     Init();

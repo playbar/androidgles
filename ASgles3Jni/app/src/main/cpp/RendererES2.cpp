@@ -18,7 +18,6 @@
 #include <EGL/egl.h>
 
 static const char VERTEX_SHADER[] =
-    "#version 100\n"
     "uniform mat2 scaleRot;\n"
     "uniform vec2 offset;\n"
     "attribute vec2 pos;\n"
@@ -30,11 +29,19 @@ static const char VERTEX_SHADER[] =
     "}\n";
 
 static const char FRAGMENT_SHADER[] =
-    "#version 100\n"
     "precision mediump float;\n"
     "varying vec4 vColor;\n"
     "void main() {\n"
     "    gl_FragColor = vColor;\n"
+//     "for (int i = 0; i < gl_MaxDrawBuffers; i++)"
+//    "{"
+//    " if(i==0)  gl_FragData[i] = vec4(1.0, 0.0, 0.0, 1.0);"
+//    " if(i==1)  gl_FragData[i] = vec4(0.0, 1.0, 0.0, 1.0);"
+//    " else gl_FragData[i] = vec4(0.0, 0.0, 1.0, 1.0);"
+//    "}"
+//    "   gl_FragData = vec4(1.0, 0.0, 0.0, 1.0);"
+//                "int i = 1;"
+//    "   gl_FragData[i] = vec4(1.0, 0.0, 0.0, 1.0);"
     "}\n";
 
 class RendererES2: public Renderer {
@@ -82,6 +89,9 @@ RendererES2::RendererES2()
 {}
 
 bool RendererES2::init() {
+
+    int maxbuffer = 0;
+//    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxbuffer);
     mProgram = createProgram(VERTEX_SHADER, FRAGMENT_SHADER);
     if (!mProgram)
         return false;

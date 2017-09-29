@@ -6,7 +6,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
 
 add_library(gles3jni SHARED
            gles3jni.cpp
-           RendererES3.cpp
            RendererES2.cpp
            ThreadPool.cpp
            ImageSobelFilter.cpp
@@ -20,7 +19,7 @@ add_library(gles3jni SHARED
 target_link_libraries(gles3jni
                       android
                       log
-                      GLESv3
+                      GLESv2
                       EGL )
 
 

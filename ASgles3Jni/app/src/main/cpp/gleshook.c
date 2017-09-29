@@ -81,8 +81,8 @@ void hookAllFun()
 {
     hook((uint32_t) glShaderSource, (uint32_t) MJ_glShaderSource, (uint32_t **) &old_glShaderSource);
     hook((uint32_t) glBindBuffer, (uint32_t) MJ_glBindBuffer, (uint32_t **) &old_glBindBuffer);
-    hook((uint32_t) glBindBufferRange, (uint32_t) MJ_glBindBufferRange, (uint32_t **) &old_glBindBufferRange);
-    hook((uint32_t) glBindBufferBase, (uint32_t) MJ_glBindBufferBase, (uint32_t **) &old_glBindBufferBase);
+//    hook((uint32_t) glBindBufferRange, (uint32_t) MJ_glBindBufferRange, (uint32_t **) &old_glBindBufferRange);
+//    hook((uint32_t) glBindBufferBase, (uint32_t) MJ_glBindBufferBase, (uint32_t **) &old_glBindBufferBase);
     hook((uint32_t) glBufferData, (uint32_t) MJ_glBufferData, (uint32_t **) &old_glBufferData);
     hook((uint32_t) glEnableVertexAttribArray, (uint32_t) MJ_glEnableVertexAttribArray, (uint32_t **) &old_glEnableVertexAttribArray);
     hook((uint32_t) glVertexAttribPointer, (uint32_t) MJ_glVertexAttribPointer, (uint32_t **) &old_glVertexAttribPointer);

@@ -39,8 +39,8 @@ GLuint CreateSimpleTexture2D( ESContext *esContext)
 
     ANativeWindowBuffer *pbuffer;
 
-    int usage = GraphicBuffer::USAGE_HW_TEXTURE | GraphicBuffer::USAGE_SW_READ_OFTEN | GraphicBuffer::USAGE_SW_WRITE_RARELY;
-    GraphicBuffer *graphicBuffer = new GraphicBuffer( 2, 2, PIXEL_FORMAT_RGBA_8888, usage);
+    int usage = GraphicBuffer::USAGE_HW_TEXTURE;
+    GraphicBuffer *graphicBuffer = new GraphicBuffer( 2, 2, PIXEL_FORMAT_RGBA_8888, usage, "string");
     graphicBuffer->initCheck();
     EGLClientBuffer clientBuffer = graphicBuffer->getNativeBuffer();
 
@@ -64,11 +64,6 @@ GLuint CreateSimpleTexture2D( ESContext *esContext)
             EGL_NONE,
     };
 
-    esContext->pEGLImage = eglCreateImageKHR(eglGetCurrentDisplay(), esContext->eglContext,
-                                             EGL_NATIVE_BUFFER_ANDROID,
-//                                             EGL_GL_TEXTURE_2D_KHR,
-                                             (EGLClientBuffer)buffer, NULL);
-
 //    status_t err = graphicBuffer->initCheck();
 //    if (err != OK)
 //    {
@@ -86,6 +81,18 @@ GLuint CreateSimpleTexture2D( ESContext *esContext)
     glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
     glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
     glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+
+//    esContext->pEGLImage = eglCreateImageKHR(eglGetCurrentDisplay(), NULL,
+//                                             EGL_NATIVE_BUFFER_ANDROID,
+////                                             EGL_GL_TEXTURE_2D_KHR,
+//                                             (EGLClientBuffer)buffer, NULL);
+
+    EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
+    esContext->pEGLImage = eglCreateImageKHR(eglGetCurrentDisplay(), eglGetCurrentContext(),
+//                                             EGL_NATIVE_BUFFER_ANDROID,
+                                             EGL_GL_TEXTURE_2D_KHR,
+                                             (EGLClientBuffer)textureId, eglImgAttrs);
+
 
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, esContext->pEGLImage);
 
@@ -196,8 +203,8 @@ void Draw ( ESContext *esContext )
    // Set the sampler texture unit to 0
    glUniform1i ( userData->samplerLoc, 0 );
 
-//   glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
-    glDrawArrays ( GL_POINTS, 0, 6 );
+   glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
+//    glDrawArrays ( GL_POINTS, 0, 6 );
 }
 
 ///
