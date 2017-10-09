@@ -102,6 +102,8 @@ bool RendererES2::init() {
 
     glGenBuffers(1, &mVB);
     glBindBuffer(GL_ARRAY_BUFFER, mVB);
+    int ilenver = sizeof(Vertex);
+    int ilen = sizeof(QUAD);
     glBufferData(GL_ARRAY_BUFFER, sizeof(QUAD), &QUAD[0], GL_STATIC_DRAW);
 
     LOGV("Using OpenGL ES 2.0 renderer");
@@ -139,7 +141,7 @@ void RendererES2::draw(unsigned int numInstances) {
     glUseProgram(mProgram);
 
     glBindBuffer(GL_ARRAY_BUFFER, mVB);
-    glVertexAttribPointer(mPosAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, pos));
+    glVertexAttribPointer(mPosAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, pos));
     glVertexAttribPointer(mColorAttrib, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, rgba));
     glEnableVertexAttribArray(mPosAttrib);
     glEnableVertexAttribArray(mColorAttrib);

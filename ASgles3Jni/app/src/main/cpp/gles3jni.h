@@ -24,7 +24,7 @@
 #if DYNAMIC_ES3
 #include "gl3stub.h"
 #else
-#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
 #endif
 
 #include "ThreadPool.h"
