@@ -74,6 +74,31 @@ enum PixelFormat
     PIXEL_FORMAT_RGBA_4444		= 7,
 };
 
+
+// ui/GraphicBuffer.h, hardware/gralloc.h
+enum {
+    USAGE_SW_READ_NEVER		= 0x00000000,
+    USAGE_SW_READ_RARELY	= 0x00000002,
+    USAGE_SW_READ_OFTEN		= 0x00000003,
+    USAGE_SW_READ_MASK		= 0x0000000f,
+
+    USAGE_SW_WRITE_NEVER	= 0x00000000,
+    USAGE_SW_WRITE_RARELY	= 0x00000020,
+    USAGE_SW_WRITE_OFTEN	= 0x00000030,
+    USAGE_SW_WRITE_MASK		= 0x000000f0,
+
+    USAGE_SOFTWARE_MASK		= USAGE_SW_READ_MASK | USAGE_SW_WRITE_MASK,
+
+    USAGE_PROTECTED			= 0x00004000,
+
+    USAGE_HW_TEXTURE		= 0x00000100,
+    USAGE_HW_RENDER			= 0x00000200,
+    USAGE_HW_2D				= 0x00000400,
+    USAGE_HW_COMPOSER		= 0x00000800,
+    USAGE_HW_VIDEO_ENCODER	= 0x00010000,
+    USAGE_HW_MASK			= 0x00071F00,
+};
+
 // ui/GraphicBuffer.h
 struct GraphicBufferFunctions
 {
@@ -95,29 +120,6 @@ struct GraphicBufferFunctions
 class GraphicBuffer
 {
 public:
-    // ui/GraphicBuffer.h, hardware/gralloc.h
-    enum {
-        USAGE_SW_READ_NEVER		= 0x00000000,
-        USAGE_SW_READ_RARELY	= 0x00000002,
-        USAGE_SW_READ_OFTEN		= 0x00000003,
-        USAGE_SW_READ_MASK		= 0x0000000f,
-
-        USAGE_SW_WRITE_NEVER	= 0x00000000,
-        USAGE_SW_WRITE_RARELY	= 0x00000020,
-        USAGE_SW_WRITE_OFTEN	= 0x00000030,
-        USAGE_SW_WRITE_MASK		= 0x000000f0,
-
-        USAGE_SOFTWARE_MASK		= USAGE_SW_READ_MASK | USAGE_SW_WRITE_MASK,
-
-        USAGE_PROTECTED			= 0x00004000,
-
-        USAGE_HW_TEXTURE		= 0x00000100,
-        USAGE_HW_RENDER			= 0x00000200,
-        USAGE_HW_2D				= 0x00000400,
-        USAGE_HW_COMPOSER		= 0x00000800,
-        USAGE_HW_VIDEO_ENCODER	= 0x00010000,
-        USAGE_HW_MASK			= 0x00071F00,
-    };
 
     GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format, uint32_t usage);
     GraphicBuffer(uint32_t width, uint32_t height, PixelFormat format, uint32_t usage, std::string requestorName);

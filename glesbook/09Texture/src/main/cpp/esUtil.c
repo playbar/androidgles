@@ -202,6 +202,93 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
          return GL_FALSE;
       }
 
+      int _alpha_size = 0;
+      int _bind_to_texture_rgb = 0;
+      int _bind_to_texture_rgba = 0;
+      int _blue_size = 0;
+      int _buffer_size = 0;
+      int _config_caveat = 0;
+      int _config_id = 0;
+      int _depth_size = 0;
+      int _green_size = 0;
+      int _red_size = 0;
+      int _level = 0;
+      int _stencil_size = 0;
+      int _max_pbuffer_width = 0;
+      int _max_pbuffer_height = 0;
+      int _max_pbuffer_pixels = 0;
+      int _max_swap_interval = 0;
+      int _min_swap_interval = 0;
+      int _native_renderable = 0;
+      int _native_visula_id = 0;
+      int _native_visual_type = 0;
+      int _samples = 0;
+      int _samples_buffers = 0;
+      int _surface_type = 0;
+      int _transparent_type = 0;
+      int _transparent_blue_value = 0;
+      int _transparent_green_value = 0;
+      int _transparent_red_value = 0;
+      int _alpha_mask_size = 0;
+      int _color_buffer_type = 0;
+      int _luminance_size = 0;
+      int _renderable_type = 0;
+      int _match_native_pixmap = 0;
+      int _conformant = 0;
+      EGLDisplay  _eglDisplay = esContext->eglDisplay;
+      for ( GLint c = 0 ; c < numConfigs ; ++c)
+      {
+         eglGetConfigAttrib( _eglDisplay, config, EGL_BUFFER_SIZE, &(_buffer_size));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_ALPHA_SIZE, &_alpha_size);
+         eglGetConfigAttrib( _eglDisplay, config, EGL_BLUE_SIZE, &(_blue_size));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_GREEN_SIZE, &(_green_size));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_RED_SIZE, &(_red_size));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_DEPTH_SIZE, &(_depth_size));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_STENCIL_SIZE, &(_stencil_size));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_CONFIG_CAVEAT, &(_config_caveat));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_CONFIG_ID, &(_config_id));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_LEVEL, &(_level));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_MAX_PBUFFER_HEIGHT, &(_max_pbuffer_height));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_MAX_PBUFFER_PIXELS, &(_max_pbuffer_pixels));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_MAX_PBUFFER_WIDTH, &(_max_pbuffer_width));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_NATIVE_RENDERABLE, &(_native_renderable));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_NATIVE_VISUAL_ID, &(_native_visula_id));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_NATIVE_VISUAL_TYPE, &(_native_visual_type));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_SAMPLES, &(_samples));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_SAMPLE_BUFFERS, &(_samples_buffers));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_SURFACE_TYPE, &(_surface_type));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_TRANSPARENT_TYPE, &(_transparent_type));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_TRANSPARENT_BLUE_VALUE, &(_transparent_blue_value));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_TRANSPARENT_GREEN_VALUE, &(_transparent_green_value));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_TRANSPARENT_RED_VALUE, &(_transparent_red_value));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_BIND_TO_TEXTURE_RGB, &(_bind_to_texture_rgb));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_BIND_TO_TEXTURE_RGBA, &(_bind_to_texture_rgba));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_MIN_SWAP_INTERVAL, &(_min_swap_interval));
+         eglGetConfigAttrib( _eglDisplay, config, EGL_MAX_SWAP_INTERVAL, &(_max_swap_interval));
+
+
+
+         /// etc etc etc for all those that you care about
+
+         if ( majorVersion >= 1 && minorVersion >= 2 )
+         {
+            // 1.2
+            eglGetConfigAttrib( _eglDisplay, config, EGL_LUMINANCE_SIZE, &(_luminance_size));
+            eglGetConfigAttrib( _eglDisplay, config, EGL_ALPHA_MASK_SIZE, &(_alpha_mask_size));
+            eglGetConfigAttrib( _eglDisplay, config, EGL_COLOR_BUFFER_TYPE, &(_color_buffer_type));
+            eglGetConfigAttrib( _eglDisplay, config, EGL_RENDERABLE_TYPE, &(_renderable_type));
+         }
+
+         eglGetConfigAttrib( _eglDisplay, config, EGL_MATCH_NATIVE_PIXMAP, &(_match_native_pixmap));
+         if ( majorVersion >= 1 && minorVersion >= 3 )
+         {
+            // 1.3
+            eglGetConfigAttrib( _eglDisplay, config, EGL_CONFORMANT, &(_conformant));
+         }
+
+      }
+
+
       if ( numConfigs < 1 )
       {
          return GL_FALSE;

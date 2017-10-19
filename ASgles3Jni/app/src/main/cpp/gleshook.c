@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <jni.h>
 #include <GLES3/gl3.h>
+#include <EGL/egl.h>
+#include <unistd.h>
 #include "mylog.h"
 #include "inlineHook.h"
 
@@ -56,6 +58,16 @@ void MJ_glVertexAttribPointer (GLuint indx, GLint size, GLenum type, GLboolean n
     return old_glVertexAttribPointer(indx, size, type, normalized, stride, ptr);
 }
 
+EGLAPI __eglMustCastToProperFunctionPointerType (*old_eglGetProcAddress)(const char *procname) = NULL;
+EGLAPI __eglMustCastToProperFunctionPointerType mj_eglGetProcAddress(const char *procname)
+{
+//    sys_call_stack();
+//    old_eglGetProcAddress(procname);
+    __eglMustCastToProperFunctionPointerType pfun = old_eglGetProcAddress(procname);
+    LOGI("mj_eglGetProcAddress, procename=%s, tid=%d", procname, gettid());
+    return pfun;
+}
+
 int hook(uint32_t target_addr, uint32_t new_addr, uint32_t **proto_addr)
 {
     if (registerInlineHook(target_addr, new_addr, proto_addr) != ELE7EN_OK) {
@@ -77,6 +89,7 @@ int unHook(uint32_t target_addr)
     return 0;
 }
 
+//void hookEglGetProcAddress(void * myEglGetProcAddress,void ** oldEglSwapBuffers);
 void hookAllFun()
 {
     hook((uint32_t) glShaderSource, (uint32_t) MJ_glShaderSource, (uint32_t **) &old_glShaderSource);
@@ -86,6 +99,8 @@ void hookAllFun()
     hook((uint32_t) glBufferData, (uint32_t) MJ_glBufferData, (uint32_t **) &old_glBufferData);
     hook((uint32_t) glEnableVertexAttribArray, (uint32_t) MJ_glEnableVertexAttribArray, (uint32_t **) &old_glEnableVertexAttribArray);
     hook((uint32_t) glVertexAttribPointer, (uint32_t) MJ_glVertexAttribPointer, (uint32_t **) &old_glVertexAttribPointer);
+    hook((uint32_t) eglGetProcAddress, (uint32_t)mj_eglGetProcAddress, (uint32_t **) &old_eglGetProcAddress);
+//    hookEglGetProcAddress((void*)mj_eglGetProcAddress, (void **) &old_eglGetProcAddress);
 }
 
 void unhookAllFun()

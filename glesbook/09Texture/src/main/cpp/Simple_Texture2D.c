@@ -37,6 +37,7 @@
 //
 #include <stdlib.h>
 #include "esUtil.h"
+#include "my_log.h"
 
 typedef struct
 {
@@ -134,6 +135,15 @@ int Init ( ESContext *esContext )
    userData->textureId = CreateSimpleTexture2D ();
 
    glClearColor ( 1.0f, 1.0f, 1.0f, 0.0f );
+
+   const unsigned char *strexten = glGetString(GL_EXTENSIONS) ;
+   LOGE("GL_EXTENSIONS:%s \n", strexten);
+
+    const unsigned char *streglexten = eglQueryString(eglGetCurrentDisplay(), EGL_EXTENSIONS);
+    LOGE("EGL_EXTENSIONS:%s \n", streglexten);
+
+    LOGE("%s\n", "over");
+
    return TRUE;
 }
 

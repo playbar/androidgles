@@ -91,6 +91,7 @@ RendererES2::RendererES2()
 bool RendererES2::init() {
 
     int maxbuffer = 0;
+    __eglMustCastToProperFunctionPointerType pfun = eglGetProcAddress("glGenTextures");
 //    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxbuffer);
     mProgram = createProgram(VERTEX_SHADER, FRAGMENT_SHADER);
     if (!mProgram)
