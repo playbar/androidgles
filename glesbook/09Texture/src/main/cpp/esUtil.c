@@ -288,7 +288,6 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
 
       }
 
-
       if ( numConfigs < 1 )
       {
          return GL_FALSE;
@@ -329,6 +328,11 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
    {
       return GL_FALSE;
    }
+
+    const char * glrender =  glGetString(GL_RENDERER);
+    const char *glvendor = glGetString(GL_VENDOR);
+    const char *glversion = glGetString(GL_VERSION);
+    const char *glexten = glGetString(GL_EXTENSIONS);
 
 #endif // #ifndef __APPLE__
 
