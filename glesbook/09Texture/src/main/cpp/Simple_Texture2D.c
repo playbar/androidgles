@@ -85,7 +85,7 @@ GLuint CreateSimpleTexture2D( )
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+//    glBindTexture(GL_TEXTURE_2D, 0);
 
    return textureId;
 
@@ -124,9 +124,9 @@ int Init ( ESContext *esContext )
    // Load the shaders and get a linked program object
    userData->programObject = esLoadProgram ( vShaderStr, fShaderStr );
 
-   GLsizei len = 1000;
-    GLchar data[1000];
-   glGetShaderSource(userData->programObject, 1, &len, data );
+//   GLsizei len = 1000;
+//    GLchar data[1000];
+//   glGetShaderSource(userData->programObject, 1, &len, data );
 
    // Get the sampler location
    userData->samplerLoc = glGetUniformLocation ( userData->programObject, "s_texture" );
@@ -152,8 +152,8 @@ int Init ( ESContext *esContext )
 //
 void Draw ( ESContext *esContext )
 {
-    GLint texid = 0;
-    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &texid);
+//    GLint texid = 0;
+//    glGetIntegerv(GL_MAX_VIEWPORT_DIMS, &texid);
 
    UserData *userData = esContext->userData;
    GLfloat vVertices[] = { -0.5f,  0.5f, 0.0f,  // Position 0
@@ -190,6 +190,7 @@ void Draw ( ESContext *esContext )
    glActiveTexture ( GL_TEXTURE0 );
    glBindTexture ( GL_TEXTURE_2D, userData->textureId );
 //    glBindImageTexture(0, userData->textureId, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32F);
+
 
    // Set the sampler texture unit to 0
    glUniform1i ( userData->samplerLoc, 0 );

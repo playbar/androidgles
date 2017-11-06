@@ -145,7 +145,7 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
    EGLConfig config;
    EGLint majorVersion;
    EGLint minorVersion;
-   EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+   EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
 
    if ( esContext == NULL )
    {
@@ -197,7 +197,7 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
       };
 
       // Choose config
-      if ( !eglChooseConfig ( esContext->eglDisplay, attribList, NULL, 1, &numConfigs ) )
+      if ( !eglChooseConfig ( esContext->eglDisplay, attribList, &config, 1, &numConfigs ) )
       {
          return GL_FALSE;
       }
@@ -265,6 +265,7 @@ GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, G
          eglGetConfigAttrib( _eglDisplay, config, EGL_BIND_TO_TEXTURE_RGBA, &(_bind_to_texture_rgba));
          eglGetConfigAttrib( _eglDisplay, config, EGL_MIN_SWAP_INTERVAL, &(_min_swap_interval));
          eglGetConfigAttrib( _eglDisplay, config, EGL_MAX_SWAP_INTERVAL, &(_max_swap_interval));
+
 
 
 
