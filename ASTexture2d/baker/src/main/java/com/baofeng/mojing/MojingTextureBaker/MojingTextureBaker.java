@@ -56,6 +56,6 @@ public class MojingTextureBaker extends Activity {
     public static native void EndBaker(int hHandle);
 
     static {
-        System.loadLibrary("MojingTextureBaker");
+        System.loadLibrary("baker");
     }
 }

@@ -15,7 +15,7 @@ using namespace std;
 typedef long HANDLE;
 #else
 #include <GLES3/gl3.h>
-typedef int HANDLE;
+typedef long HANDLE;
 #endif
 typedef int TEXTURE_ID;
 #else

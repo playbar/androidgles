@@ -12,7 +12,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                abiFilters 'armeabi-v7a'
+                abiFilters 'armeabi-v7a','arm64-v8a','x86'
                 arguments '-DANDROID_TOOLCHAIN=clang'
             }
         }
@@ -21,6 +21,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
         }
     }
 
@@ -40,6 +46,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+//    compile(name: 'sdk-audio-1.80.0', ext: 'aar')
+//    compile(name: 'sdk-base-1.80.0', ext: 'aar')
+//    compile(name: 'sdk-panowidget-1.80.0', ext: 'aar')
     compile 'com.google.vr:sdk-audio:1.80.0'
     compile 'com.google.vr:sdk-base:1.80.0'
     compile 'com.google.vr:sdk-panowidget:1.80.0'
