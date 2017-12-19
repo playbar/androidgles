@@ -189,6 +189,8 @@ void android_main ( struct android_app *pApp )
       if ( esContext.drawFunc != NULL )
       {
          esContext.drawFunc ( &esContext );
+//          glClearColor ( 1.0f, 1.0f, 1.0f, 0.0f );
+//          glClear ( GL_COLOR_BUFFER_BIT );
          eglSwapBuffers ( esContext.eglDisplay, esContext.eglSurface );
       }
    }

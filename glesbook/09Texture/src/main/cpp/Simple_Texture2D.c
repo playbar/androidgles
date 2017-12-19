@@ -118,7 +118,7 @@ int Init ( ESContext *esContext )
       "uniform sampler2D s_texture;                        \n"
       "void main()                                         \n"
       "{                                                   \n"
-      "  outColor = texture( s_texture, gl_PointCoord );   \n"
+      "  outColor = texture( s_texture, v_texCoord );   \n"
       "}                                                   \n";
 
    // Load the shaders and get a linked program object
@@ -177,11 +177,9 @@ void Draw ( ESContext *esContext )
    glUseProgram ( userData->programObject );
 
    // Load the vertex position
-   glVertexAttribPointer ( 0, 3, GL_FLOAT,
-                           GL_FALSE, 5 * sizeof ( GLfloat ), vVertices );
+   glVertexAttribPointer ( 0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof ( GLfloat ), vVertices );
    // Load the texture coordinate
-   glVertexAttribPointer ( 1, 2, GL_FLOAT,
-                           GL_FALSE, 5 * sizeof ( GLfloat ), &vVertices[3] );
+   glVertexAttribPointer ( 1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof ( GLfloat ), &vVertices[3] );
 
    glEnableVertexAttribArray ( 0 );
    glEnableVertexAttribArray ( 1 );

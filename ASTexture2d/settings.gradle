@@ -1,5 +1,5 @@
-include ':baker'
-//include ':pixmapbuffer'
+//include ':baker'
+include ':pixmapbuffer'
 //include ':fbo'
 //include ':grafika'
 //include ':app'
