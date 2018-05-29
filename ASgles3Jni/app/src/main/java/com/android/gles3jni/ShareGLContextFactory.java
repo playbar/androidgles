@@ -2,16 +2,11 @@ package com.android.gles3jni;
 
 import javax.microedition.khronos.egl.EGL10;
 
-import com.android.gles3jni.GLESSurfaceView.EGLContextFactory;
+import com.android.app.GLESSurfaceView.EGLContextFactory;
 
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGL11;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.egl.EGLSurface;
-import javax.microedition.khronos.opengles.GL;
-import javax.microedition.khronos.opengles.GL10;
 
 import android.util.Log;
 

@@ -1,24 +1,16 @@
-package com.android.gles3jni;
+package com.android.app;
 
-import java.io.Writer;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGL11;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL;
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-import javax.microedition.khronos.opengles.GL11Ext;
 
 import android.content.Context;
-import android.content.pm.ConfigurationInfo;
-import android.opengl.EGL14;
-import android.opengl.GLDebugHelper;
 //import android.os.SystemProperties;
 import android.util.AttributeSet;
 import android.util.Log;

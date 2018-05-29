@@ -1,4 +1,4 @@
-package com.android.gles3jni;
+package com.android.app;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -10,6 +10,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.util.Log;
 
+import com.android.app.EglHelper;
+import com.android.app.GLESSurfaceView;
 import com.android.util.Logger;
 
 public class GLThread extends Thread {

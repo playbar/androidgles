@@ -1,10 +1,11 @@
-package com.android.gles3jni;
+package com.android.app;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import com.android.gles3jni.GLESSurfaceView.EGLConfigChooser;
+import com.android.app.GLESSurfaceView;
+import com.android.app.GLESSurfaceView.EGLConfigChooser;
 
 public abstract class BaseConfigChooser implements EGLConfigChooser {
     public BaseConfigChooser(int[] configSpec) {

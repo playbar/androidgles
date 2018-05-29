@@ -6,7 +6,9 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 
-import com.android.gles3jni.GLESSurfaceView.EGLConfigChooser;
+import com.android.app.EglHelper;
+import com.android.app.GLESSurfaceView.EGLConfigChooser;
+import com.android.app.GLTextureUtils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

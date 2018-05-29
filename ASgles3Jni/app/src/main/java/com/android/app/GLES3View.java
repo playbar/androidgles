@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package com.android.gles3jni;
+package com.android.app;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.Bitmap.Config;
 import android.opengl.GLES30;
-import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
@@ -37,10 +34,8 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.android.gltest.MyDrawModel;
 import com.android.util.Logger;
 
 public class GLES3View extends GLESSurfaceView {
@@ -132,7 +127,7 @@ public class GLES3View extends GLESSurfaceView {
     	    private final float[] mRotationMatrix = new float[16];  
     	//  private volatile float mAngle;  
     	      
-    	    private CirclePlane mCirclePlane;  
+    	    private CirclePlane mCirclePlane;
     	    //定义环境光  
     	    private FloatBuffer lightAmbient    = FloatBuffer.wrap(new float[]{0.5f, 0.5f, 0.5f, 1.0f});  
     	    //定义漫散射  

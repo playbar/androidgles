@@ -1,4 +1,4 @@
-package com.android.gles3jni;
+package com.android.app;
 
 import java.io.IOException;
 import java.io.InputStream;

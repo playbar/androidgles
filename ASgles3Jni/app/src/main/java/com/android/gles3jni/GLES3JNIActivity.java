@@ -14,33 +14,52 @@
  * limitations under the License.
  */
 
-package com.android.app;
+package com.android.gles3jni;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
+import android.graphics.Bitmap.Config;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
-import com.android.util.Logger;
-import com.android.gltest.GLRenderer;
-import com.android.gltest.GenTexTask;
-import com.android.gltest.MyGLSurfaceView;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.egl.EGLContext;
+import javax.microedition.khronos.egl.EGLDisplay;
+import javax.microedition.khronos.egl.EGLSurface;
 
-public class MyViewActivity extends Activity {
+import com.android.gles3jni.GLES3Hook;
+import com.android.gles3jni.GLES3JNIView;
+import com.android.gltest.*;
 
-	MyGLSurfaceView mView;
+public class GLES3JNIActivity extends Activity {
 
+//	MyGLSurfaceView mView;
+//    GLES3View mView;
+	GLES3JNIView mView;
+    EGLConfig mEglConfig;
+
+    static {
+        System.loadLibrary("gles3jni");
+    }
+    
     public class ExportTex implements GenTexTask.ExportTextureId{
 
  		@Override
@@ -99,9 +118,10 @@ public class MyViewActivity extends Activity {
 //        layout.addView(txtview, tparams);//添加组件  
 //        layout.addView(et, tparams);  
 //        layout.addView(but, tparams);  
-        
-   
-        mView = new MyGLSurfaceView(getApplication());
+
+        GLES3Hook.initHook();
+        Log.e("mjhook", "after initHook");
+        mView = new GLES3JNIView(getApplication());
        
 //        mView.setZOrderOnTop(true);
 //        mView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
@@ -122,22 +142,29 @@ public class MyViewActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mView.onPause();
+        GLES3Hook.unInitHook();
     }
 
     @Override 
     protected void onResume() {
         super.onResume();
         mView.onResume();
-        
+
 //        TestMakeCurrent();
-    		
+
 //        EGL10 egl = (EGL10)EGLContext.getEGL();
 //        EGLDisplay eglDisplay = egl.eglGetCurrentDisplay();
 //  	  	EGLSurface eglSurface = egl.eglGetCurrentSurface(EGL10.EGL_DRAW);
 ////  	  	EGLConfig eglConfig 
 //  	  	EGLContext eglContext = egl.eglGetCurrentContext();
     }
-    
+
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        GLES3Hook.unInitHook();
+    }
+
     public boolean mbStop = true;
     
     @Override
@@ -174,8 +201,8 @@ public class MyViewActivity extends Activity {
     
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Logger.printTime("");
-//    	mView.onTouchEvent( event );
-        return super.onTouchEvent( event );
+    		Log.e("GLESJNIActivity", "onTouchEvent");	
+//    		mView.onTouchEvent( event );
+    		return super.onTouchEvent( event );
     }
 }

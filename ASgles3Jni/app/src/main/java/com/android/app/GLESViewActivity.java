@@ -26,7 +26,6 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.android.gles3jni.GLES3View;
 import com.android.gltest.GLRenderer;
 import com.android.gltest.GenTexTask;
 

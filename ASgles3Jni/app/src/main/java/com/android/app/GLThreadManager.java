@@ -1,7 +1,10 @@
-package com.android.gles3jni;
+package com.android.app;
 
 import javax.microedition.khronos.opengles.GL10;
 import android.util.Log;
+
+import com.android.app.GLESSurfaceView;
+import com.android.app.GLThread;
 
 public class GLThreadManager {
     private static String TAG = "GLThreadManager";

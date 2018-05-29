@@ -1,4 +1,6 @@
-package com.android.gles3jni;
+package com.android.app;
+
+import com.android.app.ComponentSizeChooser;
 
 public class SimpleEGLConfigChooser extends ComponentSizeChooser {
     public SimpleEGLConfigChooser(boolean withDepthBuffer) {

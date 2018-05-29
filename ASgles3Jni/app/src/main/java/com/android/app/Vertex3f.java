@@ -1,4 +1,4 @@
-package com.android.gles3jni;
+package com.android.app;
 
 public class Vertex3f {  
 	  

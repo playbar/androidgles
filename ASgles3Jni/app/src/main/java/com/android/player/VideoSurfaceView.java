@@ -1,9 +1,6 @@
 package com.android.player;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -12,13 +9,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
 import android.util.Log;
 import android.view.Surface;
 
-import com.android.gles3jni.GLESSurfaceView;
+import com.android.app.GLESSurfaceView;
 
 @SuppressLint("ViewConstructor")
 class VideoSurfaceView extends GLESSurfaceView {
