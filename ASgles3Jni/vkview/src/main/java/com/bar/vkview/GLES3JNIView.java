@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.android.gles3jni;
+package com.bar.vkview;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
-
-import com.android.util.Logger;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

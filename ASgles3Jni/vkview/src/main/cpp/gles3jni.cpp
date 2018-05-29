@@ -22,7 +22,7 @@
 #include <EGL/egl.h>
 
 #include "gles3jni.h"
-#include "inlineHook.h"
+#include "hook/inlineHook.h"
 
 const Vertex QUAD[4] = {
     // Square with diagonal < 2 so that it fits in a [-1 .. 1]^2 square
@@ -450,9 +450,9 @@ void Renderer::render() {
 static Renderer* g_renderer = NULL;
 
 extern "C" {
-    JNIEXPORT void JNICALL Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj);
-    JNIEXPORT void JNICALL Java_com_android_gles3jni_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height);
-    JNIEXPORT void JNICALL Java_com_android_gles3jni_GLES3JNILib_step(JNIEnv* env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_init(JNIEnv* env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height);
+    JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_step(JNIEnv* env, jobject obj);
 };
 
 #if !defined(DYNAMIC_ES3)
@@ -531,7 +531,7 @@ void * thread_1(void *pdata ){
 CThreadPool gThreadPool(10);
 
 JNIEXPORT void JNICALL
-Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj) {
+Java_com_bar_vkview_GLES3JNILib_init(JNIEnv* env, jobject obj) {
     if (g_renderer) {
         delete g_renderer;
         g_renderer = NULL;
@@ -578,7 +578,7 @@ CMyTask taskObj;
 char szTmp[] = "this is the first thread running";
 
 JNIEXPORT void JNICALL
-Java_com_android_gles3jni_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height) {
+Java_com_bar_vkview_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height) {
     if (g_renderer) {
         g_renderer->resize(width, height);
     }
@@ -595,7 +595,7 @@ Java_com_android_gles3jni_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint widt
 }
 
 JNIEXPORT void JNICALL
-Java_com_android_gles3jni_GLES3JNILib_step(JNIEnv* env, jobject obj) {
+Java_com_bar_vkview_GLES3JNILib_step(JNIEnv* env, jobject obj) {
     if (g_renderer) {
         g_renderer->render();
     }

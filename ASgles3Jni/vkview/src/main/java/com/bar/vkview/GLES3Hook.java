@@ -1,4 +1,4 @@
-package com.android.gles3jni;
+package com.bar.vkview;
 
 /**
  * Created by houguoli on 2017/8/15.

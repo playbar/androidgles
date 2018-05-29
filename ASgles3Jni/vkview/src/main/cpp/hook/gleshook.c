@@ -5,7 +5,7 @@
 #include <GLES3/gl3.h>
 #include <EGL/egl.h>
 #include <unistd.h>
-#include "mylog.h"
+#include "../mylog.h"
 #include "inlineHook.h"
 
 
@@ -115,7 +115,7 @@ void unhookAllFun()
 //    unHook((uint32_t)glVertexAttribPointer);
 }
 
-JNIEXPORT void JNICALL Java_com_android_gles3jni_GLES3Hook_initHook(JNIEnv* env, jobject obj)
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3Hook_initHook(JNIEnv* env, jobject obj)
 {
     LOGI("unhookAllFun begin");
 //    unhookAllFun();
@@ -124,12 +124,12 @@ JNIEXPORT void JNICALL Java_com_android_gles3jni_GLES3Hook_initHook(JNIEnv* env,
     LOGI("initHook after");
 }
 
-JNIEXPORT void JNICALL Java_com_android_gles3jni_GLES3Hook_hookTest(JNIEnv* env, jobject obj)
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3Hook_hookTest(JNIEnv* env, jobject obj)
 {
 
 }
 
-JNIEXPORT void JNICALL Java_com_android_gles3jni_GLES3Hook_unInitHook(JNIEnv* env, jobject obj)
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3Hook_unInitHook(JNIEnv* env, jobject obj)
 {
     unhookAllFun();
 }

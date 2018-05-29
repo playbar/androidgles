@@ -1,4 +1,4 @@
-package com.android.util;
+package com.bar.vkview;
 
 
 import android.util.Log;
@@ -264,7 +264,7 @@ public class Logger {
 		while (ix < stack.length) {
 			StackTraceElement frame = stack[ix];
 			String cname = frame.getClassName();
-			if (cname.equals("com.android.util.Logger")) {
+			if (cname.equals("Logger")) {
 				break;
 			}
 			ix++;
@@ -273,7 +273,7 @@ public class Logger {
 		while (ix < stack.length) {
 			StackTraceElement frame = stack[ix];
 			String cname = frame.getClassName();
-			if (!cname.equals("com.android.util.Logger")) {
+			if (!cname.equals("Logger")) {
 				// We've found the relevant frame.
 				CallerInfo callerInfo = new CallerInfo();
 				callerInfo.setFileName(frame.getFileName());

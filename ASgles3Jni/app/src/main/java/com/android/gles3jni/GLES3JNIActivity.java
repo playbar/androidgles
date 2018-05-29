@@ -47,7 +47,6 @@ import javax.microedition.khronos.egl.EGLSurface;
 
 import com.android.gles3jni.GLES3Hook;
 import com.android.gles3jni.GLES3JNIView;
-import com.android.gltest.*;
 
 public class GLES3JNIActivity extends Activity {
 

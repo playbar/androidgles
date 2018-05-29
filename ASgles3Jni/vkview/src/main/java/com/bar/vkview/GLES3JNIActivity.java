@@ -14,40 +14,24 @@
  * limitations under the License.
  */
 
-package com.android.gles3jni;
+package com.bar.vkview;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
-import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.egl.EGLSurface;
-
-import com.android.gles3jni.GLES3Hook;
-import com.android.gles3jni.GLES3JNIView;
-import com.android.gltest.*;
 
 public class GLES3JNIActivity extends Activity {
 
@@ -57,52 +41,12 @@ public class GLES3JNIActivity extends Activity {
     EGLConfig mEglConfig;
 
     static {
-        System.loadLibrary("gles3jni");
-    }
-    
-    public class ExportTex implements GenTexTask.ExportTextureId{
-
- 		@Override
- 		public void exportId(int texid, int hashcode) {
- 			// TODO Auto-generated method stub
- 			GLRenderer.textureId = texid;
- 		}
-     	
-     } 
-
-    public final TimerTask task = new TimerTask(){   
-    	
-        public void run(){  
-			InputStream ins = null;
-			try {
-				ins = getAssets().open("test.jpg");
-				Bitmap bmp = BitmapFactory.decodeStream(ins); 
-				ExportTex ex = new ExportTex();
-        			GenTexTask myta = new GenTexTask(123, bmp);
-        			myta.SetInterfaceTex( ex );
-        			GLRenderer.GetThreadPool().execute(myta);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (ins != null) {
-						ins.close();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}//end try
-        	 
-        }   
-    };   
-    
-    public void TestMakeCurrent(){
-  	  	Timer timer = new Timer(); 
-  	  	timer.schedule(task, 4000 ); 
+        System.loadLibrary("vkview");
     }
 
 
-    @Override protected void onCreate(Bundle icicle) {
+    @Override
+    protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         FrameLayout layout = new FrameLayout( this );
         FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,   
