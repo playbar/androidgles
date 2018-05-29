@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion = 23
+    buildToolsVersion = '25.0.0'
+
+    defaultConfig {
+        applicationId = 'com.bar.vkview'
+        minSdkVersion    21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        externalNativeBuild {
+            cmake {
+                abiFilters 'armeabi-v7a'
+                arguments '-DANDROID_TOOLCHAIN=clang'
+
+            }
+        }
+    }
+//    ndk {
+//        platformVersion = 22
+//        moduleName  = 'gles3jni'
+//        toolchain = 'clang'
+//        stl         = 'gnustl_static'
+//        cppFlags.addAll(['-std=c++11', '-Wall', '-fno-rtti', '-fno-exceptions'])
+//        CFlags.addAll(['-Wall'])
+//        ldLibs.addAll(['log','GLESv3', 'EGL'])
+//    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles.add(file('proguard-rules.txt'))
+        }
+    }
+}
+
