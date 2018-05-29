@@ -12,7 +12,8 @@
       android:allowBackup="false"
       android:fullBackupContent="false"
       android:icon="@mipmap/ic_launcher"
-      android:label="@string/gles3jni_activity">
+      android:name=".VKApplication"
+      android:label="@string/vkview_activity">
     <activity android:name=".GLES3JNIActivity"
               android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
               android:launchMode="singleTask"

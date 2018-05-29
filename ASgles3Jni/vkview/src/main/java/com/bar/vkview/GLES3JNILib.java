@@ -18,7 +18,10 @@ package com.bar.vkview;
 
 // Wrapper for native library
 
+import android.view.Surface;
+
 public class GLES3JNILib {
+     public static native void initVK(Surface surface);
      public static native void init();
      public static native void resize(int width, int height);
      public static native void step();

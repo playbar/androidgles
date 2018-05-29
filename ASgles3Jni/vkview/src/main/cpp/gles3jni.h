@@ -20,6 +20,7 @@
 #include <android/log.h>
 #include <math.h>
 #include <unistd.h>
+#include <jni.h>
 
 #if DYNAMIC_ES3
 #include "gl3stub.h"
@@ -35,6 +36,20 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__ );
 #define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_initVK(JNIEnv* env, jobject obj, jobject surface);
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_init(JNIEnv* env, jobject obj);
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height);
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_step(JNIEnv* env, jobject obj);
+
+#ifdef __cplusplus
+};
+#endif
+
 
 // ----------------------------------------------------------------------------
 // Types, functions, and data used by both ES2 and ES3 renderers.

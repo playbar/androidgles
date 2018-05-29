@@ -19,6 +19,8 @@ package com.bar.vkview;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
+import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -39,7 +41,15 @@ public class GLES3JNIView extends GLSurfaceView {
 //        start();
     }
 
-    private static class Renderer implements GLSurfaceView.Renderer {
+    public void surfaceCreated(SurfaceHolder holder)
+    {
+       super.surfaceCreated(holder);
+        SurfaceHolder holder1 = getHolder();
+        Surface surface = holder1.getSurface();
+        GLES3JNILib.initVK(surface);
+    }
+
+    private class Renderer implements GLSurfaceView.Renderer {
         public void onDrawFrame(GL10 gl) {
             Logger.printFPS();
 //            Logger.printTime("begin->");

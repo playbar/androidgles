@@ -19,6 +19,6 @@
 
 <resources>
     <!-- Simple strings. -->
-    <string name="gles3jni_activity">GLES3JNI</string>
+    <string name="vkview_activity">vkview</string>
 
 </resources>

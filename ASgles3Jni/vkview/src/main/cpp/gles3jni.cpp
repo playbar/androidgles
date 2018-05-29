@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-#include <jni.h>
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <EGL/egl.h>
+#include "android/native_window_jni.h"
 
 #include "gles3jni.h"
 #include "hook/inlineHook.h"
+#include "TriangleVK.hpp"
 
 const Vertex QUAD[4] = {
     // Square with diagonal < 2 so that it fits in a [-1 .. 1]^2 square
@@ -449,12 +450,6 @@ void Renderer::render() {
 
 static Renderer* g_renderer = NULL;
 
-extern "C" {
-    JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_init(JNIEnv* env, jobject obj);
-    JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height);
-    JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_step(JNIEnv* env, jobject obj);
-};
-
 #if !defined(DYNAMIC_ES3)
 static GLboolean gl3stubInit() {
     return GL_TRUE;
@@ -529,6 +524,18 @@ void * thread_1(void *pdata ){
 }
 
 CThreadPool gThreadPool(10);
+
+
+JNIEXPORT void JNICALL
+Java_com_bar_vkview_GLES3JNILib_initVK(JNIEnv* env, jobject obj, jobject surface)
+{
+    ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
+    ANativeWindow_acquire(window);
+    InitVulkan(window);
+    ANativeWindow_release(window);
+    return;
+
+}
 
 JNIEXPORT void JNICALL
 Java_com_bar_vkview_GLES3JNILib_init(JNIEnv* env, jobject obj) {
