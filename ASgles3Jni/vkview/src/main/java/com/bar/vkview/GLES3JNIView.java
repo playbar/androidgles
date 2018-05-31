@@ -17,8 +17,10 @@
 package com.bar.vkview;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -28,9 +30,12 @@ import javax.microedition.khronos.opengles.GL10;
 public class GLES3JNIView extends GLSurfaceView {
     private static final String TAG = "GLES3JNI";
     private static final boolean DEBUG = true;
+    private GLES3JNILib mJniLib;
 
     public GLES3JNIView(Context context) {
         super(context);
+        mJniLib = new GLES3JNILib();
+
         // Pick an EGLConfig with RGB8 color, 16-bit depth, no stencil,
         // supporting OpenGL ES 2.0 or later backwards-compatible versions.
         setZOrderOnTop(true);
@@ -41,31 +46,38 @@ public class GLES3JNIView extends GLSurfaceView {
 //        start();
     }
 
-    public void surfaceCreated(SurfaceHolder holder)
+    public void surfaceCreated(final SurfaceHolder holder)
     {
        super.surfaceCreated(holder);
+        AssetManager assetmgr = getContext().getResources().getAssets();
         SurfaceHolder holder1 = getHolder();
         Surface surface = holder1.getSurface();
-        GLES3JNILib.initVK(surface);
+//        mJniLib.run(surface, assetmgr);
+//        mJniLib.initVK(holder.getSurface(), assetmgr);
+        mJniLib.run(holder.getSurface(), assetmgr);
+        Log.e("test", "create vulkan success");
+        return;
     }
 
     private class Renderer implements GLSurfaceView.Renderer {
         public void onDrawFrame(GL10 gl) {
             Logger.printFPS();
 //            Logger.printTime("begin->");
-            GLES3JNILib.step();
+//            GLES3JNILib.vkDrawFrame();
+//            mJniLib.step();
 //            Logger.printTime("end->");
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
             Logger.printTime();
-            GLES3JNILib.resize(width, height);
+//            mJniLib.resize(width, height);
         }
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             Logger.printTime();
 //            GLES3Hook.hookTest();
-            GLES3JNILib.init();
+
+//            mJniLib.init();
         }
     }
 }

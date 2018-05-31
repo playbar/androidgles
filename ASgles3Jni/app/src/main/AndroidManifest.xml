@@ -13,6 +13,17 @@
       android:fullBackupContent="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/gles3jni_activity">
+
+    <!--<activity android:name="com.android.app.GLESViewActivity"-->
+        <!--android:theme="@android:style/Theme.NoTitleBar.Fullscreen"-->
+        <!--android:launchMode="singleTask"-->
+        <!--android:configChanges="orientation|keyboardHidden">-->
+      <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.MAIN" />-->
+        <!--<category android:name="android.intent.category.LAUNCHER" />-->
+      <!--</intent-filter>-->
+    <!--</activity>-->
+
     <activity android:name="com.android.gles3jni.GLES3JNIActivity"
               android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
               android:launchMode="singleTask"

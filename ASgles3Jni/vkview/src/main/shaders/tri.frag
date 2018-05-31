@@ -11,25 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef __VULKANMAIN_HPP__
-#define __VULKANMAIN_HPP__
-
-// Initialize vulkan device context
-// after return, vulkan is ready to draw
-
-#include <android/asset_manager.h>
-
-bool InitVulkan(ANativeWindow* app, AAssetManager* mgr);
-
-// delete vulkan device context when application goes away
-void DeleteVulkan(void);
-
-// Check if vulkan is ready to draw
-bool IsVulkanReady(void);
-
-// Ask Vulkan to Render a frame
-bool VulkanDrawFrame(void);
-
-#endif // __VULKANMAIN_HPP__
-
-
+#version 400
+#extension GL_ARB_separate_shader_objects : enable
+#extension GL_ARB_shading_language_420pack : enable
+layout (location = 0) out vec4 uFragColor;
+void main() {
+   uFragColor = vec4(0.91, 0.26,  0.21, 1.0);
+}

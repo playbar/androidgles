@@ -85,6 +85,8 @@ struct VulkanRenderInfo {
 };
 VulkanRenderInfo render;
 
+AAssetManager* mAssetMgr;
+
 // Android Native App pointer...
 //android_app* androidAppCtx = nullptr;
 
@@ -234,25 +236,25 @@ void CreateFrameBuffers(VkRenderPass& renderPass,
   swapchain.displayViews_ = new VkImageView[SwapchainImagesCount];
   for (uint32_t i = 0; i < SwapchainImagesCount; i++) {
     VkImageViewCreateInfo viewCreateInfo = {
-        .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-        .pNext = nullptr,
-        .image = displayImages[i],
-        .viewType = VK_IMAGE_VIEW_TYPE_2D,
-        .format = swapchain.displayFormat_,
-        .components = {
-           .r = VK_COMPONENT_SWIZZLE_R,
-           .g = VK_COMPONENT_SWIZZLE_G,
-           .b = VK_COMPONENT_SWIZZLE_B,
-           .a = VK_COMPONENT_SWIZZLE_A,
-        },
-        .subresourceRange = {
-            .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-            .baseMipLevel = 0,
-            .levelCount = 1,
-            .baseArrayLayer = 0,
-            .layerCount = 1,
-        },
-        .flags = 0,
+            .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            .pNext = nullptr,
+            .image = displayImages[i],
+            .viewType = VK_IMAGE_VIEW_TYPE_2D,
+            .format = swapchain.displayFormat_,
+            .components = {
+                    .r = VK_COMPONENT_SWIZZLE_R,
+                    .g = VK_COMPONENT_SWIZZLE_G,
+                    .b = VK_COMPONENT_SWIZZLE_B,
+                    .a = VK_COMPONENT_SWIZZLE_A,
+            },
+            .subresourceRange = {
+                    .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+                    .baseMipLevel = 0,
+                    .levelCount = 1,
+                    .baseArrayLayer = 0,
+                    .layerCount = 1,
+            },
+            .flags = 0,
     };
     CALL_VK(vkCreateImageView(device.device_, &viewCreateInfo, nullptr,
                               &swapchain.displayViews_[i]));
@@ -284,8 +286,8 @@ void CreateFrameBuffers(VkRenderPass& renderPass,
 
 // A helper function
 bool MapMemoryTypeToIndex(uint32_t typeBits,
-                              VkFlags requirements_mask,
-                              uint32_t *typeIndex) {
+                          VkFlags requirements_mask,
+                          uint32_t *typeIndex) {
   VkPhysicalDeviceMemoryProperties memoryProperties;
   vkGetPhysicalDeviceMemoryProperties(device.gpuDevice_, &memoryProperties);
   // Search memtypes to find first index with those properties
@@ -344,8 +346,8 @@ bool CreateBuffers(void) {
   // Assign the proper memory type for that buffer
   allocInfo.allocationSize = memReq.size;
   MapMemoryTypeToIndex(memReq.memoryTypeBits,
-                              VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-                              &allocInfo.memoryTypeIndex);
+                       VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+                       &allocInfo.memoryTypeIndex);
 
   // Allocate memory for the buffer
   VkDeviceMemory deviceMemory;
@@ -362,7 +364,7 @@ bool CreateBuffers(void) {
 }
 
 void DeleteBuffers(void) {
-        vkDestroyBuffer(device.device_, buffers.vertexBuf, nullptr);
+  vkDestroyBuffer(device.device_, buffers.vertexBuf, nullptr);
 }
 
 enum ShaderType { VERTEX_SHADER, FRAGMENT_SHADER };
@@ -370,12 +372,12 @@ VkResult loadShaderFromFile(const char* filePath, VkShaderModule* shaderOut,
                             ShaderType type) {
   // Read the file
 //  assert(androidAppCtx);
-//  AAsset* file = AAssetManager_open(androidAppCtx->activity->assetManager, filePath, AASSET_MODE_BUFFER);
-  size_t fileLength = 100;//AAsset_getLength(file);
-//
+  AAsset* file = AAssetManager_open(mAssetMgr, filePath, AASSET_MODE_BUFFER);
+  size_t fileLength = AAsset_getLength(file);
+
   char* fileContent = new char[fileLength];
-//
-//  AAsset_read(file, fileContent, fileLength);
+  AAsset_read(file, fileContent, fileLength);
+  AAsset_close(file);
 
   VkShaderModuleCreateInfo shaderModuleCreateInfo{
           .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
@@ -522,11 +524,11 @@ VkResult CreateGraphicsPipeline() {
   };
   VkVertexInputAttributeDescription vertex_input_attributes[1] {
           {
-             .binding = 0,
-             .location = 0,
-             .format = VK_FORMAT_R32G32B32_SFLOAT,
-             .offset = 0,
-           }
+                  .binding = 0,
+                  .location = 0,
+                  .format = VK_FORMAT_R32G32B32_SFLOAT,
+                  .offset = 0,
+          }
   };
   VkPipelineVertexInputStateCreateInfo vertexInputInfo {
           .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
@@ -585,7 +587,7 @@ VkResult CreateGraphicsPipeline() {
 
 void DeleteGraphicsPipeline(void) {
   if (gfxPipeline.pipeline == VK_NULL_HANDLE)
-     return;
+    return;
   vkDestroyPipeline(device.device_, gfxPipeline.pipeline, nullptr);
   vkDestroyPipelineCache(device.device_,gfxPipeline.cache, nullptr);
   vkDestroyPipelineLayout(device.device_, gfxPipeline.layout, nullptr);
@@ -593,21 +595,22 @@ void DeleteGraphicsPipeline(void) {
 // InitVulkan:
 //   Initialize Vulkan Context when android application window is created
 //   upon return, vulkan is ready to draw frames
-bool InitVulkan(ANativeWindow* window) {
-
+bool InitVulkan(ANativeWindow* window, AAssetManager* mgr)
+{
+  mAssetMgr = mgr;
   if (!InitVulkan()) {
     LOGW("Vulkan is unavailable, install vulkan and re-start");
     return false;
   }
 
   VkApplicationInfo appInfo = {
-      .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
-      .pNext = nullptr,
-      .apiVersion = VK_MAKE_VERSION(1, 0, 0),
-      .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
-      .engineVersion = VK_MAKE_VERSION(1, 0, 0),
-      .pApplicationName = "triangle_window",
-      .pEngineName = "tutorial",
+          .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+          .pNext = nullptr,
+          .apiVersion = VK_MAKE_VERSION(1, 0, 0),
+          .applicationVersion = VK_MAKE_VERSION(1, 0, 0),
+          .engineVersion = VK_MAKE_VERSION(1, 0, 0),
+          .pApplicationName = "triangle_window",
+          .pEngineName = "tutorial",
   };
 
   // create a device
@@ -618,40 +621,40 @@ bool InitVulkan(ANativeWindow* window) {
   // -----------------------------------------------------------------
   // Create render pass
   VkAttachmentDescription attachmentDescriptions{
-      .format = swapchain.displayFormat_,
-      .samples = VK_SAMPLE_COUNT_1_BIT,
-      .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
-      .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
-      .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-      .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
-      .initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-      .finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+          .format = swapchain.displayFormat_,
+          .samples = VK_SAMPLE_COUNT_1_BIT,
+          .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+          .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+          .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+          .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+          .initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+          .finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
   };
 
   VkAttachmentReference colourReference = {
-      .attachment = 0, .layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
+          .attachment = 0, .layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL};
 
   VkSubpassDescription subpassDescription {
-      .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
-      .flags = 0,
-      .inputAttachmentCount = 0,
-      .pInputAttachments = nullptr,
-      .colorAttachmentCount = 1,
-      .pColorAttachments = &colourReference,
-      .pResolveAttachments = nullptr,
-      .pDepthStencilAttachment = nullptr,
-      .preserveAttachmentCount = 0,
-      .pPreserveAttachments = nullptr,
+          .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
+          .flags = 0,
+          .inputAttachmentCount = 0,
+          .pInputAttachments = nullptr,
+          .colorAttachmentCount = 1,
+          .pColorAttachments = &colourReference,
+          .pResolveAttachments = nullptr,
+          .pDepthStencilAttachment = nullptr,
+          .preserveAttachmentCount = 0,
+          .pPreserveAttachments = nullptr,
   };
   VkRenderPassCreateInfo renderPassCreateInfo {
-      .sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
-      .pNext = nullptr,
-      .attachmentCount = 1,
-      .pAttachments = &attachmentDescriptions,
-      .subpassCount = 1,
-      .pSubpasses = &subpassDescription,
-      .dependencyCount = 0,
-      .pDependencies = nullptr,
+          .sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+          .pNext = nullptr,
+          .attachmentCount = 1,
+          .pAttachments = &attachmentDescriptions,
+          .subpassCount = 1,
+          .pSubpasses = &subpassDescription,
+          .dependencyCount = 0,
+          .pDependencies = nullptr,
   };
   CALL_VK(vkCreateRenderPass(device.device_, &renderPassCreateInfo,
                              nullptr, &render.renderPass_));
@@ -668,10 +671,10 @@ bool InitVulkan(ANativeWindow* window) {
   // -----------------------------------------------
   // Create a pool of command buffers to allocate command buffer from
   VkCommandPoolCreateInfo cmdPoolCreateInfo {
-      .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-      .pNext = nullptr,
-      .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-      .queueFamilyIndex = 0,
+          .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+          .pNext = nullptr,
+          .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+          .queueFamilyIndex = 0,
   };
   CALL_VK(vkCreateCommandPool(device.device_, &cmdPoolCreateInfo,
                               nullptr, &render.cmdPool_));
@@ -682,24 +685,24 @@ bool InitVulkan(ANativeWindow* window) {
   render.cmdBufferLen_ = swapchain.swapchainLength_;
   render.cmdBuffer_ = new VkCommandBuffer[swapchain.swapchainLength_];
   VkCommandBufferAllocateInfo cmdBufferCreateInfo {
-            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-            .pNext = nullptr,
-            .commandPool = render.cmdPool_,
-            .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-            .commandBufferCount = render.cmdBufferLen_,
+          .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+          .pNext = nullptr,
+          .commandPool = render.cmdPool_,
+          .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+          .commandBufferCount = render.cmdBufferLen_,
   };
   CALL_VK(vkAllocateCommandBuffers(device.device_,
-                  &cmdBufferCreateInfo,
-                  render.cmdBuffer_));
+                                   &cmdBufferCreateInfo,
+                                   render.cmdBuffer_));
 
   for (int bufferIndex = 0; bufferIndex < swapchain.swapchainLength_;
        bufferIndex++) {
     // We start by creating and declare the "beginning" our command buffer
     VkCommandBufferBeginInfo cmdBufferBeginInfo {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-        .pNext = nullptr,
-        .flags = 0,
-        .pInheritanceInfo = nullptr,
+            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .pInheritanceInfo = nullptr,
     };
     CALL_VK(vkBeginCommandBuffer(render.cmdBuffer_[bufferIndex],
                                  &cmdBufferBeginInfo));
@@ -707,22 +710,22 @@ bool InitVulkan(ANativeWindow* window) {
     // Now we start a renderpass. Any draw command has to be recorded in a
     // renderpass
     VkClearValue clearVals {
-        .color.float32[0] = 0.0f,
-        .color.float32[1] = 0.34f,
-        .color.float32[2] = 0.90f,
-        .color.float32[3] = 1.0f,
+            .color.float32[0] = 0.0f,
+            .color.float32[1] = 0.34f,
+            .color.float32[2] = 0.90f,
+            .color.float32[3] = 1.0f,
     };
     VkRenderPassBeginInfo renderPassBeginInfo {
-        .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-        .pNext = nullptr,
-        .renderPass = render.renderPass_,
-        .framebuffer = swapchain.framebuffers_[bufferIndex],
-        .renderArea = {
-             .offset = { .x = 0, .y = 0,},
-             .extent = swapchain.displaySize_
-        },
-        .clearValueCount = 1,
-        .pClearValues = &clearVals
+            .sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+            .pNext = nullptr,
+            .renderPass = render.renderPass_,
+            .framebuffer = swapchain.framebuffers_[bufferIndex],
+            .renderArea = {
+                    .offset = { .x = 0, .y = 0,},
+                    .extent = swapchain.displaySize_
+            },
+            .clearValueCount = 1,
+            .pClearValues = &clearVals
     };
     vkCmdBeginRenderPass(render.cmdBuffer_[bufferIndex], &renderPassBeginInfo,
                          VK_SUBPASS_CONTENTS_INLINE);
@@ -743,9 +746,9 @@ bool InitVulkan(ANativeWindow* window) {
   // We need to create a fence to be able, in the main loop, to wait for our
   // draw command(s) to finish before swapping the framebuffers
   VkFenceCreateInfo fenceCreateInfo {
-      .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
-      .pNext = nullptr,
-      .flags = 0,
+          .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+          .pNext = nullptr,
+          .flags = 0,
   };
   CALL_VK(vkCreateFence(device.device_, &fenceCreateInfo,
                         nullptr, &render.fence_));
@@ -753,9 +756,9 @@ bool InitVulkan(ANativeWindow* window) {
   // We need to create a semaphore to be able to wait, in the main loop, for our
   // framebuffer to be available for us before drawing.
   VkSemaphoreCreateInfo semaphoreCreateInfo{
-      .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
-      .pNext = nullptr,
-      .flags = 0,
+          .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+          .pNext = nullptr,
+          .flags = 0,
   };
   CALL_VK(vkCreateSemaphore(device.device_, &semaphoreCreateInfo,
                             nullptr, &render.semaphore_));
@@ -783,7 +786,7 @@ void DeleteSwapChain() {
 
 void DeleteVulkan() {
   vkFreeCommandBuffers(device.device_, render.cmdPool_,
-          render.cmdBufferLen_, render.cmdBuffer_);
+                       render.cmdBufferLen_, render.cmdBuffer_);
   delete[] render.cmdBuffer_;
 
   vkDestroyCommandPool(device.device_, render.cmdPool_, nullptr);
@@ -803,18 +806,18 @@ bool VulkanDrawFrame(void) {
   uint32_t nextIndex;
   // Get the framebuffer index we should draw in
   CALL_VK(vkAcquireNextImageKHR(device.device_, swapchain.swapchain_,
-                              UINT64_MAX, render.semaphore_,
-                              VK_NULL_HANDLE, &nextIndex));
+                                UINT64_MAX, render.semaphore_,
+                                VK_NULL_HANDLE, &nextIndex));
   CALL_VK(vkResetFences(device.device_, 1, &render.fence_));
   VkSubmitInfo submit_info = {
-        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-        .pNext = nullptr,
-        .waitSemaphoreCount = 1,
-        .pWaitSemaphores = &render.semaphore_,
-        .commandBufferCount = 1,
-        .pCommandBuffers = &render.cmdBuffer_[nextIndex],
-        .signalSemaphoreCount = 0,
-        .pSignalSemaphores = nullptr
+          .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+          .pNext = nullptr,
+          .waitSemaphoreCount = 1,
+          .pWaitSemaphores = &render.semaphore_,
+          .commandBufferCount = 1,
+          .pCommandBuffers = &render.cmdBuffer_[nextIndex],
+          .signalSemaphoreCount = 0,
+          .pSignalSemaphores = nullptr
   };
   CALL_VK(vkQueueSubmit(device.queue_, 1, &submit_info, render.fence_));
   CALL_VK(vkWaitForFences(device.device_, 1, &render.fence_, VK_TRUE, 100000000));
@@ -823,14 +826,14 @@ bool VulkanDrawFrame(void) {
 
   VkResult result;
   VkPresentInfoKHR presentInfo {
-        .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-        .pNext = nullptr,
-        .swapchainCount = 1,
-        .pSwapchains = &swapchain.swapchain_,
-        .pImageIndices = &nextIndex,
-        .waitSemaphoreCount = 0,
-        .pWaitSemaphores = nullptr,
-        .pResults = &result,
+          .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+          .pNext = nullptr,
+          .swapchainCount = 1,
+          .pSwapchains = &swapchain.swapchain_,
+          .pImageIndices = &nextIndex,
+          .waitSemaphoreCount = 0,
+          .pWaitSemaphores = nullptr,
+          .pResults = &result,
   };
   vkQueuePresentKHR(device.queue_, &presentInfo);
   return true;

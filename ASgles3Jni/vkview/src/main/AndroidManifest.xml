@@ -14,25 +14,25 @@
       android:icon="@mipmap/ic_launcher"
       android:name=".VKApplication"
       android:label="@string/vkview_activity">
-    <activity android:name=".GLES3JNIActivity"
-              android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-              android:launchMode="singleTask"
-              android:configChanges="orientation|keyboardHidden">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-
-    <!--<activity android:naMyViewActivityvity"-->
-        <!--android:theme="@android:style/Theme.NoTitleBar.Fullscreen"-->
-        <!--android:launchMode="singleTask"-->
-        <!--android:configChanges="orientation|keyboardHidden">-->
+    <!--<activity android:name=".GLES3JNIActivity"-->
+              <!--android:theme="@android:style/Theme.NoTitleBar.Fullscreen"-->
+              <!--android:launchMode="singleTask"-->
+              <!--android:configChanges="orientation|keyboardHidden">-->
       <!--<intent-filter>-->
         <!--<action android:name="android.intent.action.MAIN" />-->
         <!--<category android:name="android.intent.category.LAUNCHER" />-->
       <!--</intent-filter>-->
     <!--</activity>-->
+
+    <activity android:name="com.bar.app.GLESViewActivity"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        android:launchMode="singleTask"
+        android:configChanges="orientation|keyboardHidden">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
 
   </application>
 </manifest>

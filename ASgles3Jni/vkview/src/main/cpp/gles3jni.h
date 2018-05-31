@@ -41,7 +41,8 @@
 extern "C" {
 #endif
 
-JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_initVK(JNIEnv* env, jobject obj, jobject surface);
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_initVK(JNIEnv* env, jobject obj, jobject surface, jobject assetMgr);
+JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_vkDrawFrame(JNIEnv* env, jobject obj);
 JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_init(JNIEnv* env, jobject obj);
 JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height);
 JNIEXPORT void JNICALL Java_com_bar_vkview_GLES3JNILib_step(JNIEnv* env, jobject obj);

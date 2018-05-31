@@ -18,11 +18,22 @@ package com.bar.vkview;
 
 // Wrapper for native library
 
+import android.content.res.AssetManager;
 import android.view.Surface;
 
 public class GLES3JNILib {
-     public static native void initVK(Surface surface);
-     public static native void init();
-     public static native void resize(int width, int height);
-     public static native void step();
+     public void run(final Surface surface, final AssetManager assetmgr){
+          new Thread(new Runnable() {
+               @Override
+               public void run() {
+                    initVK(surface, assetmgr);
+                    vkDrawFrame();
+               }
+          }).start();
+     }
+     public native void initVK(Surface surface, AssetManager assetmgr);
+     public native void vkDrawFrame();
+     public native void init();
+     public native void resize(int width, int height);
+     public native void step();
 }

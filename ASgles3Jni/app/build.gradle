@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion = 23
+    compileSdkVersion = 27
     buildToolsVersion = '25.0.0'
 
     defaultConfig {
         applicationId = 'com.android.gles3jni'
-        minSdkVersion    21
-        targetSdkVersion 25
+        minSdkVersion    27
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         externalNativeBuild {
