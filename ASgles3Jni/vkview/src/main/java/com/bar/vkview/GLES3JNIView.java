@@ -54,7 +54,7 @@ public class GLES3JNIView extends GLSurfaceView {
         Surface surface = holder1.getSurface();
 //        mJniLib.run(surface, assetmgr);
 //        mJniLib.initVK(holder.getSurface(), assetmgr);
-        mJniLib.run(holder.getSurface(), assetmgr);
+//        mJniLib.run(holder.getSurface(), assetmgr);
         Log.e("test", "create vulkan success");
         return;
     }

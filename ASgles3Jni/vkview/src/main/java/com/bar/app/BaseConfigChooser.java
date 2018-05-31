@@ -4,8 +4,7 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import com.bar.app.GLESSurfaceView;
-import com.bar.app.GLESSurfaceView.EGLConfigChooser;
+import com.bar.app.VKSurfaceView.EGLConfigChooser;
 
 public abstract class BaseConfigChooser implements EGLConfigChooser {
     public BaseConfigChooser(int[] configSpec) {
@@ -55,7 +54,7 @@ public abstract class BaseConfigChooser implements EGLConfigChooser {
     protected int[] mConfigSpec;
 
     private int[] filterConfigSpec(int[] configSpec) {
-        if (GLESSurfaceView.mEGLContextClientVersion != 2) {
+        if (VKSurfaceView.mEGLContextClientVersion != 2) {
             return configSpec;
         }
         /* We know none of the subclasses define EGL_RENDERABLE_TYPE.

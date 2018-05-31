@@ -14,7 +14,7 @@ import android.opengl.GLDebugHelper;
 import android.util.Log;
 
 public class EglHelper {
-    public EglHelper(WeakReference<GLESSurfaceView> glSurfaceViewWeakRef) {
+    public EglHelper(WeakReference<VKSurfaceView> glSurfaceViewWeakRef) {
         mGLSurfaceViewWeakRef = glSurfaceViewWeakRef;
     }
 
@@ -23,7 +23,7 @@ public class EglHelper {
      * @param configSpec
      */
     public void start() {
-        if (GLESSurfaceView.LOG_EGL) {
+        if (VKSurfaceView.LOG_EGL) {
             Log.w("EglHelper", "start() tid=" + Thread.currentThread().getId());
         }
         /*
@@ -47,7 +47,7 @@ public class EglHelper {
         if(!mEgl.eglInitialize(mEglDisplay, version)) {
             throw new RuntimeException("eglInitialize failed");
         }
-        GLESSurfaceView view = mGLSurfaceViewWeakRef.get();
+        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
         if (view == null) {
             mEglConfig = null;
             mEglContext = null;
@@ -64,7 +64,7 @@ public class EglHelper {
             mEglContext = null;
             throwEglException("createContext");
         }
-        if (GLESSurfaceView.LOG_EGL) {
+        if (VKSurfaceView.LOG_EGL) {
             Log.w("EglHelper", "createContext " + mEglContext + " tid=" + Thread.currentThread().getId());
         }
 
@@ -78,7 +78,7 @@ public class EglHelper {
      * @return true if the surface was created successfully.
      */
     public boolean createSurface() {
-        if (GLESSurfaceView.LOG_EGL) {
+        if (VKSurfaceView.LOG_EGL) {
             Log.w("EglHelper", "createSurface()  tid=" + Thread.currentThread().getId());
         }
         /*
@@ -103,7 +103,7 @@ public class EglHelper {
         /*
          * Create an EGL surface we can render into.
          */
-        GLESSurfaceView view = mGLSurfaceViewWeakRef.get();
+        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
         if (view != null) {
             mEglSurface = view.mEGLWindowSurfaceFactory.createWindowSurface(mEgl,
                     mEglDisplay, mEglConfig, view.getHolder());
@@ -150,19 +150,19 @@ public class EglHelper {
     GL createGL() {
 
         GL gl = mEglContext.getGL();
-        GLESSurfaceView view = mGLSurfaceViewWeakRef.get();
+        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
         if (view != null) {
             if (view.mGLWrapper != null) {
                 gl = view.mGLWrapper.wrap(gl);
             }
 
-            if ((view.mDebugFlags & (GLESSurfaceView.DEBUG_CHECK_GL_ERROR | GLESSurfaceView.DEBUG_LOG_GL_CALLS)) != 0) {
+            if ((view.mDebugFlags & (VKSurfaceView.DEBUG_CHECK_GL_ERROR | VKSurfaceView.DEBUG_LOG_GL_CALLS)) != 0) {
                 int configFlags = 0;
                 Writer log = null;
-                if ((view.mDebugFlags & GLESSurfaceView.DEBUG_CHECK_GL_ERROR) != 0) {
+                if ((view.mDebugFlags & VKSurfaceView.DEBUG_CHECK_GL_ERROR) != 0) {
                     configFlags |= GLDebugHelper.CONFIG_CHECK_GL_ERROR;
                 }
-                if ((view.mDebugFlags & GLESSurfaceView.DEBUG_LOG_GL_CALLS) != 0) {
+                if ((view.mDebugFlags & VKSurfaceView.DEBUG_LOG_GL_CALLS) != 0) {
                     log = new LogWriter();
                 }
                 gl = GLDebugHelper.wrap(gl, configFlags, log);
@@ -183,7 +183,7 @@ public class EglHelper {
     }
 
     public void destroySurface() {
-        if (GLESSurfaceView.LOG_EGL) {
+        if (VKSurfaceView.LOG_EGL) {
             Log.w("EglHelper", "destroySurface()  tid=" + Thread.currentThread().getId());
         }
         destroySurfaceImp();
@@ -194,7 +194,7 @@ public class EglHelper {
             mEgl.eglMakeCurrent(mEglDisplay, EGL10.EGL_NO_SURFACE,
                     EGL10.EGL_NO_SURFACE,
                     EGL10.EGL_NO_CONTEXT);
-            GLESSurfaceView view = mGLSurfaceViewWeakRef.get();
+            VKSurfaceView view = mGLSurfaceViewWeakRef.get();
             if (view != null) {
                 view.mEGLWindowSurfaceFactory.destroySurface(mEgl, mEglDisplay, mEglSurface);
             }
@@ -203,11 +203,11 @@ public class EglHelper {
     }
 
     public void finish() {
-        if (GLESSurfaceView.LOG_EGL) {
+        if (VKSurfaceView.LOG_EGL) {
             Log.w("EglHelper", "finish() tid=" + Thread.currentThread().getId());
         }
         if (mEglContext != null) {
-        	GLESSurfaceView view = mGLSurfaceViewWeakRef.get();
+        	VKSurfaceView view = mGLSurfaceViewWeakRef.get();
             if (view != null) {
                 view.mEGLContextFactory.destroyContext(mEgl, mEglDisplay, mEglContext);
             }
@@ -225,7 +225,7 @@ public class EglHelper {
 
     public static void throwEglException(String function, int error) {
         String message = formatEglError(function, error);
-        if (GLESSurfaceView.LOG_THREADS) {
+        if (VKSurfaceView.LOG_THREADS) {
             Log.e("EglHelper", "throwEglException tid=" + Thread.currentThread().getId() + " "
                     + message);
         }
@@ -244,7 +244,7 @@ public class EglHelper {
     		return mEglConfig;
     }
 
-    private WeakReference<GLESSurfaceView> mGLSurfaceViewWeakRef;
+    private WeakReference<VKSurfaceView> mGLSurfaceViewWeakRef;
     public static EGL10 mEgl;
     public static EGLDisplay mEglDisplay;
     public static EGLSurface mEglSurface;

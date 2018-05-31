@@ -3,15 +3,12 @@ package com.bar.app;
 import javax.microedition.khronos.opengles.GL10;
 import android.util.Log;
 
-import com.bar.app.GLESSurfaceView;
-import com.bar.app.GLThread;
-
 public class GLThreadManager {
     private static String TAG = "GLThreadManager";
 
-    public synchronized void threadExiting(GLThread thread) {
-        if (GLESSurfaceView.LOG_THREADS) {
-            Log.i("GLThread", "exiting tid=" +  thread.getId());
+    public synchronized void threadExiting(VKThread thread) {
+        if (VKSurfaceView.LOG_THREADS) {
+            Log.i("VKThread", "exiting tid=" +  thread.getId());
         }
         thread.mExited = true;
         if (mEglOwner == thread) {
@@ -20,7 +17,7 @@ public class GLThreadManager {
         notifyAll();
     }
 
-     public boolean tryAcquireEglContextLocked(GLThread thread) {
+     public boolean tryAcquireEglContextLocked(VKThread thread) {
         if (mEglOwner == thread || mEglOwner == null) {
             mEglOwner = thread;
             notifyAll();
@@ -44,7 +41,7 @@ public class GLThreadManager {
      * Releases the EGL context. Requires that we are already in the
      * sGLThreadManager monitor when this is called.
      */
-    public void releaseEglContextLocked(GLThread thread) {
+    public void releaseEglContextLocked(VKThread thread) {
         if (mEglOwner == thread) {
             mEglOwner = null;
         }
@@ -73,7 +70,7 @@ public class GLThreadManager {
                 notifyAll();
             }
             mLimitedGLESContexts = !mMultipleGLESContextsAllowed;
-            if (GLESSurfaceView.LOG_SURFACE) {
+            if (VKSurfaceView.LOG_SURFACE) {
                 Log.w(TAG, "checkGLDriver renderer = \"" + renderer + "\" multipleContextsAllowed = "
                     + mMultipleGLESContextsAllowed
                     + " mLimitedGLESContexts = " + mLimitedGLESContexts);
@@ -91,7 +88,7 @@ public class GLThreadManager {
             if (mGLESVersion >= kGLES_20) {
                 mMultipleGLESContextsAllowed = true;
             }
-            if (GLESSurfaceView.LOG_SURFACE) {
+            if (VKSurfaceView.LOG_SURFACE) {
                 Log.w(TAG, "checkGLESVersion mGLESVersion =" +
                         " " + mGLESVersion + " mMultipleGLESContextsAllowed = " + mMultipleGLESContextsAllowed);
             }
@@ -106,6 +103,6 @@ public class GLThreadManager {
     private boolean mLimitedGLESContexts;
     private static final int kGLES_20 = 0x20000;
     private static final String kMSM7K_RENDERER_PREFIX = "Q3Dimension MSM7500 ";
-    private GLThread mEglOwner;
+    private VKThread mEglOwner;
     
 }

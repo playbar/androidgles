@@ -41,7 +41,7 @@ public class GLES3JNIActivity extends Activity {
     EGLConfig mEglConfig;
 
     static {
-        System.loadLibrary("vkview");
+        System.loadLibrary("glview");
     }
 
 

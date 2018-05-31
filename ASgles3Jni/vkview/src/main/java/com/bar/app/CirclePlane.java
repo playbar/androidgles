@@ -24,26 +24,26 @@ public class CirclePlane {
     float color[] = { 1.0f, 1.0f, 1.0f, 1.0f }; //白色不透明
 
     private final String vertexShaderCode =
-    			"#version 300 es \n" +
+            "#version 300 es \n" +
             "uniform mat4 uMVPMatrix;" +
             "layout(location = 0) in vec4 vPosition;" +
             "out vec4 color;" +
             "void main()" +
             "{" +
-            "   color = vec4(0.0f, 1.0f, 0.0f, 1.0f);"+
+            "   color = vec4(1.0f, 1.0f, 1.0f, 1.0f);"+
             "   if(vPosition.w>0.5f)"+
-            "       color = vec4(1.0f, 0.0f, 0.0f, 1.0f);"+
+            "       color = vec4(1.0f, 1.0f, 0.0f, 1.0f);"+
             "   gl_Position = uMVPMatrix * vPosition;" +
             "}";
     private final String fragmentShaderCode =
-    			"#version 300 es \n" +
+            "#version 300 es \n" +
             "precision mediump float;" +
             "uniform vec4 vColor;" +
             "in vec4 color;" +
             "out vec4 v_color;" +
             "void main()" +
             "{" +
-            "   v_color = color;" +
+            "   v_color = vec4(1.0f, 1.0f, 0.0f, 1.0f);" +
             "}";  
       
     public CirclePlane(int row, int column, float radius)   
@@ -54,8 +54,8 @@ public class CirclePlane {
         this.mRadius = radius;  
         this.createGraphics();  
           
-        int vertexShader = GLES3View.loadShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
-        int fragmentShader =GLES3View.loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        int vertexShader = VKViewTest.loadShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
+        int fragmentShader = VKViewTest.loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
           
         this.mProgram = GLES30.glCreateProgram();             // create empty OpenGL Program  
         GLES30.glAttachShader(this.mProgram, vertexShader);   // add the vertex shader to program  
@@ -112,7 +112,7 @@ public class CirclePlane {
             plane[vertexI+2] = 0.5f;//tri[i].z;
         }  
           
-        this.mPlaneBuffer = GLESUntil.getFloatBuffer(plane);
+        this.mPlaneBuffer = VKUntil.getFloatBuffer(plane);
 //      plane = null;  
     }   
     public void Draw(float[] mvpMatrix)  
@@ -123,9 +123,9 @@ public class CirclePlane {
         GLES30.glUniformMatrix4fv(this.mMVPMatrixHandle, 1, false, mvpMatrix, 0);  
         
         GLES30.glEnableVertexAttribArray(0);
-//        COORDS_PRE_VERTEX
+
         GLES30.glVertexAttribPointer(0, 2,
-                                    GLES30.GL_FLOAT, false, this.vertexStride, this.mPlaneBuffer);  
+                GLES30.GL_FLOAT, false, this.vertexStride, this.mPlaneBuffer);
         
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, this.vertexCount);  
           
