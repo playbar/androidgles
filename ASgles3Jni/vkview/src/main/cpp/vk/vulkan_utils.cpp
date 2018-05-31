@@ -11,7 +11,7 @@
 #include <stb_image.h>
 #include <unistd.h>
 
-#include "vulkan_tutorial.h"
+#include "vulkan_utils.h"
 
 const int WIDTH = 800;
 const int HEIGHT = 448;
@@ -30,7 +30,7 @@ const std::vector<const char *> deviceExtensions = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };
 
-const std::vector<VKTutorial::Vertex> vertices = {
+const std::vector<VulkanUtils::Vertex> vertices = {
         {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
         {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
         {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
@@ -217,25 +217,25 @@ std::vector<const char *> requiredExtensions() {
     return extensionNames;
 }
 
-void VKTutorial::run(ANativeWindow *window) {
+void VulkanUtils::run(ANativeWindow *window) {
     initWindow(window);
     initVulkan();
     mainLoop();
     cleanUp();
 }
 
-void VKTutorial::pause() {
+void VulkanUtils::pause() {
     state = STATE_PAUSED;
     vkDeviceWaitIdle(device);
 }
 
-void VKTutorial::surfaceChanged() {
+void VulkanUtils::surfaceChanged() {
     state = STATE_PAUSED;
     recreateSwapchain();
     state = STATE_RUNNING;
 }
 
-void VKTutorial::initVulkan() {
+void VulkanUtils::initVulkan() {
     if (!InitVulkan()) {
         throw std::runtime_error("InitVulkan fail!");
     }
@@ -269,7 +269,7 @@ void VKTutorial::initVulkan() {
     createSemaphores();
 }
 
-void VKTutorial::mainLoop() {
+void VulkanUtils::mainLoop() {
     LOGE("Fun:%s start, Line:%d, tid=%d", __FUNCTION__, __LINE__, gettid());
 
     while (state != STATE_EXIT) {
@@ -284,7 +284,7 @@ void VKTutorial::mainLoop() {
     LOGE("Fun:%s exit, Line:%d, tid=%d", __FUNCTION__, __LINE__, gettid());
 }
 
-void VKTutorial::cleanUp() {
+void VulkanUtils::cleanUp() {
     cleanupSwapchain();
 
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
@@ -311,7 +311,7 @@ void VKTutorial::cleanUp() {
     ANativeWindow_release(window);
 }
 
-void VKTutorial::createInstance() {
+void VulkanUtils::createInstance() {
     if (enableValidationLayers && !supportValidationLayers()) {
         throw std::runtime_error("validation layers requested, but not available!");
     }
@@ -346,7 +346,7 @@ void VKTutorial::createInstance() {
     LOGI("createInstance success :)");
 }
 
-void VKTutorial::setUpDebugCallback() {
+void VulkanUtils::setUpDebugCallback() {
     if (!enableValidationLayers) {
         return;
     }
@@ -363,7 +363,7 @@ void VKTutorial::setUpDebugCallback() {
     }
 }
 
-void VKTutorial::createSurface() {
+void VulkanUtils::createSurface() {
     VkAndroidSurfaceCreateInfoKHR createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
     createInfo.window = window;
@@ -373,7 +373,7 @@ void VKTutorial::createSurface() {
     }
 }
 
-void VKTutorial::pickPhysicalDevice() {
+void VulkanUtils::pickPhysicalDevice() {
     uint32_t deviceCount = 0;
     vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
@@ -398,7 +398,7 @@ void VKTutorial::pickPhysicalDevice() {
     }
 }
 
-void VKTutorial::createLogicalDevice() {
+void VulkanUtils::createLogicalDevice() {
     QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -440,7 +440,7 @@ void VKTutorial::createLogicalDevice() {
     vkGetDeviceQueue(device, indices.presentFamily, 0, &presentQueue);
 }
 
-void VKTutorial::createSwapchain() {
+void VulkanUtils::createSwapchain() {
     SwapchainSupportDetails swapchainSupport = querySwapchainSupport(physicalDevice);
     VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapchainSupport.formats);
     VkPresentModeKHR presentMode = chooseSwapPresentMode(swapchainSupport.presentModes);
@@ -492,7 +492,7 @@ void VKTutorial::createSwapchain() {
     swapchainExtent = extent;
 }
 
-void VKTutorial::createImageViews() {
+void VulkanUtils::createImageViews() {
     swapchainImageViews.resize(swapchainImages.size());
     for (size_t i = 0; i < swapchainImages.size(); i++) {
         VkImageViewCreateInfo createInfo = {};
@@ -520,7 +520,7 @@ void VKTutorial::createImageViews() {
     }
 }
 
-void VKTutorial::createRenderPass() {
+void VulkanUtils::createRenderPass() {
     VkAttachmentDescription colorAttachment = {};
     colorAttachment.format = swapchainImageFormat;
     colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -552,7 +552,7 @@ void VKTutorial::createRenderPass() {
     }
 }
 
-void VKTutorial::createDescriptorSetLayout() {
+void VulkanUtils::createDescriptorSetLayout() {
     VkDescriptorSetLayoutBinding uboLayoutBinding = {
             .binding = 0,
             .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -583,7 +583,7 @@ void VKTutorial::createDescriptorSetLayout() {
     }
 }
 
-void VKTutorial::createGraphicsPipeline() {
+void VulkanUtils::createGraphicsPipeline() {
     auto vertexShaderCode = readAsset(vertexShader);
     auto fragmentShaderCode = readAsset(fragmentShader);
     VkShaderModule vertexShaderModule = createShaderModule(vertexShaderCode);
@@ -713,7 +713,7 @@ void VKTutorial::createGraphicsPipeline() {
     vkDestroyShaderModule(device, fragmentShaderModule, nullptr);
 }
 
-void VKTutorial::createFramebuffers() {
+void VulkanUtils::createFramebuffers() {
     swapchainFramebuffers.resize(swapchainImageViews.size());
 
     for (size_t i = 0; i < swapchainImageViews.size(); i++) {
@@ -737,7 +737,7 @@ void VKTutorial::createFramebuffers() {
     }
 }
 
-void VKTutorial::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
+void VulkanUtils::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
                                              VkMemoryPropertyFlags properties, VkBuffer &buffer,
                                              VkDeviceMemory &bufferMemory) {
     VkBufferCreateInfo bufferInfo = {
@@ -766,7 +766,7 @@ void VKTutorial::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
     vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
 
-void VKTutorial::createImage(uint32_t width, uint32_t height, VkFormat format,
+void VulkanUtils::createImage(uint32_t width, uint32_t height, VkFormat format,
                                             VkImageTiling tiling, VkImageUsageFlags usage,
                                             VkMemoryPropertyFlags properties, VkImage &image,
                                             VkDeviceMemory &imageMemory) {
@@ -804,7 +804,7 @@ void VKTutorial::createImage(uint32_t width, uint32_t height, VkFormat format,
     vkBindImageMemory(device, image, imageMemory, 0);
 }
 
-void VKTutorial::transitionImageLayout(VkImage image, VkFormat format,
+void VulkanUtils::transitionImageLayout(VkImage image, VkFormat format,
                                                       VkImageLayout oldLayout,
                                                       VkImageLayout newLayout) {
     VkCommandBuffer commandBuffer = beginSingleTimeCommands();
@@ -853,7 +853,7 @@ void VKTutorial::transitionImageLayout(VkImage image, VkFormat format,
     endSingleTimeCommands(commandBuffer);
 }
 
-VkCommandBuffer VKTutorial::beginSingleTimeCommands() {
+VkCommandBuffer VulkanUtils::beginSingleTimeCommands() {
     VkCommandBufferAllocateInfo allocInfo = {};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -872,7 +872,7 @@ VkCommandBuffer VKTutorial::beginSingleTimeCommands() {
     return commandBuffer;
 }
 
-void VKTutorial::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
+void VulkanUtils::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
     vkEndCommandBuffer(commandBuffer);
 
     VkSubmitInfo submitInfo = {};
@@ -886,7 +886,7 @@ void VKTutorial::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
 
-void VKTutorial::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
+void VulkanUtils::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
                                                   uint32_t height) {
     VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -910,7 +910,7 @@ void VKTutorial::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t widt
     endSingleTimeCommands(commandBuffer);
 }
 
-VkImageView VKTutorial::createImageView(VkImage image, VkFormat format) {
+VkImageView VulkanUtils::createImageView(VkImage image, VkFormat format) {
     VkImageViewCreateInfo viewInfo = {};
     viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.image = image;
@@ -930,7 +930,7 @@ VkImageView VKTutorial::createImageView(VkImage image, VkFormat format) {
     return imageView;
 }
 
-void VKTutorial::createTextureImage() {
+void VulkanUtils::createTextureImage() {
     AAsset* file = AAssetManager_open(assetManager, IMAGE_PATH.c_str(), AASSET_MODE_BUFFER);
     size_t fileLength = AAsset_getLength(file);
     stbi_uc* fileContent = new unsigned char[fileLength];
@@ -966,11 +966,11 @@ void VKTutorial::createTextureImage() {
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void VKTutorial::createTextureImageView() {
+void VulkanUtils::createTextureImageView() {
     textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_UNORM);
 }
 
-void VKTutorial::createTextureSampler() {
+void VulkanUtils::createTextureSampler() {
     VkSamplerCreateInfo samplerInfo = {};
     samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
     samplerInfo.magFilter = VK_FILTER_LINEAR;
@@ -991,7 +991,7 @@ void VKTutorial::createTextureSampler() {
     }
 }
 
-void VKTutorial::createVertexBuffer() {
+void VulkanUtils::createVertexBuffer() {
     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
     VkBuffer stagingBuffer;
@@ -1019,7 +1019,7 @@ void VKTutorial::createVertexBuffer() {
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void VKTutorial::createIndexBuffer() {
+void VulkanUtils::createIndexBuffer() {
     VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
     VkBuffer stagingBuffer;
@@ -1047,7 +1047,7 @@ void VKTutorial::createIndexBuffer() {
     vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void VKTutorial::createUniformBuffer() {
+void VulkanUtils::createUniformBuffer() {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
     createBuffer(bufferSize,
                  VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
@@ -1056,7 +1056,7 @@ void VKTutorial::createUniformBuffer() {
                  uniformBufferMemory);
 }
 
-void VKTutorial::createDescriptorPool() {
+void VulkanUtils::createDescriptorPool() {
     std::array<VkDescriptorPoolSize, 2> poolSizes = {};
     poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     poolSizes[0].descriptorCount = 1;
@@ -1074,7 +1074,7 @@ void VKTutorial::createDescriptorPool() {
     }
 }
 
-void VKTutorial::createDescriptorSet() {
+void VulkanUtils::createDescriptorSet() {
     VkDescriptorSetLayout layouts[] = {descriptorSetLayout};
     VkDescriptorSetAllocateInfo allocInfo = {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
@@ -1119,7 +1119,7 @@ void VKTutorial::createDescriptorSet() {
     vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 }
 
-void VKTutorial::copyBuffer(
+void VulkanUtils::copyBuffer(
         VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
     VkCommandBufferAllocateInfo allocInfo = {
             .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -1155,7 +1155,7 @@ void VKTutorial::copyBuffer(
     vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
 }
 
-uint32_t VKTutorial::findMemoryType(
+uint32_t VulkanUtils::findMemoryType(
         uint32_t typeFilter, VkMemoryPropertyFlags properties) {
     VkPhysicalDeviceMemoryProperties memProperties;
     vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
@@ -1170,7 +1170,7 @@ uint32_t VKTutorial::findMemoryType(
     throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void VKTutorial::createCommandBuffers() {
+void VulkanUtils::createCommandBuffers() {
     commandBuffers.resize(swapchainFramebuffers.size());
 
     VkCommandBufferAllocateInfo allocInfo = {};
@@ -1225,7 +1225,7 @@ void VKTutorial::createCommandBuffers() {
     }
 }
 
-void VKTutorial::createSemaphores() {
+void VulkanUtils::createSemaphores() {
     VkSemaphoreCreateInfo semaphoreInfo = {};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -1236,7 +1236,7 @@ void VKTutorial::createSemaphores() {
     }
 }
 
-void VKTutorial::updateUniformBuffer() {
+void VulkanUtils::updateUniformBuffer() {
     static auto startTime = std::chrono::high_resolution_clock::now();
 
     auto currentTime = std::chrono::high_resolution_clock::now();
@@ -1261,7 +1261,7 @@ void VKTutorial::updateUniformBuffer() {
     vkUnmapMemory(device, uniformBufferMemory);
 }
 
-void VKTutorial::drawFrame() {
+void VulkanUtils::drawFrame() {
     uint32_t imageIndex = 0;
     VkResult result = vkAcquireNextImageKHR(device, swapchain, std::numeric_limits<uint64_t>::max(),
                                             imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
@@ -1315,7 +1315,7 @@ void VKTutorial::drawFrame() {
     vkQueueWaitIdle(presentQueue);
 }
 
-void VKTutorial::recreateSwapchain() {
+void VulkanUtils::recreateSwapchain() {
     LOGI("recreateSwapchain");
 
     vkDeviceWaitIdle(device);
@@ -1330,7 +1330,7 @@ void VKTutorial::recreateSwapchain() {
     createCommandBuffers();
 }
 
-void VKTutorial::cleanupSwapchain() {
+void VulkanUtils::cleanupSwapchain() {
     for (size_t i = 0; i < swapchainFramebuffers.size(); i++) {
         vkDestroyFramebuffer(device, swapchainFramebuffers[i], nullptr);
     }
@@ -1349,7 +1349,7 @@ void VKTutorial::cleanupSwapchain() {
     vkDestroySwapchainKHR(device, swapchain, nullptr);
 }
 
-std::vector<char> VKTutorial::readAsset(std::string name) {
+std::vector<char> VulkanUtils::readAsset(std::string name) {
     AAsset *file = AAssetManager_open(assetManager, name.c_str(), AASSET_MODE_BUFFER);
     size_t len = AAsset_getLength(file);
     std::vector<char> buffer(len);
@@ -1363,7 +1363,7 @@ std::vector<char> VKTutorial::readAsset(std::string name) {
     return buffer;
 }
 
-void VKTutorial::createCommandPool() {
+void VulkanUtils::createCommandPool() {
     QueueFamilyIndices queueFamilyIndices = findQueueFamilies(physicalDevice);
 
     VkCommandPoolCreateInfo poolInfo = {};
@@ -1376,7 +1376,7 @@ void VKTutorial::createCommandPool() {
     }
 }
 
-VkShaderModule VKTutorial::createShaderModule(const std::vector<char> &code) {
+VkShaderModule VulkanUtils::createShaderModule(const std::vector<char> &code) {
     VkShaderModuleCreateInfo createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = code.size();
@@ -1390,7 +1390,7 @@ VkShaderModule VKTutorial::createShaderModule(const std::vector<char> &code) {
     return shaderModule;
 }
 
-bool VKTutorial::isDeviceSuitable(VkPhysicalDevice device) {
+bool VulkanUtils::isDeviceSuitable(VkPhysicalDevice device) {
     bool extensionsSupported = checkDeviceExtensionSupport(device);
 
     bool swapchainAdequate = false;
@@ -1406,7 +1406,7 @@ bool VKTutorial::isDeviceSuitable(VkPhysicalDevice device) {
 }
 
 
-bool VKTutorial::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+bool VulkanUtils::checkDeviceExtensionSupport(VkPhysicalDevice device) {
     uint32_t extensionCount = 0;
     vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -1423,8 +1423,8 @@ bool VKTutorial::checkDeviceExtensionSupport(VkPhysicalDevice device) {
     return requiredExtensions.empty();
 }
 
-VKTutorial::QueueFamilyIndices
-VKTutorial::findQueueFamilies(VkPhysicalDevice device) {
+VulkanUtils::QueueFamilyIndices
+VulkanUtils::findQueueFamilies(VkPhysicalDevice device) {
     QueueFamilyIndices indices;
 
     uint32_t queueFamilyCount = 0;
@@ -1455,8 +1455,8 @@ VKTutorial::findQueueFamilies(VkPhysicalDevice device) {
     return indices;
 }
 
-VKTutorial::SwapchainSupportDetails
-VKTutorial::querySwapchainSupport(VkPhysicalDevice device) {
+VulkanUtils::SwapchainSupportDetails
+VulkanUtils::querySwapchainSupport(VkPhysicalDevice device) {
     SwapchainSupportDetails details;
 
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);

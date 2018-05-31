@@ -1,5 +1,5 @@
-#ifndef VULKANTUTORIAL_ANDROID_VULKAN_TRIANGLE_H
-#define VULKANTUTORIAL_ANDROID_VULKAN_TRIANGLE_H
+#ifndef __BAR_VULKAN_UTILS_H__
+#define __BAR_VULKAN_UTILS_H__
 
 #include <android/log.h>
 #include <android/asset_manager.h>
@@ -15,7 +15,7 @@
 #define STATE_PAUSED 2
 #define STATE_EXIT 3
 
-class VKTutorial {
+class VulkanUtils {
 public:
     struct QueueFamilyIndices {
         int graphicsFamily = -1;
@@ -74,7 +74,7 @@ public:
         glm::mat4 proj;
     };
 
-    VKTutorial(
+    VulkanUtils(
             AAssetManager *assetManager,
             const char *vertexShader,
             const char *fragmentShader) :
@@ -241,4 +241,4 @@ private:
     VkSemaphore renderFinishedSemaphore;
 };
 
-#endif //VULKANTUTORIAL_ANDROID_VULKAN_TRIANGLE_H
+#endif //__BAR_VULKAN_UTILS_H__

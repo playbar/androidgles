@@ -526,32 +526,6 @@ void * thread_1(void *pdata ){
 
 CThreadPool gThreadPool(10);
 
-
-JNIEXPORT void JNICALL
-Java_com_bar_app_VKJNILib_initVK(JNIEnv* env, jobject obj, jobject surface, jobject assetMgr)
-{
-    ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
-    if(window == NULL ){
-        LOGE("window surface fail");
-    }
-    AAssetManager* mgr = AAssetManager_fromJava(env, assetMgr);
-    ANativeWindow_acquire(window);
-//    InitVulkan(window, mgr);
-    ANativeWindow_release(window);
-    return;
-
-}
-
-JNIEXPORT void JNICALL
-Java_com_bar_app_VKJNILib_vkDrawFrame(JNIEnv* env, jobject obj)
-{
-//    while( true ) {
-//        if (IsVulkanReady()) {
-//            VulkanDrawFrame();
-//        }
-//    }
-}
-
 JNIEXPORT void JNICALL
 Java_com_bar_vkview_GLES3JNILib_init(JNIEnv* env, jobject obj) {
     if (g_renderer) {

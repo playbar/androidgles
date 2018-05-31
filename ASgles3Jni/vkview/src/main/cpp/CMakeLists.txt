@@ -29,12 +29,13 @@ target_link_libraries(glview
 
 ######
 
-add_library(vklib SHARED
-           vk/vulkan_tutorial.cpp
+add_library(vkutils SHARED
+           vk/vulkan_utils.cpp
            vk/vulkan_wrapper.cpp
+           vk/vulkan_utils_jni.cpp
             )
 
-target_include_directories(vklib PRIVATE
+target_include_directories(vkutils PRIVATE
                           ${CMAKE_CURRENT_SOURCE_DIR}
                           ${CMAKE_CURRENT_SOURCE_DIR}/vk
                           ${CMAKE_CURRENT_SOURCE_DIR}/data
@@ -42,7 +43,7 @@ target_include_directories(vklib PRIVATE
                           ${CMAKE_CURRENT_SOURCE_DIR}/tinyobjloader
                           )
 
-target_link_libraries(vklib
+target_link_libraries(vkutils
                       android
                       log
                       GLESv3
