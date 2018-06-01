@@ -32,47 +32,57 @@ public class VKThread extends Thread {
         }
         VKSurfaceView view = mGLSurfaceViewWeakRef.get();
         SurfaceHolder holder = view.getHolder();
-        view.mVKUtilsLib.run(holder.getSurface());
+//        view.mVKUtilsLib.run(holder.getSurface());
         try {
             guardedRun();
         } catch (InterruptedException e) {
             // fall thru and exit normally
         } finally {
-        		VKSurfaceView.sGLThreadManager.threadExiting(this);
+            VKSurfaceView.sGLThreadManager.threadExiting(this);
         }
     }
 
     private void stopEglSurfaceLocked() {
         if (mHaveEglSurface) {
             mHaveEglSurface = false;
-            mEglHelper.destroySurface();
+            VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+            view.mVKUtilsLib.destroySurface();
+//            mEglHelper.destroySurface();
         }
     }
     
     public void makeCurrent(){
-    		mEglHelper.makeCurrent();
+        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+        view.mVKUtilsLib.makeCurrent();
+//    		mEglHelper.makeCurrent();
     }
     
     public EGLConfig getEglConfig(){
-    		return mEglHelper.getEglConfig();
+        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+        return view.mVKUtilsLib.getEglConfig();
+//    	return mEglHelper.getEglConfig();
     }
 
     private void stopEglContextLocked() {
         if (mHaveEglContext) {
-            mEglHelper.finish();
+            VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+            view.mVKUtilsLib.finish();
+//            mEglHelper.finish();
             mHaveEglContext = false;
             VKSurfaceView.sGLThreadManager.releaseEglContextLocked(this);
         }
     }
     private void guardedRun() throws InterruptedException {
-        mEglHelper = new EglHelper(mGLSurfaceViewWeakRef);
+        VKSurfaceView view11 = mGLSurfaceViewWeakRef.get();
+        view11.mVKUtilsLib.setSurfaceView(mGLSurfaceViewWeakRef);
+//        mEglHelper = new EglHelper(mGLSurfaceViewWeakRef);
         mHaveEglContext = false;
         mHaveEglSurface = false;
         try {
-            GL10 gl = null;
+//            GL10 gl = null;
             boolean createEglContext = false;
             boolean createEglSurface = false;
-            boolean createGlInterface = false;
+//            boolean createGlInterface = false;
             boolean lostEglContext = false;
             boolean sizeChanged = false;
             boolean wantRenderNotification = false;
@@ -156,7 +166,9 @@ public class VKThread extends Thread {
                         // When pausing, optionally terminate EGL:
                         if (pausing) {
                             if (VKSurfaceView.sGLThreadManager.shouldTerminateEGLWhenPausing()) {
-                                mEglHelper.finish();
+                                VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+                                view.mVKUtilsLib.finish();
+//                                mEglHelper.finish();
                                 if (VKSurfaceView.LOG_SURFACE) {
                                     Log.i("VKThread", "terminating EGL because paused tid=" + getId());
                                 }
@@ -204,7 +216,9 @@ public class VKThread extends Thread {
                                     askedToReleaseEglContext = false;
                                 } else if (VKSurfaceView.sGLThreadManager.tryAcquireEglContextLocked(this)) {
                                     try {
-                                        mEglHelper.start();
+                                        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+                                        view.mVKUtilsLib.start();
+//                                        mEglHelper.start();
                                     } catch (RuntimeException t) {
                                     	VKSurfaceView.sGLThreadManager.releaseEglContextLocked(this);
                                         throw t;
@@ -219,7 +233,7 @@ public class VKThread extends Thread {
                             if (mHaveEglContext && !mHaveEglSurface) {
                                 mHaveEglSurface = true;
                                 createEglSurface = true;
-                                createGlInterface = true;
+//                                createGlInterface = true;
                                 sizeChanged = true;
                             }
 
@@ -276,7 +290,10 @@ public class VKThread extends Thread {
                     if (VKSurfaceView.LOG_SURFACE) {
                         Log.w("VKThread", "egl createSurface");
                     }
-                    if (mEglHelper.createSurface()) {
+//                    if (mEglHelper.createSurface())
+                    VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+                    if(view.mVKUtilsLib.createSurface())
+                    {
                         synchronized(VKSurfaceView.sGLThreadManager) {
                             mFinishedCreatingEglSurface = true;
                             VKSurfaceView.sGLThreadManager.notifyAll();
@@ -292,12 +309,14 @@ public class VKThread extends Thread {
                     createEglSurface = false;
                 }
 
-                if (createGlInterface) {
-                    gl = (GL10) mEglHelper.createGL();
-
-                    VKSurfaceView.sGLThreadManager.checkGLDriver(gl);
-                    createGlInterface = false;
-                }
+//                if (createGlInterface) {
+//                    VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+//                    gl = (GL10)view.mVKUtilsLib.createGL();
+////                    gl = (GL10) mEglHelper.createGL();
+//
+//                    VKSurfaceView.sGLThreadManager.checkGLDriver(gl);
+//                    createGlInterface = false;
+//                }
 
                 if (createEglContext) {
                     if (VKSurfaceView.LOG_RENDERER) {
@@ -305,7 +324,7 @@ public class VKThread extends Thread {
                     }
                     VKSurfaceView view = mGLSurfaceViewWeakRef.get();
                     if (view != null) {
-                        view.mRenderer.onSurfaceCreated(gl, mEglHelper.mEglConfig);
+                        view.mRenderer.onSurfaceCreated(view.mVKUtilsLib.mEglConfig);
                     }
                     createEglContext = false;
                 }
@@ -316,7 +335,7 @@ public class VKThread extends Thread {
                     }
                     VKSurfaceView view = mGLSurfaceViewWeakRef.get();
                     if (view != null) {
-                        view.mRenderer.onSurfaceChanged(gl, w, h);
+                        view.mRenderer.onSurfaceChanged( w, h);
                     }
                     sizeChanged = false;
                 }
@@ -327,34 +346,14 @@ public class VKThread extends Thread {
                 {
                 	VKSurfaceView view = mGLSurfaceViewWeakRef.get();
                     if (view != null) {
-                        view.mRenderer.onDrawFrame(gl);
+                        view.mRenderer.onDrawFrame();
                     }
                 }
                 Logger.printTime();
-                int swapError = mEglHelper.swap();
+                VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+//                int swapError = view.mVKUtilsLib.swap();
+//                int swapError = mEglHelper.swap();
                 Logger.printTime();
-                switch (swapError) {
-                    case EGL10.EGL_SUCCESS:
-                        break;
-                    case EGL11.EGL_CONTEXT_LOST:
-                        if (VKSurfaceView.LOG_SURFACE) {
-                            Log.i("VKThread", "egl context lost tid=" + getId());
-                        }
-                        lostEglContext = true;
-                        break;
-                    default:
-                        // Other errors typically mean that the current surface is bad,
-                        // probably because the SurfaceView surface has been destroyed,
-                        // but we haven't been notified yet.
-                        // Log the error to help developers understand why rendering stopped.
-                        EglHelper.logEglErrorAsWarning("VKThread", "eglSwapBuffers", swapError);
-
-                        synchronized(VKSurfaceView.sGLThreadManager) {
-                            mSurfaceIsBad = true;
-                            VKSurfaceView.sGLThreadManager.notifyAll();
-                        }
-                        break;
-                }
 
                 if (wantRenderNotification) {
                     doRenderNotification = true;
@@ -366,8 +365,8 @@ public class VKThread extends Thread {
              * clean-up everything...
              */
             synchronized (VKSurfaceView.sGLThreadManager) {
-                stopEglSurfaceLocked();
-                stopEglContextLocked();
+//                stopEglSurfaceLocked();
+//                stopEglContextLocked();
             }
         }
     }
@@ -566,7 +565,7 @@ public class VKThread extends Thread {
 
     // End of member variables protected by the sGLThreadManager monitor.
 
-    private EglHelper mEglHelper;
+//    private EglHelper mEglHelper;
 
     /**
      * Set once at thread construction time, nulled out when the parent view is garbage

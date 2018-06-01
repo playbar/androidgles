@@ -59,7 +59,7 @@ public class VKViewTest extends VKSurfaceView {
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
         setEGLContextClientVersion(3);
         setRenderer(mRender);
-        setRenderMode(VKSurfaceView.RENDERMODE_WHEN_DIRTY);
+//        setRenderMode(VKSurfaceView.RENDERMODE_WHEN_DIRTY);
         holder = getHolder();
     }
 
@@ -103,35 +103,23 @@ public class VKViewTest extends VKSurfaceView {
         private final float[] mRotationMatrix = new float[16];
         //  private volatile float mAngle;
 
-        private CirclePlane mCirclePlane;
-
-        public void onDrawFrame(GL10 gl) {
+        public void onDrawFrame() {
             Logger.printTime();
-
-            //清楚屏幕和深度缓存
-            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
-
-            Matrix.setLookAtM(mVMatrix, 0, 0, 0, -3, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-            Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
-
-            this.mCirclePlane.Draw(mMVPMatrix);
+            VKViewTest.this.mVKUtilsLib.onDrawFrame();
 
             return;
         }
 
-        public void onSurfaceChanged(GL10 gl, int width, int height) {
+        public void onSurfaceChanged(int width, int height) {
             Log.e("GLES2JNIView", "onSurfaceChanged");
-            float ratio = (float) width / height;
-            GLES30.glViewport(0, 0, width, height);
-            Matrix.frustumM(mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+            VKViewTest.this.mVKUtilsLib.onSurfaceChanged();
             return;
         }
 
-        public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        public void onSurfaceCreated(EGLConfig config) {
             Log.e("GLES2JNIView", "onSurfaceCreated");
-            //black background
-            GLES30.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            this.mCirclePlane = new CirclePlane(10, 10, 1.0f);
+            VKViewTest.this.mVKUtilsLib.onSurfaceCreated();
+
         }
 
     }

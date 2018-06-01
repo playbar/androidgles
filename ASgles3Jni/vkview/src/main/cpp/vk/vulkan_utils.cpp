@@ -235,6 +235,53 @@ void VulkanUtils::surfaceChanged() {
     state = STATE_RUNNING;
 }
 
+void VulkanUtils::OnSurfaceCreated()
+{
+    pickPhysicalDevice();
+    createLogicalDevice();
+
+    createSwapchain();
+    createImageViews();
+    createRenderPass();
+    createDescriptorSetLayout();
+    createGraphicsPipeline();
+    createFramebuffers();
+
+    createCommandPool();
+    createTextureImage();
+    createTextureImageView();
+    createTextureSampler();
+
+    createVertexBuffer();
+    createIndexBuffer();
+    createUniformBuffer();
+    createDescriptorPool();
+    createDescriptorSet();
+    createCommandBuffers();
+
+    createSemaphores();
+}
+
+void VulkanUtils::OnSurfaceChanged()
+{
+    recreateSwapchain();
+}
+
+void VulkanUtils::OnDrawFrame()
+{
+    updateUniformBuffer();
+    drawFrame();
+}
+
+void VulkanUtils::start() {
+    if (!InitVulkan()) {
+        throw std::runtime_error("InitVulkan fail!");
+    }
+    createInstance();
+    setUpDebugCallback();
+    return;
+}
+
 void VulkanUtils::initVulkan() {
     if (!InitVulkan()) {
         throw std::runtime_error("InitVulkan fail!");

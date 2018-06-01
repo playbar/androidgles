@@ -53,8 +53,7 @@ Java_com_bar_app_VKUtilsLib_nativeCreate(
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeRun(
-        JNIEnv *env, jclass type, jlong nativeHandle, jobject surface) {
+Java_com_bar_app_VKUtilsLib_nativeRun(JNIEnv *env, jclass type, jlong nativeHandle, jobject surface) {
     ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
     if (window == nullptr) {
         LOGE("get window from surface fail!");
@@ -93,3 +92,51 @@ Java_com_bar_app_VKUtilsLib_nativeStop(JNIEnv *env, jclass type, jlong nativeHan
     app->stop();
 }
 
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeStart(JNIEnv *env, jclass type, jlong nativeHandle)
+{
+    VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
+    app->start();
+}
+
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeCreateSurface(JNIEnv *env, jclass type, jlong nativeHandle, jobject surface)
+{
+    ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
+    if (window == nullptr) {
+        LOGE("get window from surface fail!");
+        return;
+    }
+
+    VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
+    app->initWindow(window);
+    app->createSurface();
+    return;
+}
+
+
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeOnSurfaceCreated(JNIEnv *env, jclass type, jlong nativeHandle)
+{
+    VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
+    app->OnSurfaceCreated();
+    return;
+}
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jlong nativeHandle)
+{
+    VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
+    app->OnSurfaceChanged();
+    return;
+}
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeOnDrawFrame(JNIEnv *env, jclass type, jlong nativeHandle)
+{
+    VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
+    app->OnDrawFrame();
+    return;
+}

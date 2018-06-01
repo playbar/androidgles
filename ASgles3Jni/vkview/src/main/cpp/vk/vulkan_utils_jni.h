@@ -29,6 +29,22 @@ Java_com_bar_app_VKUtilsLib_nativeSurfaceChanged(JNIEnv *env, jclass type, jlong
 JNIEXPORT void JNICALL
 Java_com_bar_app_VKUtilsLib_nativeStop(JNIEnv *env, jclass type, jlong nativeHandle);
 
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeStart(JNIEnv *env, jclass type, jlong nativeHandle);
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeCreateSurface(JNIEnv *env, jclass type, jlong nativeHandle, jobject surface);
+
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeOnSurfaceCreated(JNIEnv *env, jclass type, jlong nativeHandle);
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jlong nativeHandle);
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeOnDrawFrame(JNIEnv *env, jclass type, jlong nativeHandle);
+
 #ifdef __cplusplus
 }
 #endif

@@ -98,10 +98,16 @@ public:
         state = STATE_EXIT;
     }
 
-private:
+public:
     inline void initWindow(ANativeWindow *window) {
         this->window = window;
     }
+
+    void OnSurfaceCreated();
+    void OnSurfaceChanged();
+    void OnDrawFrame();
+
+    void start();
 
     void initVulkan();
 

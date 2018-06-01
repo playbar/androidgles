@@ -255,11 +255,11 @@ public class VKSurfaceView extends SurfaceView implements SurfaceHolder.Callback
  
     public interface Renderer {
       
-        void onSurfaceCreated(GL10 gl, EGLConfig config);
+        void onSurfaceCreated(EGLConfig config);
 
-        void onSurfaceChanged(GL10 gl, int width, int height);
+        void onSurfaceChanged(int width, int height);
 
-        void onDrawFrame(GL10 gl);
+        void onDrawFrame();
     }
 
     public interface EGLContextFactory {
@@ -285,7 +285,7 @@ public class VKSurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 if (LOG_THREADS) {
                     Log.i("DefaultContextFactory", "tid=" + Thread.currentThread().getId());
                 }
-                EglHelper.throwEglException("eglDestroyContex", egl.eglGetError());
+                mVKUtilsLib.throwEglException("eglDestroyContex", egl.eglGetError());
             }
         }
     }
