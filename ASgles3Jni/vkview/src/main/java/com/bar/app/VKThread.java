@@ -9,6 +9,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.util.Log;
+import android.view.SurfaceHolder;
 
 import com.bar.util.Logger;
 
@@ -29,7 +30,9 @@ public class VKThread extends Thread {
         if (VKSurfaceView.LOG_THREADS) {
             Log.i("VKThread", "starting tid=" + getId());
         }
-
+        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+        SurfaceHolder holder = view.getHolder();
+        view.mVKUtilsLib.run(holder.getSurface());
         try {
             guardedRun();
         } catch (InterruptedException e) {

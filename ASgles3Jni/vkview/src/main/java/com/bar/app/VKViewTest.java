@@ -17,6 +17,7 @@
 package com.bar.app;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.PixelFormat;
 import android.opengl.GLES30;
 import android.opengl.Matrix;
@@ -31,20 +32,27 @@ import javax.microedition.khronos.opengles.GL10;
 import com.bar.util.Logger;
 
 public class VKViewTest extends VKSurfaceView {
-    private static final String TAG = "VKView";
-    private static final boolean DEBUG = true;
-    
-    private final float TOUCH_SCALE_FACOTOR = 180.0f / 320;  
-    private Renderer mRender = new Renderer();  
 
-    private float mPreX = 0.0f;  
-    private float mPreY = 0.0f;  
-    
+    private static final String TAG = "VKView";
+
+
+    private VKViewRenderer mRender = new VKViewRenderer();
+
+//    VKUtilsLib mVKUitlsLib;
+
+    private float mPreX = 0.0f;
+    private float mPreY = 0.0f;
+
     public static EGLContext eglContext;
     public static  SurfaceHolder holder;
+    private AssetManager mAssetManager;
 
     public VKViewTest(Context context) {
         super(context);
+
+        mAssetManager = getContext().getAssets();
+
+//        mVKUitlsLib = new VKUtilsLib(mAssetManager, VERTEX_SHADER, FRAGMENT_SHADER);
 
         setZOrderOnTop(true);
         setEGLConfigChooser(8, 8, 8, 0, 16, 0);
@@ -54,57 +62,58 @@ public class VKViewTest extends VKSurfaceView {
         setRenderMode(VKSurfaceView.RENDERMODE_WHEN_DIRTY);
         holder = getHolder();
     }
-    
-    @Override  
-    public boolean onTouchEvent(MotionEvent event) {  
-        // TODO Auto-generated method stub  
-    		Log.e("GLES3View", "onTouchEvent");
-        float x = event.getX();  
-        float y = event.getY();  
-          
-        switch (event.getAction())   
-        {  
-            case MotionEvent.ACTION_MOVE:  
-            		Log.e("GLES3View", "onTouchEvent->ACTION_MOVE");
-                float dx = x - mPreX;  
-                float dy = y - mPreY;  
-                  
-                mRender.zrot = dx * TOUCH_SCALE_FACOTOR;  
-                mRender.xrot = dy * TOUCH_SCALE_FACOTOR;  
-                  
-                this.requestRender();  
-                break;  
-      
-            default:  
-                break;  
-        }  
-        mPreX = x;  
-        mPreY = y;  
-        return true;  
-    }  
 
-    private static class Renderer implements VKSurfaceView.Renderer {
-    		
-    	  	public float xrot, yrot, zrot;  
-          
-    	    private static final String TAG = "GLRender";  
-    	    private final float[] mProjMatrix   = new float[16];  
-    	    private final float[] mVMatrix      = new float[16];  
-    	    private final float[] mMVPMatrix    = new float[16];  
-    	    private final float[] mRotationMatrix = new float[16];  
-    	//  private volatile float mAngle;  
-    	      
-    	    private CirclePlane mCirclePlane;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // TODO Auto-generated method stub
+        Log.e("GLES3View", "onTouchEvent");
+        float x = event.getX();
+        float y = event.getY();
+
+        return true;
+    }
+
+
+    public static int loadShader(int type, String shaderCode)
+    {
+        int shader = GLES30.glCreateShader(type);
+        GLES30.glShaderSource(shader, shaderCode);
+        GLES30.glCompileShader(shader);
+
+        return shader;
+    }
+
+    public static void checkGLError(String glOperation)
+    {
+        int error;
+        while((error = GLES30.glGetError()) != (GLES30.GL_NO_ERROR))
+        {
+            Log.e(TAG, glOperation + ": glError " + error);
+            throw new RuntimeException(glOperation + ": glError " + error);
+        }
+    }
+
+    /////
+    public class VKViewRenderer implements VKSurfaceView.Renderer{
+
+        private static final String TAG = "GLRender";
+        private final float[] mProjMatrix   = new float[16];
+        private final float[] mVMatrix      = new float[16];
+        private final float[] mMVPMatrix    = new float[16];
+        private final float[] mRotationMatrix = new float[16];
+        //  private volatile float mAngle;
+
+        private CirclePlane mCirclePlane;
 
         public void onDrawFrame(GL10 gl) {
             Logger.printTime();
 
-            //清楚屏幕和深度缓存  
+            //清楚屏幕和深度缓存
             GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
-              
-            Matrix.setLookAtM(mVMatrix, 0, 0, 0, -3, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);  
-            Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0); 
-            
+
+            Matrix.setLookAtM(mVMatrix, 0, 0, 0, -3, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+            Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
+
             this.mCirclePlane.Draw(mMVPMatrix);
 
             return;
@@ -125,25 +134,7 @@ public class VKViewTest extends VKSurfaceView {
             this.mCirclePlane = new CirclePlane(10, 10, 1.0f);
         }
 
-    }  // end of renderer
-    
-    public static int loadShader(int type, String shaderCode)  
-    {
-        int shader = GLES30.glCreateShader(type);  
-        GLES30.glShaderSource(shader, shaderCode);  
-        GLES30.glCompileShader(shader);  
-          
-        return shader;  
-    }  
-    
-    public static void checkGLError(String glOperation)  
-    {  
-        int error;  
-        while((error = GLES30.glGetError()) != (GLES30.GL_NO_ERROR))  
-        {  
-            Log.e(TAG, glOperation + ": glError " + error);  
-            throw new RuntimeException(glOperation + ": glError " + error);  
-        }  
     }
-    
+
+
 }

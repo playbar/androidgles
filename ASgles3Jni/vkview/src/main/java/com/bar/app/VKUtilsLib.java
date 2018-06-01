@@ -10,6 +10,9 @@ import android.view.Surface;
 
 public class VKUtilsLib {
 
+    private static final String VERTEX_SHADER = "shaders/triangle.vert.spv";
+    private static final String FRAGMENT_SHADER = "shaders/triangle.frag.spv";
+
     static {
         System.loadLibrary("vkutils");
     }
@@ -31,8 +34,11 @@ public class VKUtilsLib {
 
     ////
 
-    public VKUtilsLib(AssetManager assetManager, String vertexShader,
-                      String fragmentShader) {
+    public VKUtilsLib(AssetManager assetManager){
+        mNativeVulanUtils = nativeCreate(assetManager, VERTEX_SHADER, FRAGMENT_SHADER);
+    }
+
+    public VKUtilsLib(AssetManager assetManager, String vertexShader, String fragmentShader) {
         mNativeVulanUtils = nativeCreate(assetManager, vertexShader, fragmentShader);
     }
 
@@ -50,13 +56,13 @@ public class VKUtilsLib {
     private static native void nativeStop(long nativeHandle);
 
     public void run(final Surface surface) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 Log.e("java run", "tid=" + android.os.Process.myTid());
                 VKUtilsLib.nativeRun(mNativeVulanUtils, surface);
-            }
-        }).start();
+//            }
+//        }).start();
     }
 
     public void pause() {

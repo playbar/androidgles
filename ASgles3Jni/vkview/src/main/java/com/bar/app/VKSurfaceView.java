@@ -96,6 +96,7 @@ public class VKSurfaceView extends SurfaceView implements SurfaceHolder.Callback
             mEGLWindowSurfaceFactory = new DefaultWindowSurfaceFactory();
         }
         mRenderer = renderer;
+        mVKUtilsLib = new VKUtilsLib(getContext().getAssets());
 
         mGLThread = new VKThread(mThisWeakRef);
         mGLThread.start();
@@ -328,8 +329,7 @@ public class VKSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     public static final GLThreadManager sGLThreadManager = new GLThreadManager();
 
-    private final WeakReference<VKSurfaceView> mThisWeakRef =
-            new WeakReference<VKSurfaceView>(this);
+    private final WeakReference<VKSurfaceView> mThisWeakRef = new WeakReference<VKSurfaceView>(this);
     private VKThread mGLThread;
     public Renderer mRenderer;
     private boolean mDetached;
@@ -340,4 +340,5 @@ public class VKSurfaceView extends SurfaceView implements SurfaceHolder.Callback
     public int mDebugFlags;
     public static int mEGLContextClientVersion;
     public boolean mPreserveEGLContextOnPause;
+    public VKUtilsLib mVKUtilsLib;
 }
