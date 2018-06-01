@@ -45,6 +45,10 @@ Java_com_bar_app_VKUtilsLib_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jlo
 JNIEXPORT void JNICALL
 Java_com_bar_app_VKUtilsLib_nativeOnDrawFrame(JNIEnv *env, jclass type, jlong nativeHandle);
 
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeCleanUp(JNIEnv *env, jclass type, jlong nativeHandle);
+
+
 #ifdef __cplusplus
 }
 #endif

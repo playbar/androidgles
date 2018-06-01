@@ -237,9 +237,6 @@ void VulkanUtils::surfaceChanged() {
 
 void VulkanUtils::OnSurfaceCreated()
 {
-    pickPhysicalDevice();
-    createLogicalDevice();
-
     createSwapchain();
     createImageViews();
     createRenderPass();
@@ -280,6 +277,13 @@ void VulkanUtils::start() {
     createInstance();
     setUpDebugCallback();
     return;
+}
+
+void VulkanUtils::createSurfaceDevice()
+{
+    createSurface();
+    pickPhysicalDevice();
+    createLogicalDevice();
 }
 
 void VulkanUtils::initVulkan() {

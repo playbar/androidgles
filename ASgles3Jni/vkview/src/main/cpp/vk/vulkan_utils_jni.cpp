@@ -111,7 +111,7 @@ Java_com_bar_app_VKUtilsLib_nativeCreateSurface(JNIEnv *env, jclass type, jlong 
 
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->initWindow(window);
-    app->createSurface();
+    app->createSurfaceDevice();
     return;
 }
 
@@ -138,5 +138,13 @@ Java_com_bar_app_VKUtilsLib_nativeOnDrawFrame(JNIEnv *env, jclass type, jlong na
 {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->OnDrawFrame();
+    return;
+}
+
+JNIEXPORT void JNICALL
+Java_com_bar_app_VKUtilsLib_nativeCleanUp(JNIEnv *env, jclass type, jlong nativeHandle)
+{
+    VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
+    app->cleanUp();
     return;
 }

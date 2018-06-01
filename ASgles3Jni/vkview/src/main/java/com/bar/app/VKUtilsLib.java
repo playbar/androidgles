@@ -73,6 +73,7 @@ public class VKUtilsLib {
     private native void nativeOnSurfaceCreated(long nativeHandle);
     private native void nativeOnSurfaceChanged(long nativeHandle);
     private native void nativeOnDrawFrame(long nativeHandle);
+    private native void nativeCleanUp(long nativeHandle);
 
     public void run(final Surface surface) {
         Log.e("java run", "tid=" + android.os.Process.myTid());
@@ -157,7 +158,8 @@ public class VKUtilsLib {
         if (VKSurfaceView.LOG_EGL) {
             Log.w("EglHelper", "destroySurface()  tid=" + Thread.currentThread().getId());
         }
-        destroySurfaceImp();
+        nativeCleanUp(mNativeVulanUtils);
+//        destroySurfaceImp();
     }
 
     private void destroySurfaceImp() {

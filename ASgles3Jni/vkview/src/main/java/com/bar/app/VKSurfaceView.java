@@ -107,11 +107,11 @@ public class VKSurfaceView extends SurfaceView implements SurfaceHolder.Callback
     public void makeCurrent(){
     		mGLThread.makeCurrent();
     }
-    
+
     public EGLConfig getEglConfig(){
     		return mGLThread.getEglConfig();
     }
-    
+
 
     public void setEGLContextFactory(EGLContextFactory factory) {
         checkRenderThreadState();

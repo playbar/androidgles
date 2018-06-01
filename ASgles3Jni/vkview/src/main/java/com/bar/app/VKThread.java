@@ -45,6 +45,8 @@ public class VKThread extends Thread {
     private void stopEglSurfaceLocked() {
         if (mHaveEglSurface) {
             mHaveEglSurface = false;
+            mWidth = 0;
+            mHeight = 0;
             VKSurfaceView view = mGLSurfaceViewWeakRef.get();
             view.mVKUtilsLib.destroySurface();
 //            mEglHelper.destroySurface();
@@ -110,11 +112,7 @@ public class VKThread extends Thread {
 
                         // Update the pause state.
                         boolean pausing = false;
-//                        if( mRequestPaused){
-//                        		sleep( 10);
-//                        		continue;
-//                        }
-                    
+
                         if (mPaused != mRequestPaused) {
                             pausing = mRequestPaused;
                             mPaused = mRequestPaused;
@@ -260,21 +258,6 @@ public class VKThread extends Thread {
                             }
                         }
 
-                        // By design, this is the only place in a VKThread thread where we wait().
-                        if (VKSurfaceView.LOG_THREADS) {
-                            Log.i("VKThread", "waiting tid=" + getId()
-                                + " mHaveEglContext: " + mHaveEglContext
-                                + " mHaveEglSurface: " + mHaveEglSurface
-                                + " mFinishedCreatingEglSurface: " + mFinishedCreatingEglSurface
-                                + " mPaused: " + mPaused
-                                + " mHasSurface: " + mHasSurface
-                                + " mSurfaceIsBad: " + mSurfaceIsBad
-                                + " mWaitingForSurface: " + mWaitingForSurface
-                                + " mWidth: " + mWidth
-                                + " mHeight: " + mHeight
-                                + " mRequestRender: " + mRequestRender
-                                + " mRenderMode: " + mRenderMode);
-                        }
 //                        break;
                         VKSurfaceView.sGLThreadManager.wait();
                     }

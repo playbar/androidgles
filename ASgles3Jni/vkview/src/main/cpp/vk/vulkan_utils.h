@@ -109,6 +109,8 @@ public:
 
     void start();
 
+    void createSurfaceDevice();
+
     void initVulkan();
 
     void mainLoop();
