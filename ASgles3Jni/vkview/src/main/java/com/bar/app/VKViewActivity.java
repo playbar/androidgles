@@ -28,6 +28,10 @@ import javax.microedition.khronos.egl.EGLConfig;
 
 public class VKViewActivity extends Activity {
 
+    static {
+        System.loadLibrary("vkutils");
+    }
+
     VKViewTest mView;
     EGLConfig mEglConfig;
 

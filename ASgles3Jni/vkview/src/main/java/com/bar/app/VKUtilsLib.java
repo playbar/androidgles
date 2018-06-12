@@ -24,10 +24,6 @@ public class VKUtilsLib {
     private static final String VERTEX_SHADER = "shaders/triangle.vert.spv";
     private static final String FRAGMENT_SHADER = "shaders/triangle.frag.spv";
 
-    static {
-        System.loadLibrary("vkutils");
-    }
-
     public void run(final Surface surface, final AssetManager assetmgr){
         new Thread(new Runnable() {
             @Override
