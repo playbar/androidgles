@@ -45,7 +45,7 @@ import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 
-import com.android.gles3jni.GLES3Hook;
+//import com.android.gles3jni.GLES3Hook;
 import com.android.gles3jni.GLES3JNIView;
 import com.android.gltest.GLRenderer;
 import com.android.gltest.GenTexTask;
@@ -57,10 +57,6 @@ public class GLES3JNIActivity extends Activity {
 	GLES3JNIView mView;
     EGLConfig mEglConfig;
 
-    static {
-        System.loadLibrary("gles3jni");
-    }
-    
     public class ExportTex implements GenTexTask.ExportTextureId{
 
  		@Override
@@ -120,7 +116,7 @@ public class GLES3JNIActivity extends Activity {
 //        layout.addView(et, tparams);  
 //        layout.addView(but, tparams);  
 
-        GLES3Hook.initHook();
+//        GLES3Hook.initHook();
         Log.e("mjhook", "after initHook");
         mView = new GLES3JNIView(getApplication());
        
@@ -143,7 +139,7 @@ public class GLES3JNIActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mView.onPause();
-        GLES3Hook.unInitHook();
+//        GLES3Hook.unInitHook();
     }
 
     @Override 
@@ -163,7 +159,7 @@ public class GLES3JNIActivity extends Activity {
     protected void onDestroy()
     {
         super.onDestroy();
-        GLES3Hook.unInitHook();
+//        GLES3Hook.unInitHook();
     }
 
     public boolean mbStop = true;
