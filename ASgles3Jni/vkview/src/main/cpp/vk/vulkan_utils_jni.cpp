@@ -52,19 +52,6 @@ Java_com_bar_app_VKUtilsLib_nativeCreate(
     return (jlong) app;
 }
 
-JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeRun(JNIEnv *env, jclass type, jlong nativeHandle, jobject surface) {
-    ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
-    if (window == nullptr) {
-        LOGE("get window from surface fail!");
-        return;
-    }
-
-    VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
-    app->run(window);
-//    app->runTriangle(window);
-    return;
-}
 
 JNIEXPORT void JNICALL
 Java_com_bar_app_VKUtilsLib_nativePause(JNIEnv *env, jclass type,
@@ -77,13 +64,6 @@ JNIEXPORT void JNICALL
 Java_com_bar_app_VKUtilsLib_nativeResume(JNIEnv *env, jclass type, jlong nativeHandle) {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->resume();
-}
-
-JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeSurfaceChanged(JNIEnv *env, jclass type, jlong nativeHandle)
-{
-    VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
-    app->surfaceChanged();
 }
 
 JNIEXPORT void JNICALL

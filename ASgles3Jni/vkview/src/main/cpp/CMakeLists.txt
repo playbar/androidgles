@@ -31,6 +31,7 @@ target_link_libraries(glview
 
 add_library(vkutils SHARED
            vk/vulkan_utils.cpp
+           vk/vulkan_device.cpp
            vk/vulkan_wrapper.cpp
            vk/vulkan_utils_jni.cpp
             )

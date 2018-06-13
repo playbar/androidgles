@@ -53,17 +53,6 @@ public class VKThread extends Thread {
         }
     }
     
-    public void makeCurrent(){
-        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
-        view.mVKUtilsLib.makeCurrent();
-//    		mEglHelper.makeCurrent();
-    }
-    
-    public EGLConfig getEglConfig(){
-        VKSurfaceView view = mGLSurfaceViewWeakRef.get();
-        return view.mVKUtilsLib.getEglConfig();
-//    	return mEglHelper.getEglConfig();
-    }
 
     private void stopEglContextLocked() {
         if (mHaveEglContext) {
@@ -307,7 +296,7 @@ public class VKThread extends Thread {
                     }
                     VKSurfaceView view = mGLSurfaceViewWeakRef.get();
                     if (view != null) {
-                        view.mRenderer.onSurfaceCreated(view.mVKUtilsLib.mEglConfig);
+                        view.mRenderer.onSurfaceCreated(null);
                     }
                     createEglContext = false;
                 }

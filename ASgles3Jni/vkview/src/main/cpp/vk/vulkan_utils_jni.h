@@ -24,9 +24,6 @@ JNIEXPORT void JNICALL
 Java_com_bar_app_VKUtilsLib_nativeResume(JNIEnv *env, jclass type, jlong nativeHandle);
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeSurfaceChanged(JNIEnv *env, jclass type, jlong nativeHandle);
-
-JNIEXPORT void JNICALL
 Java_com_bar_app_VKUtilsLib_nativeStop(JNIEnv *env, jclass type, jlong nativeHandle);
 
 JNIEXPORT void JNICALL

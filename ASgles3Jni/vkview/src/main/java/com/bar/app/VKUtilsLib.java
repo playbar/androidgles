@@ -1,5 +1,4 @@
 package com.bar.app;
-
 import android.content.res.AssetManager;
 import android.opengl.GLDebugHelper;
 import android.util.Log;
@@ -24,20 +23,7 @@ public class VKUtilsLib {
     private static final String VERTEX_SHADER = "shaders/triangle.vert.spv";
     private static final String FRAGMENT_SHADER = "shaders/triangle.frag.spv";
 
-    public void run(final Surface surface, final AssetManager assetmgr){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                initVK(surface, assetmgr);
-                vkDrawFrame();
-            }
-        }).start();
-    }
-
     private long mNativeVulanUtils;
-
-    public native void initVK(final Surface surface, final AssetManager assetmgr);
-    public native void vkDrawFrame();
 
     ////
 
@@ -50,30 +36,22 @@ public class VKUtilsLib {
     }
 
     private native long nativeCreate(AssetManager assetManager, String vertexShader,
-                                      String fragmentShader);
-
-    private native void nativeRun(long nativeHandle, Surface surface);
+                                     String fragmentShader);
 
     private native void nativePause(long nativeHandle);
-
     private native void nativeResume(long nativeHandle);
-
-    private native void nativeSurfaceChanged(long nativeHandle);
-
     private native void nativeStop(long nativeHandle);
-
     private native void nativeStart(long nativeHandle);
-
     private native void nativeCreateSurface(long nativeHandle, Surface surface);
+    private native void nativeCleanUp(long nativeHandle);
+
 
     private native void nativeOnSurfaceCreated(long nativeHandle);
     private native void nativeOnSurfaceChanged(long nativeHandle);
     private native void nativeOnDrawFrame(long nativeHandle);
-    private native void nativeCleanUp(long nativeHandle);
 
-    public void run(final Surface surface) {
-        Log.e("java run", "tid=" + android.os.Process.myTid());
-        nativeRun(mNativeVulanUtils, surface);
+    public void start() {
+        nativeStart(mNativeVulanUtils);
     }
 
     public void pause() {
@@ -84,9 +62,6 @@ public class VKUtilsLib {
         nativeResume(mNativeVulanUtils);
     }
 
-    public void surfaceChanged() {
-        nativeSurfaceChanged(mNativeVulanUtils);
-    }
 
     public void stop() {
         nativeStop(mNativeVulanUtils);
@@ -113,10 +88,6 @@ public class VKUtilsLib {
     }
 
 
-    public void start() {
-        nativeStart(mNativeVulanUtils);
-    }
-
     /**
      * Create an egl surface for the current SurfaceHolder surface. If a surface
      * already exists, destroy it before creating the new surface.
@@ -131,22 +102,15 @@ public class VKUtilsLib {
         return true;
     }
 
-    public boolean makeCurrent(){
-        if (!mEgl.eglMakeCurrent(mEglDisplay, mEglSurface, mEglSurface, mEglContext)) {
-            logEglErrorAsWarning("EGLHelper", "eglMakeCurrent", mEgl.eglGetError());
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Display the current render surface.
      * @return the EGL error code from eglSwapBuffers.
      */
     public int swap() {
-        if (! mEgl.eglSwapBuffers(mEglDisplay, mEglSurface)) {
-            return mEgl.eglGetError();
-        }
+//        if (! mEgl.eglSwapBuffers(mEglDisplay, mEglSurface)) {
+//            return mEgl.eglGetError();
+//        }
         return EGL10.EGL_SUCCESS;
     }
 
@@ -159,38 +123,35 @@ public class VKUtilsLib {
     }
 
     private void destroySurfaceImp() {
-        if (mEglSurface != null && mEglSurface != EGL10.EGL_NO_SURFACE) {
-            mEgl.eglMakeCurrent(mEglDisplay, EGL10.EGL_NO_SURFACE,
-                    EGL10.EGL_NO_SURFACE,
-                    EGL10.EGL_NO_CONTEXT);
-            VKSurfaceView view = mGLSurfaceViewWeakRef.get();
-            if (view != null) {
-                view.mEGLWindowSurfaceFactory.destroySurface(mEgl, mEglDisplay, mEglSurface);
-            }
-            mEglSurface = null;
-        }
+//        if (mEglSurface != null && mEglSurface != EGL10.EGL_NO_SURFACE) {
+//            mEgl.eglMakeCurrent(mEglDisplay, EGL10.EGL_NO_SURFACE,
+//                    EGL10.EGL_NO_SURFACE,
+//                    EGL10.EGL_NO_CONTEXT);
+//            VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+//            if (view != null) {
+//                view.mEGLWindowSurfaceFactory.destroySurface(mEgl, mEglDisplay, mEglSurface);
+//            }
+//            mEglSurface = null;
+//        }
     }
 
     public void finish() {
         if (VKSurfaceView.LOG_EGL) {
             Log.w("EglHelper", "finish() tid=" + Thread.currentThread().getId());
         }
-        if (mEglContext != null) {
-            VKSurfaceView view = mGLSurfaceViewWeakRef.get();
-            if (view != null) {
-                view.mEGLContextFactory.destroyContext(mEgl, mEglDisplay, mEglContext);
-            }
-            mEglContext = null;
-        }
-        if (mEglDisplay != null) {
-            mEgl.eglTerminate(mEglDisplay);
-            mEglDisplay = null;
-        }
+//        if (mEglContext != null) {
+//            VKSurfaceView view = mGLSurfaceViewWeakRef.get();
+//            if (view != null) {
+//                view.mEGLContextFactory.destroyContext(mEgl, mEglDisplay, mEglContext);
+//            }
+//            mEglContext = null;
+//        }
+//        if (mEglDisplay != null) {
+//            mEgl.eglTerminate(mEglDisplay);
+//            mEglDisplay = null;
+//        }
     }
 
-    private void throwEglException(String function) {
-        throwEglException(function, mEgl.eglGetError());
-    }
 
     public static void throwEglException(String function, int error) {
         String message = formatEglError(function, error);
@@ -209,16 +170,9 @@ public class VKUtilsLib {
         return function + " failed: ";
     }
 
-    public EGLConfig getEglConfig(){
-        return mEglConfig;
-    }
 
     private WeakReference<VKSurfaceView> mGLSurfaceViewWeakRef;
-    public static EGL10 mEgl;
-    public static EGLDisplay mEglDisplay;
-    public static EGLSurface mEglSurface;
-    public static EGLConfig mEglConfig;
-    public static EGLContext mEglContext;
+
 
 
 }
