@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bar.app;
+package com.bar.vkview;
 
 import android.app.Activity;
 import android.os.Bundle;

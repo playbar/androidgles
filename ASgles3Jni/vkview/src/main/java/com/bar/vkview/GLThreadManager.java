@@ -1,4 +1,4 @@
-package com.bar.app;
+package com.bar.vkview;
 
 import javax.microedition.khronos.opengles.GL10;
 import android.util.Log;

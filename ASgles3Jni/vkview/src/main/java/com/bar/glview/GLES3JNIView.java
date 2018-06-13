@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bar.vkview;
+package com.bar.glview;
 
 import android.content.Context;
 import android.content.res.AssetManager;

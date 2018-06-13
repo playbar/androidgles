@@ -6,7 +6,7 @@
 #include "mylog.h"
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_initVK(JNIEnv* env, jobject obj, jobject surface, jobject assetMgr)
+Java_com_bar_vkview_VKUtilsLib_initVK(JNIEnv* env, jobject obj, jobject surface, jobject assetMgr)
 {
     ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
     if(window == NULL ){
@@ -21,7 +21,7 @@ Java_com_bar_app_VKUtilsLib_initVK(JNIEnv* env, jobject obj, jobject surface, jo
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_vkDrawFrame(JNIEnv* env, jobject obj)
+Java_com_bar_vkview_VKUtilsLib_vkDrawFrame(JNIEnv* env, jobject obj)
 {
 //    while( true ) {
 //        if (IsVulkanReady()) {
@@ -31,7 +31,7 @@ Java_com_bar_app_VKUtilsLib_vkDrawFrame(JNIEnv* env, jobject obj)
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_bar_app_VKUtilsLib_nativeCreate(
+Java_com_bar_vkview_VKUtilsLib_nativeCreate(
         JNIEnv *env, jclass type, jobject assetManager_, jstring vertexShader_,
         jstring fragmentShader_) {
 
@@ -54,26 +54,26 @@ Java_com_bar_app_VKUtilsLib_nativeCreate(
 
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativePause(JNIEnv *env, jclass type,
+Java_com_bar_vkview_VKUtilsLib_nativePause(JNIEnv *env, jclass type,
                                         jlong nativeHandle) {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->pause();
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeResume(JNIEnv *env, jclass type, jlong nativeHandle) {
+Java_com_bar_vkview_VKUtilsLib_nativeResume(JNIEnv *env, jclass type, jlong nativeHandle) {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->resume();
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeStop(JNIEnv *env, jclass type, jlong nativeHandle) {
+Java_com_bar_vkview_VKUtilsLib_nativeStop(JNIEnv *env, jclass type, jlong nativeHandle) {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->stop();
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeStart(JNIEnv *env, jclass type, jlong nativeHandle)
+Java_com_bar_vkview_VKUtilsLib_nativeStart(JNIEnv *env, jclass type, jlong nativeHandle)
 {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->start();
@@ -81,7 +81,7 @@ Java_com_bar_app_VKUtilsLib_nativeStart(JNIEnv *env, jclass type, jlong nativeHa
 
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeCreateSurface(JNIEnv *env, jclass type, jlong nativeHandle, jobject surface)
+Java_com_bar_vkview_VKUtilsLib_nativeCreateSurface(JNIEnv *env, jclass type, jlong nativeHandle, jobject surface)
 {
     ANativeWindow *window = ANativeWindow_fromSurface(env, surface);
     if (window == nullptr) {
@@ -98,7 +98,7 @@ Java_com_bar_app_VKUtilsLib_nativeCreateSurface(JNIEnv *env, jclass type, jlong 
 
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeOnSurfaceCreated(JNIEnv *env, jclass type, jlong nativeHandle)
+Java_com_bar_vkview_VKUtilsLib_nativeOnSurfaceCreated(JNIEnv *env, jclass type, jlong nativeHandle)
 {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->OnSurfaceCreated();
@@ -106,7 +106,7 @@ Java_com_bar_app_VKUtilsLib_nativeOnSurfaceCreated(JNIEnv *env, jclass type, jlo
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jlong nativeHandle)
+Java_com_bar_vkview_VKUtilsLib_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jlong nativeHandle)
 {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->OnSurfaceChanged();
@@ -114,7 +114,7 @@ Java_com_bar_app_VKUtilsLib_nativeOnSurfaceChanged(JNIEnv *env, jclass type, jlo
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeOnDrawFrame(JNIEnv *env, jclass type, jlong nativeHandle)
+Java_com_bar_vkview_VKUtilsLib_nativeOnDrawFrame(JNIEnv *env, jclass type, jlong nativeHandle)
 {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->OnDrawFrame();
@@ -122,7 +122,7 @@ Java_com_bar_app_VKUtilsLib_nativeOnDrawFrame(JNIEnv *env, jclass type, jlong na
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_app_VKUtilsLib_nativeCleanUp(JNIEnv *env, jclass type, jlong nativeHandle)
+Java_com_bar_vkview_VKUtilsLib_nativeCleanUp(JNIEnv *env, jclass type, jlong nativeHandle)
 {
     VulkanUtils *app = reinterpret_cast<VulkanUtils *>(nativeHandle);
     app->cleanUp();

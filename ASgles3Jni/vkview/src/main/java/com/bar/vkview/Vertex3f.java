@@ -1,4 +1,4 @@
-package com.bar.app;
+package com.bar.vkview;
 
 public class Vertex3f {  
 	  

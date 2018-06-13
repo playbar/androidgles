@@ -1,6 +1,6 @@
-package com.bar.app;
+package com.bar.vkview;
 
-import com.bar.app.ComponentSizeChooser;
+import com.bar.vkview.ComponentSizeChooser;
 
 public class SimpleEGLConfigChooser extends ComponentSizeChooser {
     public SimpleEGLConfigChooser(boolean withDepthBuffer) {

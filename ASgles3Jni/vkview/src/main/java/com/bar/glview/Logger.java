@@ -1,4 +1,4 @@
-package com.bar.vkview;
+package com.bar.glview;
 
 
 import android.util.Log;

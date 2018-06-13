@@ -1,10 +1,10 @@
-package com.bar.app;
+package com.bar.vkview;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import com.bar.app.VKSurfaceView.EGLConfigChooser;
+import com.bar.vkview.VKSurfaceView.EGLConfigChooser;
 
 public abstract class BaseConfigChooser implements EGLConfigChooser {
     public BaseConfigChooser(int[] configSpec) {

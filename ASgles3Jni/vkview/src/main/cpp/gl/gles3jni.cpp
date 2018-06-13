@@ -527,7 +527,7 @@ void * thread_1(void *pdata ){
 CThreadPool gThreadPool(10);
 
 JNIEXPORT void JNICALL
-Java_com_bar_vkview_GLES3JNILib_init(JNIEnv* env, jobject obj) {
+Java_com_bar_glview_GLES3JNILib_init(JNIEnv* env, jobject obj) {
     if (g_renderer) {
         delete g_renderer;
         g_renderer = NULL;
@@ -574,7 +574,7 @@ CMyTask taskObj;
 char szTmp[] = "this is the first thread running";
 
 JNIEXPORT void JNICALL
-Java_com_bar_vkview_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height) {
+Java_com_bar_glview_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height) {
     if (g_renderer) {
         g_renderer->resize(width, height);
     }
@@ -591,7 +591,7 @@ Java_com_bar_vkview_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jin
 }
 
 JNIEXPORT void JNICALL
-Java_com_bar_vkview_GLES3JNILib_step(JNIEnv* env, jobject obj) {
+Java_com_bar_glview_GLES3JNILib_step(JNIEnv* env, jobject obj) {
     if (g_renderer) {
         g_renderer->render();
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bar.vkview;
+package com.bar.glview;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

@@ -1,4 +1,4 @@
-package com.bar.app;
+package com.bar.vkview;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

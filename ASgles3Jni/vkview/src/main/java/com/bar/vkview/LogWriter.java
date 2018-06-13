@@ -1,4 +1,4 @@
-package com.bar.app;
+package com.bar.vkview;
 
 import java.io.Writer;
 

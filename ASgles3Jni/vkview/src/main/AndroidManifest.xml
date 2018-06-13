@@ -24,7 +24,7 @@
       <!--</intent-filter>-->
     <!--</activity>-->
 
-    <activity android:name="com.bar.app.VKViewActivity"
+    <activity android:name="com.bar.vkview.VKViewActivity"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
         android:launchMode="singleTask"
         android:configChanges="orientation|keyboardHidden">

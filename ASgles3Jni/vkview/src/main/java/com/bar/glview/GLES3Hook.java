@@ -1,4 +1,4 @@
-package com.bar.vkview;
+package com.bar.glview;
 
 /**
  * Created by houguoli on 2017/8/15.
