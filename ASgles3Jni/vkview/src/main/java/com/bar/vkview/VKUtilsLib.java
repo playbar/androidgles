@@ -22,7 +22,7 @@ public class VKUtilsLib {
 
     private static final String VERTEX_SHADER = "shaders/triangle.vert.spv";
     private static final String FRAGMENT_SHADER = "shaders/triangle.frag.spv";
-
+//
 //    private static final String VERTEX_SHADER = "shaders/triangle.vert";
 //    private static final String FRAGMENT_SHADER = "shaders/triangle.frag";
 

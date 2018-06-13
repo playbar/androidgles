@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include "vulkan_utils.h"
+#include "shaderc/shaderc.hpp"
 
 VulkanUtils *gpVKUtils = NULL;
 
@@ -29,6 +30,45 @@ const std::vector<uint16_t> indices = {
 };
 
 const std::string IMAGE_PATH = "sample_tex.png";
+
+struct shader_type_mapping {
+    VkShaderStageFlagBits vkshader_type;
+    shaderc_shader_kind   shaderc_type;
+};
+static const shader_type_mapping shader_map_table[] = {
+        {
+                VK_SHADER_STAGE_VERTEX_BIT,
+                shaderc_glsl_vertex_shader
+        },
+        {
+                VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+                shaderc_glsl_tess_control_shader
+        },
+        {
+                VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
+                shaderc_glsl_tess_evaluation_shader
+        },
+        {
+                VK_SHADER_STAGE_GEOMETRY_BIT,
+                shaderc_glsl_geometry_shader},
+        {
+                VK_SHADER_STAGE_FRAGMENT_BIT,
+                shaderc_glsl_fragment_shader
+        },
+        {
+                VK_SHADER_STAGE_COMPUTE_BIT,
+                shaderc_glsl_compute_shader
+        },
+};
+shaderc_shader_kind MapShadercType(VkShaderStageFlagBits vkShader) {
+    for (auto shader : shader_map_table) {
+        if (shader.vkshader_type == vkShader) {
+            return shader.shaderc_type;
+        }
+    }
+    assert(false);
+    return shaderc_glsl_infer_from_source;
+}
 
 
 VkSurfaceFormatKHR chooseSwapSurfaceFormat(
@@ -80,6 +120,27 @@ VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities) {
     return actualExtent;
 }
 
+
+bool GLSLtoSPV(const VkShaderStageFlagBits shader_type, const char *pshader,
+               std::vector<unsigned int> &spirv)
+{
+    // On Android, use shaderc instead.
+    shaderc::Compiler compiler;
+    shaderc::SpvCompilationResult module =
+            compiler.CompileGlslToSpv(pshader, strlen(pshader),
+                                      MapShadercType(shader_type),
+                                      "shader");
+    if (module.GetCompilationStatus() !=
+        shaderc_compilation_status_success) {
+        LOGE("Error: Id=%d, Msg=%s",
+             module.GetCompilationStatus(),
+             module.GetErrorMessage().c_str());
+        return false;
+    }
+    spirv.assign(module.cbegin(), module.cend());
+
+    return true;
+}
 
 //void VulkanUtils::run(ANativeWindow *window) {
 //    initWindow(window);
@@ -389,11 +450,28 @@ void VulkanUtils::createDescriptorSetLayout() {
     }
 }
 
+//#define USE_SPV
+
 void VulkanUtils::createGraphicsPipeline() {
+
+#ifdef USE_SPV
+    vertexShader = "shaders/triangle.vert.spv";
+    fragmentShader = "shaders/triangle.frag.spv";
     auto vertexShaderCode = readAsset(vertexShader);
     auto fragmentShaderCode = readAsset(fragmentShader);
     VkShaderModule vertexShaderModule = createShaderModule(vertexShaderCode);
     VkShaderModule fragmentShaderModule = createShaderModule(fragmentShaderCode);
+#else
+    auto vertexShaderCode = readAsset("shaders/triangle.vert");
+    auto fragmentShaderCode = readAsset("shaders/triangle.frag");
+    std::vector<unsigned int> vtx_spv;
+    std::vector<unsigned int> frag_spv;
+    GLSLtoSPV(VK_SHADER_STAGE_VERTEX_BIT, vertexShaderCode.data(), vtx_spv);
+    GLSLtoSPV(VK_SHADER_STAGE_FRAGMENT_BIT, fragmentShaderCode.data(), frag_spv);
+    VkShaderModule vertexShaderModule = createShaderModule(vtx_spv);
+    VkShaderModule fragmentShaderModule = createShaderModule(frag_spv);
+#endif
+
     VkPipelineShaderStageCreateInfo vertexShaderStageInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
             .stage = VK_SHADER_STAGE_VERTEX_BIT,
@@ -1205,3 +1283,16 @@ VkShaderModule VulkanUtils::createShaderModule(const std::vector<char> &code) {
 }
 
 
+VkShaderModule VulkanUtils::createShaderModule(const std::vector<uint32_t> &code) {
+    VkShaderModuleCreateInfo createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+    createInfo.codeSize = code.size() * sizeof(uint32_t);
+    createInfo.pCode = reinterpret_cast<const uint32_t *>(code.data());
+
+    VkShaderModule shaderModule;
+    if (vkCreateShaderModule(vulkanDevice.logicalDevice, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create shader module!");
+    }
+
+    return shaderModule;
+}

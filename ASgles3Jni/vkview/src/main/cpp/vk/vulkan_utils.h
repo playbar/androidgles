@@ -107,7 +107,7 @@ public:
     std::vector<char> readAsset(std::string name);
 
     VkShaderModule createShaderModule(const std::vector<char> &code);
-
+    VkShaderModule createShaderModule(const std::vector<uint32_t> &code);
 
     AAssetManager *assetManager;
     std::string vertexShader;
