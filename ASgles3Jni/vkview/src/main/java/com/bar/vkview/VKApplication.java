@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bar.glview;
+package com.bar.vkview;
 
 import javax.microedition.khronos.opengles.GL10;
 
