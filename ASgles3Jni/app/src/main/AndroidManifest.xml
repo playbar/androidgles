@@ -6,10 +6,11 @@
 
   <uses-sdk
       android:minSdkVersion="21"
-      android:targetSdkVersion="25" />
+      android:targetSdkVersion="27" />
 
   <application
       android:allowBackup="false"
+      android:name="com.android.app.App"
       android:fullBackupContent="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/gles3jni_activity">

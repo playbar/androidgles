@@ -489,12 +489,12 @@ void VulkanUtils::createGraphicsPipeline() {
     };
 
     auto bindingDesc = Vertex::getBindingDescription();
-    auto attrDesc = Vertex::getAttributeDescriptions();
+    auto attrDesc =    Vertex::getAttributeDescriptions();
     VkPipelineVertexInputStateCreateInfo vertexInputInfo = {
             .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
             .vertexBindingDescriptionCount = 1,
-            .vertexAttributeDescriptionCount = static_cast<uint32_t>(attrDesc.size()),
             .pVertexBindingDescriptions = &bindingDesc,
+            .vertexAttributeDescriptionCount = static_cast<uint32_t>(attrDesc.size()),
             .pVertexAttributeDescriptions = attrDesc.data(),
     };
 

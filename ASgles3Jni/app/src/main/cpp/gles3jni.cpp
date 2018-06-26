@@ -22,7 +22,6 @@
 #include <EGL/egl.h>
 
 #include "gles3jni.h"
-#include "inlineHook.h"
 
 const Vertex QUAD[4] = {
     // Square with diagonal < 2 so that it fits in a [-1 .. 1]^2 square
@@ -522,7 +521,6 @@ void * thread_1(void *pdata ){
     pthread_t seft = pthread_self();
     char chId[32] = {0};
     sprintf( chId, "sub thread id=%u", seft );
-    LOGI( chId );
     pthread_exit(0);
     return NULL;
 
@@ -551,26 +549,25 @@ Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj) {
 //        LOGE("Unsupported OpenGL ES version");
 //    }
 
-    g_renderer = createES2Renderer();
+    g_renderer = createES3Renderer();
 
 //    GPU_Sobel();
-    Init();
-    gDisplay = eglGetCurrentDisplay();
-    createSharedContext();
-
-    pthread_t id_1;
-    int ret;
-    ret = pthread_create( &id_1, NULL, thread_1, NULL );
-    if( ret != 0 ){
-        printf("Create thread error\n");
-    }
-
-//   pthread_join( id_1, NULL );
-
-    pthread_t seft = pthread_self();
-    char chId[32] = {0};
-    sprintf( chId, "main thread id=%u", seft );
-    LOGI( chId );
+//    Init();
+//    gDisplay = eglGetCurrentDisplay();
+//    createSharedContext();
+//
+//    pthread_t id_1;
+//    int ret;
+//    ret = pthread_create( &id_1, NULL, thread_1, NULL );
+//    if( ret != 0 ){
+//        printf("Create thread error\n");
+//    }
+//
+////   pthread_join( id_1, NULL );
+//
+//    pthread_t seft = pthread_self();
+//    char chId[32] = {0};
+//    sprintf( chId, "main thread id=%u", seft );
 
 }
 
@@ -582,11 +579,11 @@ Java_com_android_gles3jni_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint widt
     if (g_renderer) {
         g_renderer->resize(width, height);
     }
-    glViewport(0, 0, width, height);
 
-    taskObj.SetData((void*)szTmp);
-    gThreadPool.Create();
-    gThreadPool.AddTask(&taskObj);
+//    glViewport(0, 0, width, height);
+//    taskObj.SetData((void*)szTmp);
+//    gThreadPool.Create();
+//    gThreadPool.AddTask(&taskObj);
 
 //    for(int i = 0; i < 5; i++)
 //    {
