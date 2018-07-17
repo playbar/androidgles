@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId = 'com.android.gles3jni'
-        minSdkVersion    21
+        minSdkVersion    18
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -39,5 +39,9 @@ android {
             proguardFiles.add(file('proguard-rules.txt'))
         }
     }
+}
+
+dependencies{
+    compile 'com.android.support:appcompat-v7:25.3.1'
 }
 

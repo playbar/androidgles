@@ -549,7 +549,7 @@ Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj) {
 //        LOGE("Unsupported OpenGL ES version");
 //    }
 
-    g_renderer = createES3Renderer();
+    g_renderer = createES2Renderer();
 
 //    GPU_Sobel();
 //    Init();
@@ -593,6 +593,15 @@ Java_com_android_gles3jni_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint widt
 
 JNIEXPORT void JNICALL
 Java_com_android_gles3jni_GLES3JNILib_step(JNIEnv* env, jobject obj) {
+    static bool bblend = false;
+    glEnable(GL_BLEND);
+    if( bblend ){
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    } else{
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    bblend = !bblend;
+
     if (g_renderer) {
         g_renderer->render();
     }

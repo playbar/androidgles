@@ -10,6 +10,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <unistd.h>
+#include <android/native_window.h>
 
 #include "vulkan_utils.h"
 #include "shaderc/shaderc.hpp"

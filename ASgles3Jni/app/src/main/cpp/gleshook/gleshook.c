@@ -12,6 +12,7 @@
 #include "log.h"
 #include "exporthook.h"
 #include "andhook.h"
+#include "syscallstack.h"
 
 //egl
 
@@ -20,6 +21,40 @@ extern int gismaligpu;
 
 /////////////////////////////
 //gles
+void (*old_glEnable)(GLenum cap) = NULL;
+void mj_glEnable(GLenum cap)
+{
+    LOGITAG("mjgl", "mj_glEnable, cap=%d, tid=%d", cap, gettid());
+    if( cap == 0x0BE2)
+    {
+        cap = 0x0BE2;
+    }
+    return old_glEnable(cap);
+//    return;
+}
+
+void (*old_glDisable )(GLenum cap) = NULL;
+void mj_glDisable (GLenum cap)
+{
+    LOGITAG("mjgl", "mj_glDisable, cap=%d, tid=%d", cap, gettid());
+    return old_glDisable(cap);
+}
+
+void (*old_glBlendFunc)(GLenum sfactor, GLenum dfactor) = NULL;
+void mj_glBlendFunc(GLenum sfactor, GLenum dfactor)
+{
+    LOGITAG("mjgl", "mj_glBlendFunc, sfactor=%d, dfactor=%d, tid=%d", sfactor, dfactor, gettid());
+//    sys_call_stack();
+//    sfactor = dfactor = GL_ONE;
+//    if( sfactor == 0 )
+//    {
+//        sfactor = 0.5;
+//    }
+    return old_glBlendFunc(sfactor, dfactor);
+//    return;
+}
+
+
 void (*old_glShaderSource) (GLuint shader, GLsizei count, const GLchar* const* string, const GLint* length) = NULL;
 void mj_glShaderSource (GLuint shader, GLsizei count, const GLchar* const* string, const GLint* length)
 {
@@ -139,7 +174,7 @@ void mj_glDisableVertexAttribArray (GLuint index)
 void (*old_glEnableVertexAttribArray) (GLuint index) = NULL;
 void mj_glEnableVertexAttribArray (GLuint index)
 {
-    LOGITAG("mjgl","mj_glEnableVertexAttribArray, index=%d", index);
+//    LOGITAG("mjgl","mj_glEnableVertexAttribArray, index=%d", index);
     return old_glEnableVertexAttribArray(index);
 }
 
@@ -299,7 +334,8 @@ void hookESFun()
 {
 //    hook((uint32_t) dlsym, (uint32_t)mj_dlsym, (uint32_t **) &old_dlsym);
 //    hook((uint32_t) glDrawElements, (uint32_t)mj_glDrawElements, (uint32_t **) &old_glDrawElements);
-    return;
+    hook((uint32_t) glEnable, (uint32_t)mj_glEnable, (uint32_t **) &old_glEnable);
+    hook((uint32_t) glBlendFunc, (uint32_t)mj_glBlendFunc, (uint32_t **) &old_glBlendFunc);
     hook((uint32_t) glShaderSource, (uint32_t)mj_glShaderSource, (uint32_t **) &old_glShaderSource);
     hook((uint32_t) glBindFramebuffer, (uint32_t)mj_glBindFramebuffer, (uint32_t **) &old_glBindFramebuffer);
     hook((uint32_t) glBindRenderbuffer, (uint32_t)mj_glBindRenderbuffer, (uint32_t **) &old_glBindRenderbuffer);
@@ -337,7 +373,7 @@ void hookExportHook()
 //    hook_lwp(getpid(), "libgvr.", "dlsym", mj_dlsym, (void **)&old_dlsym);
 //    hook((uint32_t) dlsym, (uint32_t)mj_dlsym, (uint32_t **) &old_dlsym);
 //    void and_hook(void *orig_fcn, void* new_fcn, void **orig_fcn_ptr);
-    and_hook(glDrawElements, mj_glDrawElements, &old_glDrawElements);
+//    and_hook(glDrawElements, mj_glDrawElements, &old_glDrawElements);
     return;
 }
 
