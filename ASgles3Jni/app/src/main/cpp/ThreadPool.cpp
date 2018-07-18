@@ -4,6 +4,7 @@
 
 #include "ThreadPool.h"
 #include "gles3jni.h"
+#include <malloc.h>
 #include <iostream>
 
 void CTask::SetData(void * data)

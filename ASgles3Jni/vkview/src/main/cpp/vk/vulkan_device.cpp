@@ -6,6 +6,7 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <cstring>
 
 #include "vulkan_device.h"
 
