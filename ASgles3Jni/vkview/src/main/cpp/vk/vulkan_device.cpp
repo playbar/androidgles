@@ -10,6 +10,7 @@
 
 #include "vulkan_device.h"
 
+//#define USE_DEBUG_EXTENTIONS
 
 #ifdef USE_DEBUG_EXTENTIONS
 const bool enableValidationLayers = true;

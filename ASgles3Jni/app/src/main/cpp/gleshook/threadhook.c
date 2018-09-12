@@ -3,9 +3,11 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <dlfcn.h>
+#include <malloc.h>
 #include "log.h"
 #include "callstack.h"
 #include "hookutils.h"
+#include "abort_message.h"
 
 int (*old__android_log_print)(int prio, const char *tag, const char *fmt, ...) = NULL;
 int mj__android_log_print(int prio, const char *tag,  const char *fmt, ...)
@@ -108,6 +110,18 @@ int mj_pthread_create(pthread_t *thread, pthread_attr_t const * attr, void *(*st
     return re;
 }
 
+void (*old_abort_message)(const char *format, ...) = NULL;
+void mj_abort_message(const char *format, ...)
+{
+    LOGITAG("mjhook", "mj_abort_message");
+    va_list ap;
+    char buf[1024];
+    va_start(ap, format);
+    vsnprintf(buf, 1024, format, ap);
+    va_end(ap);
+    return old_abort_message(buf);
+
+}
 
 void hookThreadFun()
 {
@@ -122,4 +136,10 @@ void hookThreadFun()
 //    hook((uint32_t) free, (uint32_t)mj_free, (uint32_t **) &old_free);
 //    hook((uint32_t) pthread_attr_init, (uint32_t)mj_pthread_attr_init, (uint32_t **) &old_pthread_attr_init);
     hook((uint32_t) pthread_create, (uint32_t)mj_pthread_create, (uint32_t **) &old_pthread_create);
+}
+
+void hookBadAlloc()
+{
+    hook((uint32_t) abort_message, (uint32_t)mj_abort_message, (uint32_t **) &old_abort_message);
+
 }

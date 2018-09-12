@@ -35,6 +35,7 @@ JNIEXPORT void JNICALL Java_com_android_hook_GLESHook_initHook(JNIEnv* env, jobj
     hookGLESFun();
 //    hookThreadFun();
 //    hookVulkanFun();
+    hookBadAlloc();
     LOGI("initHook after");
 }
 

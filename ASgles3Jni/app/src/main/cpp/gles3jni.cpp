@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <EGL/egl.h>
+#include "memory"
 
 #include "gles3jni.h"
 
@@ -580,6 +581,12 @@ Java_com_android_gles3jni_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint widt
         g_renderer->resize(width, height);
     }
 
+    char *pdata = new char[10];
+
+    int count = 1;
+    __sync_sub_and_fetch(&count, 1);
+    __sync_sub_and_fetch(&count, 1);
+
 //    glViewport(0, 0, width, height);
 //    taskObj.SetData((void*)szTmp);
 //    gThreadPool.Create();
@@ -605,6 +612,11 @@ Java_com_android_gles3jni_GLES3JNILib_step(JNIEnv* env, jobject obj) {
     if (g_renderer) {
         g_renderer->render();
     }
+//    vector<int> vecData;
+//    vecData.
+//    char *pdata = new char[1024 * 1024];
+//    memset( pdata, 0, 1024 * 1024);
+
 //    Draw();
 //    gThreadPool.AddTask(&taskObj);
 }

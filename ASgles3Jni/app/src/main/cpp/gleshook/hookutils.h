@@ -26,6 +26,7 @@ void hookImportFun(const char *modulename, const char *funname, void *myEglGetPr
 
 void hookThreadFun();
 void hookVulkanFun();
+void hookBadAlloc();
 
 JNIEXPORT void JNICALL Java_com_android_hook_GLESHook_printMapInfo(JNIEnv *env, jobject obj);
 
