@@ -2,3 +2,7 @@
 .externalNativeBuild
 *.iml
 magiccamera/.idea
+ASgles3Jni/gltest/build
+ASgles3Jni/gltestmk/build
+ASgles3Jni/gltestmk/src/main/libs
+ASgles3Jni/gltestmk/src/main/obj
