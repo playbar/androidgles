@@ -13,6 +13,8 @@ public:
     VulkanDevice();
     ~VulkanDevice();
 
+    void destroy();
+
 public:
     void createInstance();
     void setUpDebugCallback();
@@ -25,6 +27,9 @@ public:
     SwapchainSupportDetails querySwapchainSupport(VkPhysicalDevice device);
     QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+    void createCommandPool();
+    VkCommandBuffer beginSingleTimeCommands();
+    void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
 public:
     VkDebugReportCallbackEXT callback;
@@ -32,6 +37,7 @@ public:
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
     VkDevice logicalDevice;
     VkSurfaceKHR surface;
+    VkCommandPool mCommandPool;
 
     VkQueue graphicsQueue;
     VkQueue presentQueue;

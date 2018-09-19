@@ -30,6 +30,8 @@ public:
 
 	void unmap();
 
+	void copyBuffer(HVkBuffer &srcBuffer);
+
 	VkResult bind(VkDeviceSize offset = 0);
 
 	void setupDescriptor(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);

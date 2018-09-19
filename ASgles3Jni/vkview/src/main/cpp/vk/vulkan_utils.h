@@ -14,6 +14,7 @@
 #include "vulkan_data.h"
 #include "vulkan_device.h"
 #include "vulkan_buffer.h"
+#include "vulkan_texture.h"
 
 #define STATE_RUNNING 1
 #define STATE_PAUSED 2
@@ -67,8 +68,7 @@ public:
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
                       VkMemoryPropertyFlags properties,
                       VkBuffer &buffer, VkDeviceMemory &bufferMemory);
-    void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
-    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
     void createVertexBuffer();
@@ -81,7 +81,6 @@ public:
     void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
                      VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
                      VkImage& image, VkDeviceMemory& imageMemory);
-    void createTextureImage();
 
     void createTextureImageView();
 
@@ -90,14 +89,6 @@ public:
 public:
 
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
-
-    VkCommandBuffer beginSingleTimeCommands();
-
-    void endSingleTimeCommands(VkCommandBuffer commandBuffer);
-
-
-
-    void createCommandPool();
 
     void createDescriptorPool();
     void createDescriptorSet();
@@ -125,7 +116,7 @@ public:
     VkDescriptorSet descriptorSet;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
-    VkCommandPool mCommandPool;
+
 
     VkFormat swapchainImageFormat;
     VkExtent2D swapchainExtent;
@@ -138,10 +129,7 @@ public:
     HVkBuffer mIndexBuffer;
     HVkBuffer mUniformBuffer;
 
-    VkImage textureImage;
-    VkDeviceMemory textureImageMemory;
-    VkImageView textureImageView;
-    VkSampler textureSampler;
+    HVkTexture mTexImage;
 
     VkSemaphore imageAvailableSemaphore;
     VkSemaphore renderFinishedSemaphore;

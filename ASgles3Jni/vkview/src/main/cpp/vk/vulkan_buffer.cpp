@@ -62,6 +62,44 @@ void HVkBuffer::unmap()
 	}
 }
 
+void HVkBuffer::copyBuffer(HVkBuffer &srcBuffer)
+//void HVkBuffer::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+{
+	VkCommandBufferAllocateInfo allocInfo = {
+			.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+			.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+			.commandPool = mVkDevice->mCommandPool,
+			.commandBufferCount = 1,
+	};
+
+	VkCommandBuffer commandBuffer;
+	vkAllocateCommandBuffers(mVkDevice->logicalDevice, &allocInfo, &commandBuffer);
+
+	VkCommandBufferBeginInfo beginInfo = {
+			.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+			.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+	};
+	vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+	VkBufferCopy copyRegion = {
+			.size = srcBuffer.mSize
+	};
+	vkCmdCopyBuffer(commandBuffer, srcBuffer.mBuffer, mBuffer, 1, &copyRegion);
+
+	vkEndCommandBuffer(commandBuffer);
+
+	VkSubmitInfo submitInfo = {
+			.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+			.commandBufferCount = 1,
+			.pCommandBuffers = &commandBuffer,
+	};
+	vkQueueSubmit(mVkDevice->graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+	vkQueueWaitIdle(mVkDevice->graphicsQueue);
+
+	vkFreeCommandBuffers(mVkDevice->logicalDevice, mVkDevice->mCommandPool, 1, &commandBuffer);
+	return;
+}
+
 
 VkResult HVkBuffer::bind(VkDeviceSize offset)
 {

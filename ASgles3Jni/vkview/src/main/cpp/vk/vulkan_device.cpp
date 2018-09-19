@@ -141,6 +141,7 @@ VulkanDevice::VulkanDevice()
 
 VulkanDevice::~VulkanDevice()
 {
+    vkDestroyCommandPool(logicalDevice, mCommandPool, nullptr);
     vkDestroyDevice(logicalDevice, nullptr);
     DestroyDebugReportCallbackEXT(instance, callback, nullptr);
     vkDestroySurfaceKHR(instance, surface, nullptr);
@@ -383,4 +384,56 @@ uint32_t VulkanDevice::findMemoryType( uint32_t typeFilter, VkMemoryPropertyFlag
     }
 
     throw std::runtime_error("failed to find suitable memory type!");
+}
+
+void VulkanDevice::createCommandPool()
+{
+    QueueFamilyIndices queueFamilyIndices = findQueueFamilies(physicalDevice);
+
+    VkCommandPoolCreateInfo poolInfo = {};
+    poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily;
+    poolInfo.flags = 0; // Optional
+
+    if (vkCreateCommandPool(logicalDevice, &poolInfo, nullptr, &mCommandPool) != VK_SUCCESS)
+    {
+        throw std::runtime_error("failed to create command pool!");
+    }
+    return;
+}
+
+
+VkCommandBuffer VulkanDevice::beginSingleTimeCommands()
+{
+    VkCommandBufferAllocateInfo allocInfo = {};
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandPool = mCommandPool;
+    allocInfo.commandBufferCount = 1;
+
+    VkCommandBuffer commandBuffer;
+    vkAllocateCommandBuffers(logicalDevice, &allocInfo, &commandBuffer);
+
+    VkCommandBufferBeginInfo beginInfo = {};
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+    vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+    return commandBuffer;
+}
+
+void VulkanDevice::endSingleTimeCommands(VkCommandBuffer commandBuffer)
+{
+    vkEndCommandBuffer(commandBuffer);
+
+    VkSubmitInfo submitInfo = {};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+
+    vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+    vkQueueWaitIdle(graphicsQueue);
+
+    vkFreeCommandBuffers(logicalDevice, mCommandPool, 1, &commandBuffer);
 }
