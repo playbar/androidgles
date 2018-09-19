@@ -194,11 +194,11 @@ JNIEXPORT void JNICALL Java_com_example_yt_myapplication_LibraryClass_init(JNIEn
             4, 5, 6, 4, 6, 7,
         };
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices,
-            GL_STATIC_DRAW); CHECK_GL;
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        CHECK_GL;
 
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-            GL_STATIC_DRAW); CHECK_GL;
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+        CHECK_GL;
 
         GLsizei vs = sizeof(struct my_vertex);
         size_t vp = offsetof(struct my_vertex, pos);
@@ -246,15 +246,18 @@ void render(int w, int h)
     /* setup global state */
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); CHECK_GL;
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    CHECK_GL;
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
     glActiveTexture(GL_TEXTURE0);
 
     /* setup program */
-    glUseProgram(prog); CHECK_GL;
+    glUseProgram(prog);
+    CHECK_GL;
 
-    glUniformMatrix4fv(uniform_proj, 1, GL_FALSE, &ortho[0][0]); CHECK_GL;
+    glUniformMatrix4fv(uniform_proj, 1, GL_FALSE, &ortho[0][0]);
+    CHECK_GL;
 
     glBindVertexArray(vao); CHECK_GL;
 
@@ -264,8 +267,10 @@ void render(int w, int h)
     /*
      * Variant 1
      */
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0); CHECK_GL;
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (const GLushort*)(0) + 6); CHECK_GL;
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+    CHECK_GL;
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, (const GLushort*)(0) + 6);
+    CHECK_GL;
 
     /*
      * Variant 2

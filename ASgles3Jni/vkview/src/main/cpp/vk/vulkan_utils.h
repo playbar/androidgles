@@ -13,6 +13,7 @@
 
 #include "vulkan_data.h"
 #include "vulkan_device.h"
+#include "vulkan_buffer.h"
 
 #define STATE_RUNNING 1
 #define STATE_PAUSED 2
@@ -115,7 +116,7 @@ public:
     int state;
 
     ANativeWindow *window;
-    VulkanDevice vulkanDevice;
+    VulkanDevice mVKDevice;
 
 
     VkSwapchainKHR swapchain;
@@ -134,8 +135,10 @@ public:
     std::vector<VkFramebuffer> swapchainFramebuffers;
     std::vector<VkCommandBuffer> commandBuffers;
 
-    VkBuffer vertexBuffer;
-    VkDeviceMemory vertexBufferMemory;
+
+    HVkBuffer vertexBuffer;
+//    VkBuffer vertexBuffer;
+//    VkDeviceMemory vertexBufferMemory;
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
     VkBuffer uniformBuffer;
@@ -149,7 +152,5 @@ public:
     VkSemaphore imageAvailableSemaphore;
     VkSemaphore renderFinishedSemaphore;
 };
-
-extern VulkanUtils *gpVKUtils;
 
 #endif //__BAR_VULKAN_UTILS_H__
