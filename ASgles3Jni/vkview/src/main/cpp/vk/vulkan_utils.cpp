@@ -145,7 +145,9 @@ bool GLSLtoSPV(const VkShaderStageFlagBits shader_type, const char *pshader,
 
 
 VulkanUtils::VulkanUtils(AAssetManager *assetManager, const char *vertexShader, const char *fragmentShader) :
-    vertexBuffer(&mVKDevice),
+        mVertexBuffer(&mVKDevice),
+        mIndexBuffer(&mVKDevice),
+        mUniformBuffer(&mVKDevice),
     assetManager(assetManager),
     vertexShader(std::string(vertexShader)),
     fragmentShader(std::string(fragmentShader)),
@@ -154,7 +156,9 @@ VulkanUtils::VulkanUtils(AAssetManager *assetManager, const char *vertexShader, 
 }
 
 VulkanUtils::VulkanUtils():
-        vertexBuffer(&mVKDevice)
+        mVertexBuffer(&mVKDevice),
+        mIndexBuffer(&mVKDevice),
+        mUniformBuffer(&mVKDevice)
 {
     state = STATE_RUNNING;
 }
@@ -279,16 +283,18 @@ void VulkanUtils::cleanUp() {
 
     vkDestroyDescriptorPool(mVKDevice.logicalDevice, descriptorPool, nullptr);
     vkDestroyDescriptorSetLayout(mVKDevice.logicalDevice, descriptorSetLayout, nullptr);
-    vkDestroyBuffer(mVKDevice.logicalDevice, uniformBuffer, nullptr);
-    vkFreeMemory(mVKDevice.logicalDevice, uniformBufferMemory, nullptr);
+//    vkDestroyBuffer(mVKDevice.logicalDevice, uniformBuffer, nullptr);
+//    vkFreeMemory(mVKDevice.logicalDevice, uniformBufferMemory, nullptr);
 
-    vkDestroyBuffer(mVKDevice.logicalDevice, indexBuffer, nullptr);
-    vkFreeMemory(mVKDevice.logicalDevice, indexBufferMemory, nullptr);
+//    vkDestroyBuffer(mVKDevice.logicalDevice, indexBuffer, nullptr);
+//    vkFreeMemory(mVKDevice.logicalDevice, indexBufferMemory, nullptr);
 
 //    vkDestroyBuffer(mVKDevice.logicalDevice, vertexBuffer, nullptr);
 //    vkFreeMemory(mVKDevice.logicalDevice, vertexBufferMemory, nullptr);
 
-    vertexBuffer.destroy();
+    mUniformBuffer.destroy();
+    mIndexBuffer.destroy();
+    mVertexBuffer.destroy();
 
     vkDestroySemaphore(mVKDevice.logicalDevice, renderFinishedSemaphore, nullptr);
     vkDestroySemaphore(mVKDevice.logicalDevice, imageAvailableSemaphore, nullptr);
@@ -884,65 +890,49 @@ void VulkanUtils::createTextureSampler() {
 void VulkanUtils::createVertexBuffer() {
     VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-//    VkBuffer stagingBuffer;
-//    VkDeviceMemory stagingBufferMemory;
     HVkBuffer stagBuffer(&mVKDevice);
     stagBuffer.createBuffer(bufferSize,
                  VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
                  VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-
-
-    void *data;
     stagBuffer.map(bufferSize, 0 );
     stagBuffer.copyTo((void *)vertices.data(), (size_t) bufferSize);
     stagBuffer.unmap();
 
-    vertexBuffer.createBuffer(bufferSize,
+    mVertexBuffer.createBuffer(bufferSize,
                  VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
                  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-    copyBuffer(stagBuffer.mBuffer, vertexBuffer.mBuffer, bufferSize);
+    copyBuffer(stagBuffer.mBuffer, mVertexBuffer.mBuffer, bufferSize);
 
-//    vkDestroyBuffer(mVKDevice.logicalDevice, stagingBuffer, nullptr);
-//    vkFreeMemory(mVKDevice.logicalDevice, stagingBufferMemory, nullptr);
 }
 
 void VulkanUtils::createIndexBuffer() {
     VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
-    VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    createBuffer(bufferSize,
+    HVkBuffer stagBuffer(&mVKDevice);
+
+    stagBuffer.createBuffer(bufferSize,
                  VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                 stagingBuffer,
-                 stagingBufferMemory);
+                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-    void *data;
-    vkMapMemory(mVKDevice.logicalDevice, stagingBufferMemory, 0, bufferSize, 0, &data);
-    memcpy(data, indices.data(), (size_t) bufferSize);
-    vkUnmapMemory(mVKDevice.logicalDevice, stagingBufferMemory);
+    stagBuffer.map(bufferSize, 0);
+    stagBuffer.copyTo( (void*)indices.data(), (size_t) bufferSize);
+    stagBuffer.unmap();
 
-    createBuffer(bufferSize,
+    mIndexBuffer.createBuffer(bufferSize,
                  VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-                 indexBuffer,
-                 indexBufferMemory);
+                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+    copyBuffer(stagBuffer.mBuffer, mIndexBuffer.mBuffer, bufferSize);
 
-    copyBuffer(stagingBuffer, indexBuffer, bufferSize);
 
-    vkDestroyBuffer(mVKDevice.logicalDevice, stagingBuffer, nullptr);
-    vkFreeMemory(mVKDevice.logicalDevice, stagingBufferMemory, nullptr);
 }
 
 void VulkanUtils::createUniformBuffer() {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
-    createBuffer(bufferSize,
+    mUniformBuffer.createBuffer(bufferSize,
                  VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                 uniformBuffer,
-                 uniformBufferMemory);
+                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 }
 
 void VulkanUtils::createDescriptorPool() {
@@ -976,7 +966,7 @@ void VulkanUtils::createDescriptorSet() {
     }
 
     VkDescriptorBufferInfo bufferInfo = {
-            .buffer = uniformBuffer,
+            .buffer = mUniformBuffer.mBuffer,
             .offset = 0,
             .range = sizeof(UniformBufferObject),
     };
@@ -1081,11 +1071,11 @@ void VulkanUtils::createCommandBuffers() {
 
         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
-        VkBuffer vertexBuffers[] = {vertexBuffer.mBuffer};
+        VkBuffer vertexBuffers[] = {mVertexBuffer.mBuffer};
         VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 
-        vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindIndexBuffer(commandBuffers[i], mIndexBuffer.mBuffer, 0, VK_INDEX_TYPE_UINT16);
 
         vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
                                 0, 1, &descriptorSet, 0, nullptr);
@@ -1128,10 +1118,10 @@ void VulkanUtils::updateUniformBuffer() {
     };
     ubo.proj[1][1] *= -1;
 
-    void *data;
-    vkMapMemory(mVKDevice.logicalDevice, uniformBufferMemory, 0, sizeof(ubo), 0, &data);
-    memcpy(data, &ubo, sizeof(ubo));
-    vkUnmapMemory(mVKDevice.logicalDevice, uniformBufferMemory);
+    mUniformBuffer.map(sizeof(ubo), 0);
+    mUniformBuffer.copyTo(&ubo, sizeof(ubo));
+    mUniformBuffer.unmap();
+    return;
 }
 
 void VulkanUtils::drawFrame() {

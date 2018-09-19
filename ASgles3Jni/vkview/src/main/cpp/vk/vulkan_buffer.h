@@ -12,6 +12,7 @@ public:
 	VulkanDevice *mVkDevice;
 	VkBuffer mBuffer;
 	VkDeviceMemory mMemory;
+
 	VkDescriptorBufferInfo descriptor;
 	VkDeviceSize mSize = 0;
 	VkDeviceSize alignment = 0;

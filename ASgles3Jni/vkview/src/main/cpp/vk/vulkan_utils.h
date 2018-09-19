@@ -118,7 +118,6 @@ public:
     ANativeWindow *window;
     VulkanDevice mVKDevice;
 
-
     VkSwapchainKHR swapchain;
     VkRenderPass renderPass;
     VkDescriptorSetLayout descriptorSetLayout;
@@ -135,14 +134,9 @@ public:
     std::vector<VkFramebuffer> swapchainFramebuffers;
     std::vector<VkCommandBuffer> commandBuffers;
 
-
-    HVkBuffer vertexBuffer;
-//    VkBuffer vertexBuffer;
-//    VkDeviceMemory vertexBufferMemory;
-    VkBuffer indexBuffer;
-    VkDeviceMemory indexBufferMemory;
-    VkBuffer uniformBuffer;
-    VkDeviceMemory uniformBufferMemory;
+    HVkBuffer mVertexBuffer;
+    HVkBuffer mIndexBuffer;
+    HVkBuffer mUniformBuffer;
 
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;

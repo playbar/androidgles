@@ -6,6 +6,9 @@
 HVkBuffer::HVkBuffer(VulkanDevice *device)
 {
 	mVkDevice = device;
+	mMemory = NULL;
+	mBuffer = NULL;
+	mSize = 0;
 }
 
 
@@ -100,10 +103,12 @@ void HVkBuffer::destroy()
 	if (mBuffer)
 	{
 		vkDestroyBuffer(mVkDevice->logicalDevice, mBuffer, nullptr);
+		mBuffer = NULL;
 	}
 	if (mMemory)
 	{
 		vkFreeMemory(mVkDevice->logicalDevice, mMemory, nullptr);
+		mMemory = NULL;
 	}
 }
 
