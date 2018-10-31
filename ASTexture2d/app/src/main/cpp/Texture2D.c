@@ -47,12 +47,13 @@ GLuint CreateSimpleTexture2D( )
     int ilen = sizeof(pixels);
    int width, height;
 //   GLubyte *pdata = DecodePngFile("/sdcard/test.png", &width, &height);
-    pic_data data;
-    detect_png("/sdcard/test.png", &data);
-//    write_png("/sdcard/test.png", pixels, 2, 2);
 
-    write_png_file("/sdcard/test_file.png", &data);
+//    pic_data data;
+//    detect_png("/sdcard/test.png", &data);
+////    write_png("/sdcard/test.png", pixels, 2, 2);
+//    write_png_file("/sdcard/test_file.png", &data);
    // Use tightly packed data
+
    glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
    // Generate a texture object
@@ -63,7 +64,8 @@ GLuint CreateSimpleTexture2D( )
    glBindTexture ( GL_TEXTURE_2D, textureId );
 
    // Load the texture
-   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, data.width, data.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.rgba );
+//   glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, data.width, data.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.rgba );
+    glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels );
 
    // Set the filtering mode
    glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
