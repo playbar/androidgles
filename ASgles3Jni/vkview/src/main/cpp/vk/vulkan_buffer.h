@@ -13,7 +13,7 @@ public:
 	VkBuffer mBuffer;
 	VkDeviceMemory mMemory;
 
-	VkDescriptorBufferInfo descriptor;
+	VkDescriptorBufferInfo mDescriptor;
 	VkDeviceSize mSize = 0;
 	VkDeviceSize alignment = 0;
 	VkBufferUsageFlags usageFlags;

@@ -141,6 +141,11 @@ VulkanDevice::VulkanDevice()
 
 VulkanDevice::~VulkanDevice()
 {
+    destroy();
+}
+
+void VulkanDevice::destroy()
+{
     vkDestroyCommandPool(logicalDevice, mCommandPool, nullptr);
     vkDestroyDevice(logicalDevice, nullptr);
     DestroyDebugReportCallbackEXT(instance, callback, nullptr);

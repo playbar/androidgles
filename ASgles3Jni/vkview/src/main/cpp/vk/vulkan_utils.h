@@ -45,8 +45,6 @@ public:
 
     void createSurfaceDevice();
 
-    void mainLoop();
-
     void cleanUp();
 
 public:
@@ -64,12 +62,6 @@ public:
     void createFramebuffers();
 
 public:
-    //buffer
-    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
-                      VkMemoryPropertyFlags properties,
-                      VkBuffer &buffer, VkDeviceMemory &bufferMemory);
-
-    void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
     void createVertexBuffer();
     void createIndexBuffer();
@@ -77,18 +69,7 @@ public:
     void updateUniformBuffer();
 
 public:
-    //texture
-    void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
-                     VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
-                     VkImage& image, VkDeviceMemory& imageMemory);
 
-    void createTextureImageView();
-
-    void createTextureSampler();
-
-public:
-
-    void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
 
     void createDescriptorPool();
     void createDescriptorSet();

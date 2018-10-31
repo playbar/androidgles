@@ -63,7 +63,6 @@ void HVkBuffer::unmap()
 }
 
 void HVkBuffer::copyBuffer(HVkBuffer &srcBuffer)
-//void HVkBuffer::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
 	VkCommandBufferAllocateInfo allocInfo = {
 			.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -108,9 +107,9 @@ VkResult HVkBuffer::bind(VkDeviceSize offset)
 
 void HVkBuffer::setupDescriptor(VkDeviceSize size, VkDeviceSize offset)
 {
-	descriptor.offset = offset;
-	descriptor.buffer = mBuffer;
-	descriptor.range = size;
+	mDescriptor.offset = offset;
+	mDescriptor.buffer = mBuffer;
+	mDescriptor.range = size;
 }
 
 
