@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fexceptions -Wall -fno-rtti")
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fexceptions")
 
 
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
-#add_definitions(-DGLM_LANG_STL11_FORCED)
+add_definitions(-DRAPIDJSON_HAS_CXX11_RVALUE_REFS=1)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/assimp)
 
 #ModelAssimpNative
 add_library(ModelAssimpNative SHARED
@@ -33,7 +34,9 @@ add_library(ModelAssimpNative SHARED
 
 target_include_directories(ModelAssimpNative PRIVATE
                           ${CMAKE_CURRENT_SOURCE_DIR}
-                          ${CMAKE_CURRENT_SOURCE_DIR}/externals
+                          ${CMAKE_CURRENT_SOURCE_DIR}/assimp/include
+                          ${CMAKE_CURRENT_SOURCE_DIR}/externals/glm
+                          ${CMAKE_CURRENT_SOURCE_DIR}/externals/opencv
                           ${CMAKE_CURRENT_SOURCE_DIR}/jniCalls
                           ${CMAKE_CURRENT_SOURCE_DIR}/nativeCode/common
                           ${CMAKE_CURRENT_SOURCE_DIR}/nativeCode/modelAssimp
@@ -42,7 +45,7 @@ target_include_directories(ModelAssimpNative PRIVATE
 
 add_library(lib_assimp SHARED IMPORTED)
 set_target_properties(lib_assimp PROPERTIES IMPORTED_LOCATION
-    ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libassimp.so)
+    ${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libassimp_bin.so)
 
 add_library(lib_opencv SHARED IMPORTED)
 set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION
@@ -54,7 +57,7 @@ target_link_libraries(ModelAssimpNative
                       log
                       EGL
                       GLESv2
-                      lib_assimp
+                      assimp
                       lib_opencv
                   )
 
