@@ -1,110 +1,43 @@
-import org.apache.tools.ant.taskdefs.condition.Os
+apply plugin: 'com.android.application'
 
-apply plugin: 'com.android.model.application'
 
-// path to OpenCV Android SDK Version 3.0
-def opencvSDKPath = '../../OpenCV-3.0.0-android-sdk'
+def stlType = 'gnustl_static '
 
-model {
-
-    repositories {
-        libs(PrebuiltLibraries) {
-
-            // Assimp prebuilt shared lib
-            my_assimp {
-                // Inform Android Studio where header file dir for this lib
-                headers.srcDir "src/main/externals/assimp-3.0/include"
-                // Inform Android Studio where lib is -- each ABI should have a lib file
-                binaries.withType(SharedLibraryBinary) {
-                    sharedLibraryFile = file("src/main/externals/assimp-3.0/libs/" +
-                            "${targetPlatform.getName()}/libassimp.so")
-                }
-            }
-
-            // OpenCV prebuilt shared lib
-            my_cv {
-                // Inform Android Studio where header file dir for this lib
-                headers.srcDir "src/main/externals/opencv-3.0.0/include"
-                // Inform Android Studio where lib is -- each ABI should have a lib file
-                binaries.withType(SharedLibraryBinary) {
-                    sharedLibraryFile = file("src/main/externals/opencv-3.0.0/libs/" +
-                            "${targetPlatform.getName()}/libopencv_java3.so")
-                }
-            }
-
-        }
-    }
-
-    android {
-
-        // 23 = Android Marshmallow
-        compileSdkVersion = 23
-        buildToolsVersion = '25.0.0'
-
-        defaultConfig {
-            applicationId "com.anandmuralidhar.assimpandroid"
-            // assuming that device has Android KitKat (19) or above
-            minSdkVersion.apiLevel = 19
-            targetSdkVersion.apiLevel = 22
-
-            // versionCode and versionName are relevant if you release the app on Google Play
-            versionCode 1
-            versionName "1.0"
-        }
-
+android {
+    compileSdkVersion  24
+    buildToolsVersion '26.0.2'
+    defaultConfig {
+        applicationId 'com.anandmuralidhar.assimpandroid'
+        minSdkVersion 24
+        targetSdkVersion 24
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true
+        versionCode 1
+        versionName "1.0"
         ndk {
-            platformVersion = 19
-            moduleName = 'ModelAssimpNative' // this creates libModelAssimpNative.so and should be loaded in Java
-            stl        = 'gnustl_static'
-            abiFilters.add('armeabi-v7a')
-
-            // specify the path to jni code
-            cppFlags.addAll(['-I' + file('src/main/jni/nativeCode/modelAssimp'),
-                             '-I' + file('src/main/jni/nativeCode/common'),
-                             '-I' + file('src/main/externals/glm-0.9.7.5')])
-
-            cppFlags.addAll(['-std=c++11', '-Wall', '-fexceptions', '-fno-rtti'])
-            ldLibs.addAll(['android', 'log', 'EGL', 'GLESv2', "stdc++"])
+            abiFilters 'armeabi-v7a'
         }
-
-        sources {
-            main {
-                jni {
-                    dependencies {
-                        // we use some functions from ndk_helper to simplify native tasks
-                        project ':ndk_helper' linkage 'static'
-                        project ':native_app_glue' linkage 'static'
-                        library 'my_assimp' linkage 'shared'
-                        library 'my_cv' linkage 'shared'
-                    }
-                    source {
-                        srcDirs 'src/main/jni'
-                    }
-                }
-                jniLibs {
-                    // for shared lib, lib need to be pushed to the target too
-                    // Once libs are copied into app/src/main/jniLibs directory,
-                    // Android Studio will pack them into APK's lib/ directory
-                    // Here we like to avoid another duplication by pointing
-                    // to the files that containing our libs' distribution location
-                    // so the same file is used by compiler at host, also packed
-                    // into APk to be used at Target (phone/tablet)
-                    source {
-                        srcDir "src/main/externals/assimp-3.0/libs"
-                        srcDir "src/main/externals/opencv-3.0.0/libs"
-                    }
-                }
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_PLATFORM=android-24',
+                        '-DANDROID_TOOLCHAIN=clang',
+                        "-DANDROID_STL=${stlType}",
+                        '-DSAMPLE_NAME=' + project.getName()
             }
         }
-
-        buildTypes {
-            release {
-                minifyEnabled = false
-                proguardFiles.add(file('proguard-rules.txt'))
-            }
-        }
-
     }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+
 }
 
 dependencies {
