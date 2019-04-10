@@ -16,10 +16,9 @@
 
 #include "myShader.h"
 #include "modelAssimp.h"
-#include <glm/gtc/type_ptr.hpp>
+
 
 #include "assimp/Importer.hpp"
-#include "Camera.h"
 #include <opencv2/opencv.hpp>
 #include <myJNIHelper.h>
 
@@ -37,11 +36,7 @@ ModelAssimp::ModelAssimp() {
     std::copy(&pos[0], &pos[5], std::back_inserter(modelDefaultPosition));
     myGLCamera->SetModelPosition(modelDefaultPosition);
 
-    std::string vertexShader    = "shaders/model_loading.vs";
-    std::string fragmentShader  = "shaders/model_loading.frag";
-    mshader.Init(vertexShader.c_str(), fragmentShader.c_str());
-
-//    modelObject = NULL;
+    modelObject = NULL;
 }
 
 ModelAssimp::~ModelAssimp() {
@@ -50,9 +45,9 @@ ModelAssimp::~ModelAssimp() {
     if (myGLCamera) {
         delete myGLCamera;
     }
-//    if (modelObject) {
-//        delete modelObject;
-//    }
+    if (modelObject) {
+        delete modelObject;
+    }
 }
 
 /**
@@ -64,56 +59,20 @@ void ModelAssimp::PerformGLInits() {
 
     MyGLInits();
 
-//    modelObject = new AssimpLoader();
-    mModel = new Model();
+    modelObject = new AssimpLoader();
 
     // extract the OBJ and companion files from assets
-    std::string objFilename, mtlFilename, texFilename, str11,str22, strBG2, strlattice, strloftstep;
-    std::string strTmp;
-//    bool isFilesPresent  =
-//            gHelperObject->ExtractAssetReturnFilename("amenemhat/amenemhat.obj", objFilename) &&
-//            gHelperObject->ExtractAssetReturnFilename("amenemhat/amenemhat.mtl", mtlFilename) &&
-//            gHelperObject->ExtractAssetReturnFilename("amenemhat/amenemhat.jpg", texFilename);
-//    bool isFilesPresent  =
-//            gHelperObject->ExtractAssetReturnFilename("space/space_screen03.FBX", objFilename) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/11.jpg", str11) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/22.jpg", str22) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/BG2.jpg", strBG2 ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/lattice.jpg", strlattice ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/loftstep.jpg", strloftstep ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/mainspace.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/pingmu.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/roomspace.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/screen_var.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/seat_.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/space_.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/textures.2.png", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/TV1.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/TV2.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/TV3.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/TV4.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/TV5.jpg", strTmp ) &&
-//            gHelperObject->ExtractAssetReturnFilename("space/TV6.jpg", strTmp );
-
-
-//    bool isFilesPresent  = gHelperObject->ExtractAssetReturnFilename("scene/door.FBX", objFilename);
-    bool isFilesPresent  = gHelperObject->ExtractAssetReturnFilename("spider/spider.obj", objFilename)
-                           && gHelperObject->ExtractAssetReturnFilename("spider/spider.mtl", objFilename)
-                           && gHelperObject->ExtractAssetReturnFilename("spider/drkwood2.jpg", strTmp )
-                           && gHelperObject->ExtractAssetReturnFilename("spider/engineflare1.jpg", strTmp )
-                           && gHelperObject->ExtractAssetReturnFilename("spider/SpiderTex.jpg", strTmp )
-                           && gHelperObject->ExtractAssetReturnFilename("spider/wal67ar_small.jpg", strTmp );
-//
-//    bool isFilesPresent  = gHelperObject->ExtractAssetReturnFilename("astroboy/astroboy_walk.dae", objFilename)
-//                           &&gHelperObject->ExtractAssetReturnFilename("astroboy/seymour.jpg", objFilename);
-
+    std::string objFilename, mtlFilename, texFilename;
+    bool isFilesPresent  =
+            gHelperObject->ExtractAssetReturnFilename("amenemhat/amenemhat.obj", objFilename) &&
+            gHelperObject->ExtractAssetReturnFilename("amenemhat/amenemhat.mtl", mtlFilename) &&
+            gHelperObject->ExtractAssetReturnFilename("amenemhat/amenemhat.jpg", texFilename);
     if( !isFilesPresent ) {
         MyLOGE("Model %s does not exist!", objFilename.c_str());
         return;
     }
 
-//    modelObject->Load3DModel(objFilename);
-    mModel->loadModel(objFilename);
+    modelObject->Load3DModel(objFilename);
 
     CheckGLError("ModelAssimp::PerformGLInits");
     initsDone = true;
@@ -128,26 +87,8 @@ void ModelAssimp::Render() {
     // clear the screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//    glm::mat4 mvpMat = myGLCamera->GetMVP();
-//    modelObject->Render3DModel(&mvpMat);
-
-    // Clear the colorbuffer
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.5f, 0.05f, 0.05f, 1.0f);
-    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-    mshader.Use();
-    // Transformation matrices
-    glm::mat4 projection = glm::perspective(camera.Zoom, (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
-    glUniformMatrix4fv(glGetUniformLocation(mshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glUniformMatrix4fv(glGetUniformLocation(mshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-
-    // Draw the loaded model
-    glm::mat4 model;
-    model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // Translate it down a bit so it's at the center of the scene
-    model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// It's a bit too big for our scene, so scale it down
-    glUniformMatrix4fv(glGetUniformLocation(mshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    mModel->Draw(mshader);
+    glm::mat4 mvpMat = myGLCamera->GetMVP();
+    modelObject->Render3DModel(&mvpMat);
 
     CheckGLError("ModelAssimp::Render");
 

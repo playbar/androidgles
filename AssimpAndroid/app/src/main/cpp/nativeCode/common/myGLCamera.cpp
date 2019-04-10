@@ -37,8 +37,6 @@ MyGLCamera::MyGLCamera(
 
     // 6DOF describing model's position
     deltaX = deltaY = deltaZ = 0;                  // translations
-    deltaX = 0;
-    deltaY = 0;
     modelQuaternion = glm::quat(glm::vec3(0,0,0)); // rotation
 
     modelMat        = glm::mat4(1.0f);

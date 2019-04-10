@@ -29,7 +29,7 @@
 class MyGLCamera {
 public:
     MyGLCamera(
-            float FOV = 90,          // in degrees
+            float FOV = 45,          // in degrees
             float zPosition = 10,    // camera's location on Z axis
             float nearPlaneDistance = 1.0f, // as large as possible
             float farPlaneDistance = 2000.0f // as small as possible

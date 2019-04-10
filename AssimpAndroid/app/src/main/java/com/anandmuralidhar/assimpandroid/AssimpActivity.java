@@ -16,16 +16,13 @@
 
 package com.anandmuralidhar.assimpandroid;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.res.AssetManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 
 
 public class AssimpActivity extends Activity{
-    public static final int REQ_CODE_PERMISSION_REQUEST = 1000;
     private GLSurfaceView mGLView = null;
     private native void CreateObjectNative(AssetManager assetManager, String pathToInternalDir);
     private native void DeleteObjectNative();
@@ -34,8 +31,6 @@ public class AssimpActivity extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_CODE_PERMISSION_REQUEST);
-
 
         AssetManager assetManager = getAssets();
         String pathToInternalDir = getFilesDir().getAbsolutePath();

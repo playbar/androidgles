@@ -18,10 +18,7 @@ add_library(ModelAssimpNative SHARED
             nativeCode/common/myGLFunctions.cpp
             nativeCode/common/myJNIHelper.cpp
             nativeCode/common/myShader.cpp
-            nativeCode/modelAssimp/Mesh.cpp
-            nativeCode/modelAssimp/Model.cpp
             nativeCode/modelAssimp/modelAssimp.cpp
-            nativeCode/modelAssimp/Shader.cpp
             ndk_helper/gestureDetector.cpp
             ndk_helper/gl3stub.c
             ndk_helper/GLContext.cpp

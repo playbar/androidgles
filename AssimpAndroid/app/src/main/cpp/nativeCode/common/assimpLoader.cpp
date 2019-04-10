@@ -153,31 +153,18 @@ bool AssimpLoader::LoadTexturesToGL(std::string modelFilename) {
     for (unsigned int m = 0; m < scene->mNumMaterials; ++m) {
 
         int textureIndex = 0;
-        aiString textureFilename, texFileName;
+        aiString textureFilename;
         aiReturn isTexturePresent = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE,
                                                                      textureIndex,
                                                                      &textureFilename);
-
-        const char *pTmp = strrchr(textureFilename.C_Str(), '\\');
-        if(pTmp != NULL )
-        {
-            ++pTmp;
-        }else{
-            pTmp = textureFilename.C_Str();
-        }
-
-        texFileName.Set(pTmp);
-        MyLOGE("texture name:%s", textureFilename.C_Str());
-        MyLOGE("texture name:%s", pTmp);
-
         while (isTexturePresent == AI_SUCCESS) {
             //fill map with textures, OpenGL image ids set to 0
-            textureNameMap.insert(std::pair<std::string, GLuint>(texFileName.data, 0));
+            textureNameMap.insert(std::pair<std::string, GLuint>(textureFilename.data, 0));
 
             // more textures? more than one texture could be associated with a material
             textureIndex++;
             isTexturePresent = scene->mMaterials[m]->GetTexture(aiTextureType_DIFFUSE,
-                                                                textureIndex, &texFileName);
+                                                                textureIndex, &textureFilename);
         }
     }
 
@@ -305,9 +292,7 @@ void AssimpLoader::Render3DModel(glm::mat4 *mvpMat) {
     unsigned int numberOfLoadedMeshes = modelMeshes.size();
 
     // render all meshes
-    for (unsigned int n = 0; n < numberOfLoadedMeshes; ++n)
-//    unsigned int n = 1;
-    {
+    for (unsigned int n = 0; n < numberOfLoadedMeshes; ++n) {
 
         // Texture
         if (modelMeshes[n].textureIndex) {
