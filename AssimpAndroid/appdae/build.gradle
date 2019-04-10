@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+
+def stlType = 'gnustl_static '
+
+android {
+    compileSdkVersion  24
+    buildToolsVersion '26.0.2'
+    defaultConfig {
+        applicationId 'com.anandmuralidhar.assimpandroid'
+        minSdkVersion 24
+        targetSdkVersion 24
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_PLATFORM=android-24',
+                        '-DANDROID_TOOLCHAIN=clang',
+                        "-DANDROID_STL=${stlType}",
+                        '-DSAMPLE_NAME=' + project.getName()
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:23.4.0'
+}
