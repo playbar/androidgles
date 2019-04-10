@@ -13,13 +13,13 @@ add_library(ModelAssimpNative SHARED
             jniCalls/assimpActivity.cpp
             jniCalls/gestureClass.cpp
             jniCalls/myGLRenderer.cpp
-            nativeCode/common/assimpLoader.cpp
-            nativeCode/common/misc.cpp
-            nativeCode/common/myGLCamera.cpp
-            nativeCode/common/myGLFunctions.cpp
-            nativeCode/common/myJNIHelper.cpp
-            nativeCode/common/myShader.cpp
-            nativeCode/modelAssimp/modelAssimp.cpp
+            modelAssimp/assimpLoader.cpp
+            modelAssimp/misc.cpp
+            modelAssimp/myGLCamera.cpp
+            modelAssimp/myGLFunctions.cpp
+            modelAssimp/myJNIHelper.cpp
+            modelAssimp/myShader.cpp
+            modelAssimp/modelAssimp.cpp
             ndk_helper/gestureDetector.cpp
             ndk_helper/gl3stub.c
             ndk_helper/GLContext.cpp
@@ -38,8 +38,7 @@ target_include_directories(ModelAssimpNative PRIVATE
                           ${CMAKE_CURRENT_SOURCE_DIR}/externals/glm
                           ${CMAKE_CURRENT_SOURCE_DIR}/externals/opencv
                           ${CMAKE_CURRENT_SOURCE_DIR}/jniCalls
-                          ${CMAKE_CURRENT_SOURCE_DIR}/nativeCode/common
-                          ${CMAKE_CURRENT_SOURCE_DIR}/nativeCode/modelAssimp
+                          ${CMAKE_CURRENT_SOURCE_DIR}/modelAssimp
                           ${CMAKE_CURRENT_SOURCE_DIR}/ndk_helper
                      )
 
