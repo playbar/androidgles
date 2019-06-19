@@ -123,7 +123,7 @@ int Init ( ESContext *esContext )
 void Draw ( ESContext *esContext )
 {
    UserData *userData = esContext->userData;
-   GLfloat vVertices[] = { -0.5f,  0.5f, 0.0f,  // Position 0
+   GLfloat vVertices[] = { -1.0f,  0.5f, 0.0f,  // Position 0
                             0.0f,  0.0f,        // TexCoord 0 
                            -0.5f, -0.5f, 0.0f,  // Position 1
                             0.0f,  1.0f,        // TexCoord 1
@@ -212,7 +212,7 @@ void createSharedContext(ESContext *esContext){
    EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
    EGLint numConfigs = 0;
    EGLConfig config;
-   int flags = 0;
+   int flags = ES_WINDOW_ALPHA | ES_WINDOW_DEPTH | ES_WINDOW_STENCIL | ES_WINDOW_MULTISAMPLE;
    EGLint attribList[] =
   {
        EGL_RED_SIZE,       5,
@@ -222,6 +222,7 @@ void createSharedContext(ESContext *esContext){
        EGL_DEPTH_SIZE,     ( flags & ES_WINDOW_DEPTH ) ? 8 : EGL_DONT_CARE,
        EGL_STENCIL_SIZE,   ( flags & ES_WINDOW_STENCIL ) ? 8 : EGL_DONT_CARE,
        EGL_SAMPLE_BUFFERS, ( flags & ES_WINDOW_MULTISAMPLE ) ? 1 : 0,
+       EGL_SAMPLES, 4,
        // if EGL_KHR_create_context extension is supported, then we will use
        // EGL_OPENGL_ES3_BIT_KHR instead of EGL_OPENGL_ES2_BIT in the attribute list
        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
