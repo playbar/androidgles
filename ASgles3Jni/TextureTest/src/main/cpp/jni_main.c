@@ -250,47 +250,105 @@ GLuint gaPositionHandle;
 GLuint gaTexCoordHandle;
 GLuint gaTexSamplerHandle;
 
-GLuint gTextureHandlePNG;
 GLuint gTextureHandleETC2;
 GLuint gTextureHandleUnsupported;
 GLuint gTextureHandleETC;
 GLuint gTextureHandlePVRTC;
 GLuint gTextureHandleS3TC;
 
+GLuint gTexturePng[TEXTURE_COUNT];
 GLuint gTextureETC2[TEXTURE_COUNT];
 
-void LoadETC2Tex()
-{
-    gTextureHandleETC2 = ( IsETC2Supported() ) ? LoadTextureETC_KTX("bang.ktx") : gTextureHandleUnsupported;
+char *gTexPngName[] = {"bang.png", "bang1.png"};
+char *gTexEtcName[] = {"bang.ktx", "bang1.ktx"};
 
+void LoadPng()
+{
     for( int i = 0; i < TEXTURE_COUNT; ++i )
     {
-        gTextureETC2[i] = LoadTextureETC_KTX("bang.ktx");
+        Log("Fun:%s, index = %d", __FUNCTION__, i );
+        gTexturePng[i] = LoadTexturePNG(gTexPngName[i%2]);
     }
 }
 
-void DrawTEC2Tex()
+void LoadETC2Tex()
+{
+    for( int i = 0; i < TEXTURE_COUNT; ++i )
+    {
+        Log("Fun:%s, index = %d", __FUNCTION__, i );
+        gTextureETC2[i] = LoadTextureETC_KTX(gTexEtcName[i%2]);
+    }
+}
+
+void DrawPngTex()
 {
     // Set vertex position
-    glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesETC2 );
-    CheckGlError( "glVertexAttribPointer");
-
-    // Set vertex texture coordinates
-    glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesETC2 + sizeof(float)*2 );
-    CheckGlError( "glVertexAttribPointer");
-
-    // Set active texture
-    glBindTexture( GL_TEXTURE_2D, gTextureHandleETC2 );
-
-    glDrawArrays( GL_TRIANGLES, 0, 6 );
 
     for( int i = 0; i < TEXTURE_COUNT; ++i )
     {
-        glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesETC2 );
+        TriangleVertex triangleVerticesPng[6];
+        float frand = ((float)(rand() % 1000) ) / 1000.0f - 0.5;
+        float frandy = ((float)(rand() % 1000) ) / 1000.0f - 0.5;
+        for (int j = 0; j < 6; ++j )
+        {
+            triangleVerticesPng[j].x = gTriangleVerticesPNG[j].x + frand;
+            triangleVerticesPng[j].y = gTriangleVerticesPNG[j].y + frandy;
+            triangleVerticesPng[j].u = gTriangleVerticesPNG[j].u;
+            triangleVerticesPng[j].v = gTriangleVerticesPNG[j].v;
+        }
+
+        glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), triangleVerticesPng );
+        CheckGlError( "glVertexAttribPointer" );
+
+        // Set vertex texture coordinates
+        glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)triangleVerticesPng + sizeof(float)*2 );
+        CheckGlError( "glVertexAttribPointer" );
+
+        // Set active texture
+        glBindTexture( GL_TEXTURE_2D, gTexturePng[i] );
+
+        glDrawArrays( GL_TRIANGLES, 0, 6 );
+    }
+}
+
+void DrawETCTex()
+{
+//    // Set vertex position
+    glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesETC );
+    CheckGlError( "glVertexAttribPointer");
+
+    // Set vertex texture coordinates
+    glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesETC + sizeof(float)*2 );
+    CheckGlError( "glVertexAttribPointer");
+
+    // Set active texture
+    glBindTexture( GL_TEXTURE_2D, gTextureHandleETC );
+
+    glDrawArrays( GL_TRIANGLES, 0, 6 );
+}
+
+void DrawETC2Tex()
+{
+    // Set vertex position
+
+    for( int i = 0; i < TEXTURE_COUNT; ++i )
+    {
+        TriangleVertex triangleVerticesETC2[6];
+        float frand = ((float)(rand() % 1000) ) / 1000.0f - 0.5;
+        float frandy = ((float)(rand() % 1000) ) / 1000.0f - 0.5;
+        for (int j = 0; j < 6; ++j )
+        {
+            triangleVerticesETC2[j].x = gTriangleVerticesETC2[j].x + frand;
+            triangleVerticesETC2[j].y = gTriangleVerticesETC2[j].y + frandy;
+            triangleVerticesETC2[j].u = gTriangleVerticesETC2[j].u;
+            triangleVerticesETC2[j].v = gTriangleVerticesETC2[j].v;
+        }
+
+        glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), triangleVerticesETC2 );
         CheckGlError( "glVertexAttribPointer");
 
         // Set vertex texture coordinates
-        glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesETC2 + sizeof(float)*2 );
+        glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)triangleVerticesETC2 + sizeof(float)*2 );
         CheckGlError( "glVertexAttribPointer");
 
         // Set active texture
@@ -298,6 +356,40 @@ void DrawTEC2Tex()
 
         glDrawArrays( GL_TRIANGLES, 0, 6 );
     }
+}
+
+void DrawPVRTCTex()
+{
+    //
+// Set vertex position
+    glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesPVRTC );
+    CheckGlError( "glVertexAttribPointer" );
+
+    // Set vertex texture coordinates
+    glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesPVRTC + sizeof(float)*2 );
+    CheckGlError( "glVertexAttribPointer" );
+
+    // Set active texture
+    glBindTexture( GL_TEXTURE_2D, gTextureHandlePVRTC );
+
+    glDrawArrays( GL_TRIANGLES, 0, 6) ;
+}
+
+void DrawS3TCTex()
+{
+    //
+// Set vertex position
+    glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesS3TC );
+    CheckGlError( "glVertexAttribPointer" );
+
+    // Set vertex texture coordinates
+    glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesS3TC + sizeof(float)*2 );
+    CheckGlError( "glVertexAttribPointer" );
+
+    // Set active texture
+    glBindTexture( GL_TEXTURE_2D, gTextureHandleS3TC );
+
+    glDrawArrays( GL_TRIANGLES, 0, 6 );
 }
 
 void Init( int width, int height ) 
@@ -324,14 +416,17 @@ void Init( int width, int height )
     glViewport( 0, 0, width, height ) ;
     CheckGlError( "glViewport" );
 
+    Log("Fun:%s, begin loadtexture", __FUNCTION__ );
+
+//    LoadPng();
     LoadETC2Tex();
     // Load textures
-//    gTextureHandlePNG = LoadTexturePNG("bang.png");
 //    gTextureHandleUnsupported = LoadTexturePNG("tex_bw.png");
 //    gTextureHandleETC = ( IsETCSupported() ) ? LoadTextureETC_KTX("tex_etc1.ktx") : gTextureHandleUnsupported;
 //    gTextureHandleETC2 = ( IsETC2Supported() ) ? LoadTextureETC_KTX("tex_etc2.ktx") : gTextureHandleUnsupported;
 //    gTextureHandlePVRTC = ( IsPVRTCSupported() ) ? LoadTexturePVRTC("tex_pvr.pvr") : gTextureHandleUnsupported;
 //    gTextureHandleS3TC = ( IsS3TCSupported() ) ? LoadTextureS3TC("tex_s3tc.dds") : gTextureHandleUnsupported;
+    Log("Fun:%s, end loadtexture", __FUNCTION__ );
 }
 
 
@@ -368,68 +463,23 @@ void Render()
     glUniform1i( gaTexSamplerHandle, 0 );
     
     // PNG //////////////////////////////////////////////////////////////////////////////////////////////////////
-            
-//    // Set vertex position
-//    glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesPNG );
-//    CheckGlError( "glVertexAttribPointer" );
-//
-//    // Set vertex texture coordinates
-//    glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesPNG + sizeof(float)*2 );
-//    CheckGlError( "glVertexAttribPointer" );
-//
-//    // Set active texture
-//    glBindTexture( GL_TEXTURE_2D, gTextureHandlePNG );
-//
-//    glDrawArrays( GL_TRIANGLES, 0, 6 );
+//    DrawPngTex();
 
     // ETC //////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-//    // Set vertex position
-//    glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesETC );
-//    CheckGlError( "glVertexAttribPointer");
-//
-//    // Set vertex texture coordinates
-//    glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesETC + sizeof(float)*2 );
-//    CheckGlError( "glVertexAttribPointer");
-//
-//    // Set active texture
-//    glBindTexture( GL_TEXTURE_2D, gTextureHandleETC );
-//
-//    glDrawArrays( GL_TRIANGLES, 0, 6 );
+//    DrawETCTex();
+
 
     // ETC2 //////////////////////////////////////////////////////////////////////////////////////////////////////
-    DrawTEC2Tex();
+    DrawETC2Tex();
 
 
 //    // PVRTC //////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//    // Set vertex position
-//    glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesPVRTC );
-//    CheckGlError( "glVertexAttribPointer" );
-//
-//    // Set vertex texture coordinates
-//    glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesPVRTC + sizeof(float)*2 );
-//    CheckGlError( "glVertexAttribPointer" );
-//
-//    // Set active texture
-//    glBindTexture( GL_TEXTURE_2D, gTextureHandlePVRTC );
-//
-//    glDrawArrays( GL_TRIANGLES, 0, 6) ;
+//    DrawPVRTCTex();
+
 //
 //    // S3TC //////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-//    // Set vertex position
-//    glVertexAttribPointer( gaPositionHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), gTriangleVerticesS3TC );
-//    CheckGlError( "glVertexAttribPointer" );
-//
-//    // Set vertex texture coordinates
-//    glVertexAttribPointer( gaTexCoordHandle, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), (char*)gTriangleVerticesS3TC + sizeof(float)*2 );
-//    CheckGlError( "glVertexAttribPointer" );
-//
-//    // Set active texture
-//    glBindTexture( GL_TEXTURE_2D, gTextureHandleS3TC );
-//
-//    glDrawArrays( GL_TRIANGLES, 0, 6 );
+//    DrawS3TCTex();
+
 }
 
 
