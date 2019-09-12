@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.play.texturetest">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application android:label="@string/textureloader_activity"
+        android:icon="@drawable/ic_launcher"
+        android:debuggable="true">
+        <activity android:name="TextureLoaderActivity"
+                android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            	android:launchMode="singleTask"
+                android:screenOrientation="landscape"
+            	android:configChanges="orientation|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+    <uses-feature android:glEsVersion="0x00030000" android:required="true" />
+</manifest>
+
+
