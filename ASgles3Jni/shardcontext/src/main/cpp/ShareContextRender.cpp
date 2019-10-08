@@ -96,18 +96,18 @@ GLuint CreateStorageTexture2D( )
 
 
 void createSharedContext(){
-    EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
+    EGLint contextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
     EGLint numConfigs = 0;
     EGLConfig config;
     int flags = 0;
 
     const EGLint attribList[] = {
+            EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
             EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
             EGL_BLUE_SIZE, 8,
             EGL_GREEN_SIZE, 8,
             EGL_RED_SIZE, 8,
             EGL_ALPHA_SIZE, 8,
-            EGL_RENDERABLE_TYPE, 64,
             EGL_DEPTH_SIZE, 0,
             EGL_STENCIL_SIZE, 0,
             EGL_NONE
@@ -120,6 +120,8 @@ void createSharedContext(){
             EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE,
             EGL_NONE
     };
+
+    EGLint winAttr[] = { EGL_NONE };
 
     // Choose config
     EGLDisplay display = eglGetCurrentDisplay( );
@@ -134,6 +136,9 @@ void createSharedContext(){
         return;
     }
 
+//    EGLSurface surface = eglGetCurrentSurface(EGL_READ);
+//    gAuxSurface = eglCreateWindowSurface(display, config, , winAttr);
+
     gShareContext = eglCreateContext( display, config, context, contextAttribs );
     return;
 
@@ -141,6 +146,11 @@ void createSharedContext(){
 
 void * thread_1(void *pdata ){
     sleep( 2);
+
+    EGLContext context = eglGetCurrentContext();
+    EGLSurface drawSurface = eglGetCurrentSurface(EGL_DRAW);
+    EGLSurface readSurface = eglGetCurrentSurface(EGL_READ);
+
     if( !eglMakeCurrent( gDisplay, gAuxSurface, gAuxSurface, gShareContext )){
         printf("error");
     }

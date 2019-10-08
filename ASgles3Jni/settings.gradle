@@ -1,5 +1,7 @@
 //include ':vkview'
 //include ':app'
+include ':glestobmp'
+include ':offscreen'
 include ':shardcontext'
 //include ':pbuffer'
 //include ':TextureTest'
