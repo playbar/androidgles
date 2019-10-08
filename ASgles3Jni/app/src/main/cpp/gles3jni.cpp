@@ -553,9 +553,9 @@ Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj) {
     g_renderer = createES2Renderer();
 
 //    GPU_Sobel();
-//    Init();
-//    gDisplay = eglGetCurrentDisplay();
-//    createSharedContext();
+    Init();
+    gDisplay = eglGetCurrentDisplay();
+    createSharedContext();
 //
 //    pthread_t id_1;
 //    int ret;

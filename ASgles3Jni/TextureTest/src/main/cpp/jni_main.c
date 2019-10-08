@@ -243,7 +243,7 @@ GLuint createProgram( const char* pVertexSource, const char* pPixelSource )
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Init - Called from Java-side to setup the graphics on the native-side
-#define TEXTURE_COUNT 100
+#define TEXTURE_COUNT 2
 
 GLuint gProgramHandle;
 GLuint gaPositionHandle;
@@ -338,8 +338,8 @@ void DrawETC2Tex()
         float frandy = ((float)(rand() % 1000) ) / 1000.0f - 0.5;
         for (int j = 0; j < 6; ++j )
         {
-            triangleVerticesETC2[j].x = gTriangleVerticesETC2[j].x + frand;
-            triangleVerticesETC2[j].y = gTriangleVerticesETC2[j].y + frandy;
+            triangleVerticesETC2[j].x = gTriangleVerticesETC2[j].x;// + frand;
+            triangleVerticesETC2[j].y = gTriangleVerticesETC2[j].y;// + frandy;
             triangleVerticesETC2[j].u = gTriangleVerticesETC2[j].u;
             triangleVerticesETC2[j].v = gTriangleVerticesETC2[j].v;
         }

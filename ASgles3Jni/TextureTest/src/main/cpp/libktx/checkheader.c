@@ -72,6 +72,7 @@ DECLARE_GL_EXTGLOBALS
  * @author Georg Kolling, Imagination Technology
  * @author Mark Callow, HI Corporation
  */
+
 KTX_error_code _ktxCheckHeader(KTX_header* header, KTX_texinfo* texinfo)
 {
 	khronos_uint8_t identifier_reference[12] = KTX_IDENTIFIER_REF;

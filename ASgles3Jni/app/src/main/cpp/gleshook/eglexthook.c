@@ -334,15 +334,15 @@ EGLClientBuffer mj_eglCreateNativeClientBufferANDROID(const EGLint *attrib_list)
 
 void hookEglextFun()
 {
-    hook((uint32_t) eglLockSurfaceKHR, (uint32_t)mj_eglLockSurfaceKHR, (uint32_t **) &old_eglLockSurfaceKHR);
-    hook((uint32_t) eglUnlockSurfaceKHR, (uint32_t)mj_eglUnlockSurfaceKHR, (uint32_t **)&old_eglUnlockSurfaceKHR);
-    hook((uint32_t) eglCreateImageKHR, (uint32_t)mj_eglCreateImageKHR, (uint32_t **) &old_eglCreateImageKHR);
-    hook((uint32_t) eglDestroyImageKHR, (uint32_t)mj_eglDestroyImageKHR, (uint32_t **) &old_eglDestroyImageKHR);
-    hook((uint32_t) eglCreateSyncKHR, (uint32_t)mj_eglCreateSyncKHR, (uint32_t **) &old_eglCreateSyncKHR);
-    hook((uint32_t) eglDestroySyncKHR, (uint32_t)mj_eglDestroySyncKHR, (uint32_t **) &old_eglDestroySyncKHR);
-    hook((uint32_t) eglClientWaitSyncKHR, (uint32_t)mj_eglClientWaitSyncKHR, (uint32_t **) &old_eglClientWaitSyncKHR);
-    hook((uint32_t) eglSignalSyncKHR, (uint32_t)mj_eglSignalSyncKHR, (uint32_t **) &old_eglSignalSyncKHR);
-    hook((uint32_t) eglGetSyncAttribKHR, (uint32_t)mj_eglGetSyncAttribKHR, (uint32_t **) &old_eglGetSyncAttribKHR);
+//    hook((uint32_t) eglLockSurfaceKHR, (uint32_t)mj_eglLockSurfaceKHR, (uint32_t **) &old_eglLockSurfaceKHR);
+//    hook((uint32_t) eglUnlockSurfaceKHR, (uint32_t)mj_eglUnlockSurfaceKHR, (uint32_t **)&old_eglUnlockSurfaceKHR);
+//    hook((uint32_t) eglCreateImageKHR, (uint32_t)mj_eglCreateImageKHR, (uint32_t **) &old_eglCreateImageKHR);
+//    hook((uint32_t) eglDestroyImageKHR, (uint32_t)mj_eglDestroyImageKHR, (uint32_t **) &old_eglDestroyImageKHR);
+//    hook((uint32_t) eglCreateSyncKHR, (uint32_t)mj_eglCreateSyncKHR, (uint32_t **) &old_eglCreateSyncKHR);
+//    hook((uint32_t) eglDestroySyncKHR, (uint32_t)mj_eglDestroySyncKHR, (uint32_t **) &old_eglDestroySyncKHR);
+//    hook((uint32_t) eglClientWaitSyncKHR, (uint32_t)mj_eglClientWaitSyncKHR, (uint32_t **) &old_eglClientWaitSyncKHR);
+//    hook((uint32_t) eglSignalSyncKHR, (uint32_t)mj_eglSignalSyncKHR, (uint32_t **) &old_eglSignalSyncKHR);
+//    hook((uint32_t) eglGetSyncAttribKHR, (uint32_t)mj_eglGetSyncAttribKHR, (uint32_t **) &old_eglGetSyncAttribKHR);
 //    hook((uint32_t) eglSetDamageRegionKHR, (uint32_t)mj_eglSetDamageRegionKHR, (uint32_t **) &old_eglSetDamageRegionKHR);
 //    hook((uint32_t) eglCreateFenceSyncNV, (uint32_t)mj_eglCreateFenceSyncNV, (uint32_t **) &old_eglCreateFenceSyncNV);
 //    hook((uint32_t) eglDestroySyncNV, (uint32_t)mj_eglDestroySyncNV, (uint32_t **) &old_eglDestroySyncNV);
@@ -351,8 +351,8 @@ void hookEglextFun()
 //    hook((uint32_t) eglSignalSyncNV, (uint32_t)mj_eglSignalSyncNV, (uint32_t **) &old_eglSignalSyncNV);
 //    hook((uint32_t) eglGetSyncAttribNV, (uint32_t)mj_eglGetSyncAttribNV, (uint32_t **) &old_eglGetSyncAttribNV);
 //    hook((uint32_t) eglCreatePixmapSurfaceHI, (uint32_t)mj_eglCreatePixmapSurfaceHI, (uint32_t **) &old_eglCreatePixmapSurfaceHI);
-    hook((uint32_t) eglGetSystemTimeFrequencyNV, (uint32_t)mj_eglGetSystemTimeFrequencyNV, (uint32_t **) &old_eglGetSystemTimeFrequencyNV);
-    hook((uint32_t) eglGetSystemTimeNV, (uint32_t)mj_eglGetSystemTimeNV, (uint32_t **) &old_eglGetSystemTimeNV);
+//    hook((uint32_t) eglGetSystemTimeFrequencyNV, (uint32_t)mj_eglGetSystemTimeFrequencyNV, (uint32_t **) &old_eglGetSystemTimeFrequencyNV);
+//    hook((uint32_t) eglGetSystemTimeNV, (uint32_t)mj_eglGetSystemTimeNV, (uint32_t **) &old_eglGetSystemTimeNV);
 //    hook((uint32_t) eglCreateStreamKHR, (uint32_t)mj_eglCreateStreamKHR, (uint32_t **) &old_eglCreateStreamKHR);
 //    hook((uint32_t) eglDestroyStreamKHR, (uint32_t)mj_eglDestroyStreamKHR, (uint32_t **) &old_eglDestroyStreamKHR);
 //    hook((uint32_t) eglStreamAttribKHR, (uint32_t)mj_eglStreamAttribKHR, (uint32_t **) &old_eglStreamAttribKHR);
@@ -366,8 +366,8 @@ void hookEglextFun()
 //    hook((uint32_t) eglSwapBuffersWithDamageKHR, (uint32_t)mj_eglSwapBuffersWithDamageKHR, (uint32_t **) &old_eglSwapBuffersWithDamageKHR);
 //    hook((uint32_t) eglGetStreamFileDescriptorKHR, (uint32_t)mj_eglGetStreamFileDescriptorKHR, (uint32_t **) &old_eglGetStreamFileDescriptorKHR);
 //    hook((uint32_t) eglCreateStreamFromFileDescriptorKHR, (uint32_t)mj_eglCreateStreamFromFileDescriptorKHR, (uint32_t **) &old_eglCreateStreamFromFileDescriptorKHR);
-    hook((uint32_t) eglWaitSyncKHR, (uint32_t)mj_eglWaitSyncKHR, (uint32_t **) &old_eglWaitSyncKHR);
-    hook((uint32_t) eglPresentationTimeANDROID, (uint32_t)mj_eglPresentationTimeANDROID, (uint32_t **) &old_eglPresentationTimeANDROID);
+//    hook((uint32_t) eglWaitSyncKHR, (uint32_t)mj_eglWaitSyncKHR, (uint32_t **) &old_eglWaitSyncKHR);
+//    hook((uint32_t) eglPresentationTimeANDROID, (uint32_t)mj_eglPresentationTimeANDROID, (uint32_t **) &old_eglPresentationTimeANDROID);
 
 //    hook((uint32_t) eglCreateNativeClientBufferANDROID, (uint32_t)mj_eglCreateNativeClientBufferANDROID, (uint32_t **) &old_eglCreateNativeClientBufferANDROID);
 

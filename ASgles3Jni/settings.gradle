@@ -1,3 +1,5 @@
 //include ':vkview'
 include ':app'
+include ':pbuffer'
+include ':TextureTest'
 //include ':gltest'
