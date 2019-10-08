@@ -27,6 +27,8 @@
 #include <GLES3/gl3.h>
 #endif
 
+#include <EGL/egl.h>
+
 #include "ThreadPool.h"
 
 #define DEBUG 1
@@ -89,22 +91,22 @@ public:
 class Renderer {
 public:
     virtual ~Renderer();
-    void resize(int w, int h);
-    void render();
+    virtual void resize(int w, int h);
+    virtual void render();
 
 protected:
     Renderer();
 
     // return a pointer to a buffer of MAX_INSTANCES * sizeof(vec2).
     // the buffer is filled with per-instance offsets, then unmapped.
-    virtual float* mapOffsetBuf() = 0;
-    virtual void unmapOffsetBuf() = 0;
+    virtual float* mapOffsetBuf(){};
+    virtual void unmapOffsetBuf(){};
     // return a pointer to a buffer of MAX_INSTANCES * sizeof(vec4).
     // the buffer is filled with per-instance scale and rotation transforms.
-    virtual float* mapTransformBuf() = 0;
-    virtual void unmapTransformBuf() = 0;
+    virtual float* mapTransformBuf(){};
+    virtual void unmapTransformBuf(){};
 
-    virtual void draw(unsigned int numInstances) = 0;
+    virtual void draw(unsigned int numInstances){};
 
 private:
     void calcSceneParams(unsigned int w, unsigned int h, float* offsets);
@@ -117,7 +119,55 @@ private:
     float mAngles[MAX_INSTANCES];
 };
 
+class RendererES2: public Renderer {
+public:
+    RendererES2();
+    virtual ~RendererES2();
+    bool init();
+
+private:
+    virtual float* mapOffsetBuf();
+    virtual void unmapOffsetBuf();
+    virtual float* mapTransformBuf();
+    virtual void unmapTransformBuf();
+    virtual void draw(unsigned int numInstances);
+
+    const EGLContext mEglContext;
+    GLuint mProgram;
+    GLuint mVB;
+    GLint mPosAttrib;
+    GLint mColorAttrib;
+    GLint mScaleRotUniform;
+    GLint mOffsetUniform;
+
+    float mOffsets[2*MAX_INSTANCES];
+    float mScaleRot[4*MAX_INSTANCES];   // array of 2x2 column-major matrices
+};
+
+class ShareContextRender : public Renderer
+{
+public:
+    ShareContextRender();
+    virtual ~ShareContextRender();
+    void resize(int w, int h) override;
+    void render() override;
+
+    bool init();
+
+private:
+    virtual float* mapOffsetBuf(){};
+    virtual void unmapOffsetBuf(){};
+    virtual float* mapTransformBuf(){};
+    virtual void unmapTransformBuf(){};
+    virtual void draw(unsigned int numInstances){};
+
+    GLuint programObject;
+    GLint samplerLoc;
+    GLuint textureId;
+};
+
 extern Renderer* createES2Renderer();
 extern Renderer* createES3Renderer();
+extern Renderer* craeteShareContextRender();
 
 #endif // GLES3JNI_H

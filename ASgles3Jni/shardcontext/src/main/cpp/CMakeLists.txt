@@ -6,8 +6,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
 
 add_library(gles3jni SHARED
            gles3jni.cpp
-           RendererES3.cpp
+           Renderer.cpp
            RendererES2.cpp
+           RendererES3.cpp
+           ShareContextRender.cpp
            ThreadPool.cpp
            gl3stub_wrapper.c
             )

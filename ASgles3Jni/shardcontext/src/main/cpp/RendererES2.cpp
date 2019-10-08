@@ -15,7 +15,6 @@
  */
 
 #include "gles3jni.h"
-#include <EGL/egl.h>
 
 static const char VERTEX_SHADER[] =
     "#version 100\n"
@@ -37,30 +36,6 @@ static const char FRAGMENT_SHADER[] =
     "    gl_FragColor = vColor;\n"
     "}\n";
 
-class RendererES2: public Renderer {
-public:
-    RendererES2();
-    virtual ~RendererES2();
-    bool init();
-
-private:
-    virtual float* mapOffsetBuf();
-    virtual void unmapOffsetBuf();
-    virtual float* mapTransformBuf();
-    virtual void unmapTransformBuf();
-    virtual void draw(unsigned int numInstances);
-
-    const EGLContext mEglContext;
-    GLuint mProgram;
-    GLuint mVB;
-    GLint mPosAttrib;
-    GLint mColorAttrib;
-    GLint mScaleRotUniform;
-    GLint mOffsetUniform;
-
-    float mOffsets[2*MAX_INSTANCES];
-    float mScaleRot[4*MAX_INSTANCES];   // array of 2x2 column-major matrices
-};
 
 Renderer* createES2Renderer() {
     RendererES2* renderer = new RendererES2;
