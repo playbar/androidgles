@@ -229,48 +229,48 @@ void Init ( )
         "   v_texCoord = a_texCoord;                \n"
         "}                                          \n";
 
-//   char fShaderStr[] =
-//       "#version 300 es                                     \n"
-//       "precision mediump float;                            \n"
-//       "in vec2 v_texCoord;                                 \n"
-//       "layout(location = 0) out vec4 outColor;             \n"
-//       "uniform sampler2D s_texture;                        \n"
-//       "void main()                                         \n"
-//       "{                                                   \n"
-//       "  outColor = texture( s_texture, v_texCoord );      \n"
-//       "}                                                   \n";
+   char fShaderStr[] =
+       "#version 300 es                                     \n"
+       "precision mediump float;                            \n"
+       "in vec2 v_texCoord;                                 \n"
+       "layout(location = 0) out vec4 outColor;             \n"
+       "uniform sampler2D s_texture;                        \n"
+       "void main()                                         \n"
+       "{                                                   \n"
+       "  outColor = texture( s_texture, v_texCoord );      \n"
+       "}                                                   \n";
 
-     char fShaderStr[] =
-         "#version 300 es                                     \n"
-         "precision mediump float;                            \n"
-         "in vec2 v_texCoord;                                 \n"
-         "layout(location = 0) out vec4 outColor;             \n"
-         "uniform sampler2D s_texture;                        \n"
-         "vec2 brownConradyDistortion(vec2 uv)                \n"
-         "{ \n"
-         "   float demoScale = 1.0; \n"
-         "   uv *= demoScale; \n"
-         "   float barrelDistortion1 = 0.08; \n"
-         "   float barrelDistortion2 = 0.0; \n"
-         "   float r2 = uv.x*uv.x + uv.y*uv.y; \n"
-         "   uv *= 1.0 + barrelDistortion1 * r2 + barrelDistortion2 * r2 * r2; \n"
-         "   return uv;\n"
-         "}\n"
-         "void main()                                         \n"
-         "{                                                   \n"
-         "   vec2 uv = v_texCoord; \n"
-         "   uv = uv * 2.0 - 1.0; \n"
-         "   uv = brownConradyDistortion(uv);\n"
-         "   uv = 0.5 * (uv * 1.0 + 1.0); \n"
-         "   vec4 color;\n"
-         "   if(uv.x>1.0||uv.y>0.93||uv.x<0.0||uv.y<0.07){\n"
-         "       color = vec4(0.0,0.0,0.0,1.0);\n"
-         "    }else{\n"
-         "        color = texture(s_texture, uv);\n"
-         "    }"
-         "   outColor = color;       \n"
-          "  //outColor = texture( s_texture, v_texCoord );      \n"
-         "}                                                   \n";
+//     char fShaderStr[] =
+//         "#version 300 es                                     \n"
+//         "precision mediump float;                            \n"
+//         "in vec2 v_texCoord;                                 \n"
+//         "layout(location = 0) out vec4 outColor;             \n"
+//         "uniform sampler2D s_texture;                        \n"
+//         "vec2 brownConradyDistortion(vec2 uv)                \n"
+//         "{ \n"
+//         "   float demoScale = 1.0; \n"
+//         "   uv *= demoScale; \n"
+//         "   float barrelDistortion1 = 0.08; \n"
+//         "   float barrelDistortion2 = 0.0; \n"
+//         "   float r2 = uv.x*uv.x + uv.y*uv.y; \n"
+//         "   uv *= 1.0 + barrelDistortion1 * r2 + barrelDistortion2 * r2 * r2; \n"
+//         "   return uv;\n"
+//         "}\n"
+//         "void main()                                         \n"
+//         "{                                                   \n"
+//         "   vec2 uv = v_texCoord; \n"
+//         "   uv = uv * 2.0 - 1.0; \n"
+//         "   uv = brownConradyDistortion(uv);\n"
+//         "   uv = 0.5 * (uv * 1.0 + 1.0); \n"
+//         "   vec4 color;\n"
+//         "   if(uv.x>1.0||uv.y>0.93||uv.x<0.0||uv.y<0.07){\n"
+//         "       color = vec4(0.0,0.0,0.0,1.0);\n"
+//         "    }else{\n"
+//         "        color = texture(s_texture, uv);\n"
+//         "    }"
+//         "   outColor = color;       \n"
+//          "  //outColor = texture( s_texture, v_texCoord );      \n"
+//         "}                                                   \n";
 
     // Load the shaders and get a linked program object
     gUserData.programObject = createProgram ( vShaderStr, fShaderStr );
@@ -280,7 +280,7 @@ void Init ( )
 
     // Load the texture
 //    gUserData.textureId = CreateStorageTexture2D ();
-    gUserData.textureId = CreateSimpleTexture2D ();
+//    gUserData.textureId = CreateSimpleTexture2D ();
 
     glClearColor ( 1.0f, 1.0f, 1.0f, 0.0f );
     return;
@@ -305,11 +305,9 @@ void Draw ()
     glUseProgram ( gUserData.programObject );
 
     // Load the vertex position
-    glVertexAttribPointer ( 0, 3, GL_FLOAT,
-                            GL_FALSE, 5 * sizeof ( GLfloat ), vVertices );
+    glVertexAttribPointer ( 0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof ( GLfloat ), vVertices );
     // Load the texture coordinate
-    glVertexAttribPointer ( 1, 2, GL_FLOAT,
-                            GL_FALSE, 5 * sizeof ( GLfloat ), &vVertices[3] );
+    glVertexAttribPointer ( 1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof ( GLfloat ), &vVertices[3] );
 
     glEnableVertexAttribArray ( 0 );
     glEnableVertexAttribArray ( 1 );
@@ -513,7 +511,7 @@ void * thread_1(void *pdata ){
     if( !eglMakeCurrent( gDisplay, gAuxSurface, gAuxSurface, gShareContext )){
         printf("error");
     }
-    gUserData.textureId = CreateSimpleTexture2D ();
+    gUserData.textureId = CreateSimpleTexture2D();
 
 //   GLuint texid;
 //   glGenTextures(2, &texid );
@@ -541,19 +539,22 @@ Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj) {
     printGlString("Renderer", GL_RENDERER);
     printGlString("Extensions", GL_EXTENSIONS);
 
-    const char* versionStr = (const char*)glGetString(GL_VERSION);
-    if (strstr(versionStr, "OpenGL ES 3.") && gl3stubInit()) {
-        g_renderer = createES3Renderer();
-    } else if (strstr(versionStr, "OpenGL ES 2.")) {
-        g_renderer = createES2Renderer();
-    } else {
-        LOGE("Unsupported OpenGL ES version");
-    }
+//    const char* versionStr = (const char*)glGetString(GL_VERSION);
+//    if (strstr(versionStr, "OpenGL ES 3.") && gl3stubInit()) {
+//        g_renderer = createES3Renderer();
+//    } else if (strstr(versionStr, "OpenGL ES 2.")) {
+//        g_renderer = createES2Renderer();
+//    } else {
+//        LOGE("Unsupported OpenGL ES version");
+//    }
 
 //    g_renderer = createES2Renderer();
 
 //    GPU_Sobel();
     Init();
+
+//    gUserData.textureId = CreateSimpleTexture2D();
+
     gDisplay = eglGetCurrentDisplay();
     createSharedContext();
 
@@ -563,13 +564,13 @@ Java_com_android_gles3jni_GLES3JNILib_init(JNIEnv* env, jobject obj) {
     if( ret != 0 ){
         printf("Create thread error\n");
     }
-
+//
 //   pthread_join( id_1, NULL );
 
-    pthread_t seft = pthread_self();
-    char chId[32] = {0};
-    sprintf( chId, "main thread id=%u", seft );
-    LOGI( chId );
+//    pthread_t seft = pthread_self();
+//    char chId[32] = {0};
+//    sprintf( chId, "main thread id=%u", seft );
+//    LOGI( chId );
 
 }
 
@@ -578,14 +579,14 @@ char szTmp[] = "this is the first thread running";
 
 JNIEXPORT void JNICALL
 Java_com_android_gles3jni_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint width, jint height) {
-    if (g_renderer) {
-        g_renderer->resize(width, height);
-    }
+//    if (g_renderer) {
+//        g_renderer->resize(width, height);
+//    }
     glViewport(0, 0, width, height);
 
-    taskObj.SetData((void*)szTmp);
-    gThreadPool.Create();
-    gThreadPool.AddTask(&taskObj);
+//    taskObj.SetData((void*)szTmp);
+//    gThreadPool.Create();
+//    gThreadPool.AddTask(&taskObj);
 
 //    for(int i = 0; i < 5; i++)
 //    {
@@ -595,9 +596,9 @@ Java_com_android_gles3jni_GLES3JNILib_resize(JNIEnv* env, jobject obj, jint widt
 
 JNIEXPORT void JNICALL
 Java_com_android_gles3jni_GLES3JNILib_step(JNIEnv* env, jobject obj) {
-    if (g_renderer) {
-        g_renderer->render();
-    }
-//    Draw();
+//    if (g_renderer) {
+//        g_renderer->render();
+//    }
+    Draw();
 //    gThreadPool.AddTask(&taskObj);
 }
