@@ -29,13 +29,25 @@ GLuint CreateSimpleTexture2D( )
     GLuint textureId =0;
 
     // 2x2 Image, 3 bytes per pixel (R, G, B)
-    GLubyte pixels[4 * 3] =
-            {
-                    255,   0,   0, // Red
-                    0, 255,   0, // Green
-                    0,   0, 255, // Blue
-                    255, 255,   0  // Yellow
-            };
+//    GLubyte pixels[4 * 3] =
+//            {
+//                    255,   0,   0, // Red
+//                    0, 255,   0, // Green
+//                    0,   0, 255, // Blue
+//                    255, 255,   0  // Yellow
+//            };
+
+    GLubyte pixels[256 * 256 * 3];
+
+    for( int y = 0; y < 256; ++y )
+    {
+        for( int x = 0; x < 256; ++x )
+        {
+            pixels[y * 3 * 256 + x * 3 + 0 ] = x;
+            pixels[y * 3 * 256 + x * 3 + 1 ] = 0;
+            pixels[y * 3 * 256 + x * 3 + 2 ] = y;
+        }
+    }
 
     // Use tightly packed data
     glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
@@ -48,7 +60,7 @@ GLuint CreateSimpleTexture2D( )
     glBindTexture ( GL_TEXTURE_2D, textureId );
 
     // Load the texture
-    glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels );
+    glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels );
 
     // Set the filtering mode
     glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
