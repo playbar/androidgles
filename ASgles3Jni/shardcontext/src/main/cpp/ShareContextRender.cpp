@@ -3,6 +3,7 @@
 //
 
 //#include <pthread.h>
+#include <cstdio>
 #include "gles3jni.h"
 
 EGLContext gShareContext;
@@ -157,16 +158,25 @@ void createSharedContext(){
 }
 
 void * thread_1(void *pdata ){
-    sleep( 2);
 
-    EGLContext context = eglGetCurrentContext();
-    EGLSurface drawSurface = eglGetCurrentSurface(EGL_DRAW);
-    EGLSurface readSurface = eglGetCurrentSurface(EGL_READ);
-
-    if( !eglMakeCurrent( gDisplay, gAuxSurface, gAuxSurface, gShareContext )){
+    if (!eglMakeCurrent(gDisplay, gAuxSurface, gAuxSurface, gShareContext))
+    {
         printf("error");
     }
-    gUserData.textureId = CreateSimpleTexture2D();
+
+    while( true ) {
+        usleep(2000);
+
+        EGLContext context = eglGetCurrentContext();
+        EGLSurface drawSurface = eglGetCurrentSurface(EGL_DRAW);
+        EGLSurface readSurface = eglGetCurrentSurface(EGL_READ);
+
+        gUserData.textureId = CreateSimpleTexture2D();
+        usleep(10000);
+        glDeleteTextures(1, &gUserData.textureId);
+        gUserData.textureId = 0;
+
+    }
 
 //   GLuint texid;
 //   glGenTextures(2, &texid );
@@ -256,6 +266,22 @@ void ShareContextRender::resize(int w, int h)
 
 void ShareContextRender::render()
 {
+//    pthread_t id_1;
+//    int ret;
+//    ret = pthread_create( &id_1, NULL, thread_1, NULL );
+//    if( ret != 0 ){
+//        printf("Create thread error\n");
+//    }
+//
+//    gUserData.textureId = CreateSimpleTexture2D();
+//
+    if( gUserData.textureId == 0 )
+    {
+        return;
+    }
+
+
+
     GLfloat vVertices[] = { -1.0f,  1.0f, 0.0f, 0.0f,  0.0f,
                             -1.0f, 0.0f, 0.0f, 0.0f,  1.0f,
                             1.0f,  0.0f, 0.0f, 1.0f,  1.0f,
@@ -287,5 +313,11 @@ void ShareContextRender::render()
     glUniform1i ( gUserData.samplerLoc, 0 );
 
     glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices );
+
+//    eglMakeCurrent(gDisplay, gAuxSurface, gAuxSurface, gShareContext);
+//    glDeleteTextures(1, &gUserData.textureId);
+//    gUserData.textureId = 0;
+
+
 }
 
