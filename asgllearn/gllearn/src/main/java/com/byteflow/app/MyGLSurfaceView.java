@@ -77,7 +77,8 @@ public class MyGLSurfaceView extends GLSurfaceView implements ScaleGestureDetect
         mGLRender = glRender;
         /*If no setEGLConfigChooser method is called,
         then by default the view will choose an RGB_888 surface with a depth buffer depth of at least 16 bits.*/
-        setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+//        setEGLConfigChooser(8, 8, 8, 8, 16, 8);
+        setEGLConfigChooser(8, 8, 8, 8, 24, 8);
         setRenderer(mGLRender);
         setRenderMode(RENDERMODE_WHEN_DIRTY);
         mScaleGestureDetector = new ScaleGestureDetector(context, this);
